@@ -1,12 +1,52 @@
 // src/components/Navbar.jsx
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const navLinkBase =
   "text-sm md:text-base px-3 py-2 rounded-full transition-colors";
 const navLinkActive = "bg-zinc-800 text-zinc-50";
 const navLinkInactive = "text-zinc-300 hover:bg-zinc-800/60";
 
+function LanguageToggle({ onAfterToggle }) {
+  const { language, toggleLanguage } = useLanguage();
+  const isGerman = language === "de";
+
+  const handleClick = () => {
+    toggleLanguage();
+    if (onAfterToggle) onAfterToggle();
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className="text-xs border border-zinc-700 rounded-full px-1 py-1 text-zinc-300 hover:border-zinc-500 bg-zinc-900 flex items-center gap-1"
+    >
+      <span
+        className={`px-2 py-1 rounded-full font-semibold transition-colors ${
+          isGerman ? "bg-zinc-700 text-zinc-50" : "text-zinc-400"
+        }`}
+      >
+        DE
+      </span>
+      <span
+        className={`px-2 py-1 rounded-full font-semibold transition-colors ${
+          !isGerman ? "bg-zinc-700 text-zinc-50" : "text-zinc-400"
+        }`}
+      >
+        EN
+      </span>
+    </button>
+  );
+}
+
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen((prev) => !prev);
+  const closeMenu = () => setIsOpen(false);
+
   return (
     <header className="sticky top-0 z-40 bg-black/70 backdrop-blur-md border-b border-zinc-800">
       <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
@@ -22,40 +62,105 @@ export default function Navbar() {
 
         {/* Nav links */}
         <div className="flex items-center gap-2">
-          <NavLink
-            to="/booking"
-            className={({ isActive }) =>
-              `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-            }
-          >
-            Buchen
-          </NavLink>
-          <NavLink
-            to="/faq"
-            className={({ isActive }) =>
-              `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-            }
-          >
-            FAQ
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-            }
-          >
-            Über die Bar
-          </NavLink>
+          <div className="hidden md:flex items-center gap-2">
+            <NavLink
+              to="/booking"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
+              }
+            >
+              Buchen
+            </NavLink>
+            <NavLink
+              to="/faq"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
+              }
+            >
+              FAQ
+            </NavLink>
+            <NavLink
+              to="/about"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
+              }
+            >
+              Über die Bar
+            </NavLink>
 
-          {/* Language toggle placeholder – default DE */}
+            <div className="ml-2">
+              <LanguageToggle />
+            </div>
+          </div>
+
           <button
             type="button"
-            className="ml-3 text-xs border border-zinc-700 rounded-full px-3 py-1 text-zinc-300 hover:bg-zinc-800/70"
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-full border border-zinc-700 text-zinc-200 hover:bg-zinc-800 transition"
+            onClick={toggleMenu}
+            aria-label="Toggle navigation"
           >
-            DE | EN
+            <span className="sr-only">Toggle navigation</span>
+            <div className="space-y-1">
+              <span
+                className={`block h-0.5 w-5 bg-zinc-200 transition-transform ${
+                  isOpen ? "rotate-45 translate-y-1.5" : ""
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-zinc-200 transition-opacity ${
+                  isOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-zinc-200 transition-transform ${
+                  isOpen ? "-rotate-45 -translate-y-1.5" : ""
+                }`}
+              />
+            </div>
           </button>
         </div>
       </nav>
+
+      {isOpen && (
+        <div className="md:hidden border-t border-zinc-800 bg-black/95">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2">
+            <NavLink
+              to="/booking"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
+              }
+            >
+              Buchen
+            </NavLink>
+            <NavLink
+              to="/faq"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
+              }
+            >
+              FAQ
+            </NavLink>
+            <NavLink
+              to="/about"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
+              }
+            >
+              Über die Bar
+            </NavLink>
+
+            <div className="pt-2">
+              <LanguageToggle onAfterToggle={closeMenu} />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
