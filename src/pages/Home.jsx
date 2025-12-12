@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -85,8 +86,12 @@ export default function Home() {
   const t = texts[language] ?? texts.de;
   const baseTitle = "RoKo Bar Göttingen";
 
-  const pageTitle =
-    language === "de" ? "Startseite" : "Home";
+  const pageTitle = language === "de" ? "Startseite" : "Home";
+  const fullTitle = `${pageTitle} – ${baseTitle}`;
+
+  useEffect(() => {
+    document.title = fullTitle;
+  }, [fullTitle]);
 
   const priceHeading =
     language === "de" ? "Preise & Konditionen" : "Prices & Conditions";
@@ -101,7 +106,7 @@ export default function Home() {
   return (
     <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
       <Helmet>
-        <title>{`${pageTitle} – ${baseTitle}`}</title>
+        <title>{fullTitle}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/" />
         <html lang={language === "de" ? "de" : "en"} />

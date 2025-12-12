@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
@@ -58,6 +59,11 @@ export default function Booking() {
   const { language } = useLanguage();
   const t = bookingTexts[language] ?? bookingTexts.de;
   const baseTitle = "RoKo Bar Göttingen";
+  const fullTitle = `${t.title} – ${baseTitle}`;
+
+  useEffect(() => {
+    document.title = fullTitle;
+  }, [fullTitle]);
 
   const subject =
     language === "de" ? "Anfrage RoKo-Bar Buchung" : "RoKo Bar booking request";
@@ -107,7 +113,7 @@ export default function Booking() {
   return (
     <div className="space-y-10 max-w-6xl mx-auto">
       <Helmet>
-        <title>{`${t.title} – ${baseTitle}`}</title>
+        <title>{fullTitle}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/booking" />
         <html lang={language === "de" ? "de" : "en"} />

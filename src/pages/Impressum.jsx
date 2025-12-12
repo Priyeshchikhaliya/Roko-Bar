@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
@@ -30,11 +31,16 @@ export default function Impressum() {
   const { language } = useLanguage();
   const t = texts[language] ?? texts.de;
   const baseTitle = "RoKo Bar Göttingen";
+  const fullTitle = `${t.title} – ${baseTitle}`;
+
+  useEffect(() => {
+    document.title = fullTitle;
+  }, [fullTitle]);
 
   return (
     <div className="max-w-6xl mx-auto space-y-10">
       <Helmet>
-        <title>{`${t.title} – ${baseTitle}`}</title>
+        <title>{fullTitle}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/impressum" />
         <html lang={language === "de" ? "de" : "en"} />

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "react-router-dom";
@@ -105,11 +106,16 @@ export default function About() {
   const { language } = useLanguage();
   const t = aboutTexts[language] ?? aboutTexts.de;
   const baseTitle = "RoKo Bar Göttingen";
+  const fullTitle = `${t.title} – ${baseTitle}`;
+
+  useEffect(() => {
+    document.title = fullTitle;
+  }, [fullTitle]);
 
   return (
     <div className="space-y-10 max-w-6xl mx-auto">
       <Helmet>
-        <title>{`${t.title} – ${baseTitle}`}</title>
+        <title>{fullTitle}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/about" />
         <html lang={language === "de" ? "de" : "en"} />

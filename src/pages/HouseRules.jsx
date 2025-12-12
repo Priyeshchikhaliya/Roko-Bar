@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -148,11 +149,16 @@ export default function HouseRules() {
   const { language } = useLanguage();
   const t = rulesTexts[language] ?? rulesTexts.de;
   const baseTitle = "RoKo Bar Göttingen";
+  const fullTitle = `${t.title} – ${baseTitle}`;
+
+  useEffect(() => {
+    document.title = fullTitle;
+  }, [fullTitle]);
 
   return (
     <div className="space-y-10 max-w-6xl mx-auto">
       <Helmet>
-        <title>{`${t.title} – ${baseTitle}`}</title>
+        <title>{fullTitle}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/house-rules" />
         <html lang={language === "de" ? "de" : "en"} />
