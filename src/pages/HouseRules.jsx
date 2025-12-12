@@ -147,11 +147,12 @@ const rulesTexts = {
 export default function HouseRules() {
   const { language } = useLanguage();
   const t = rulesTexts[language] ?? rulesTexts.de;
+  const baseTitle = "RoKo Bar Göttingen";
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <Helmet>
-        <title>{t.seoTitle}</title>
+        <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/house-rules" />
         <html lang={language === "de" ? "de" : "en"} />

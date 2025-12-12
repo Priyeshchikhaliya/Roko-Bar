@@ -57,6 +57,7 @@ const bookingTexts = {
 export default function Booking() {
   const { language } = useLanguage();
   const t = bookingTexts[language] ?? bookingTexts.de;
+  const baseTitle = "RoKo Bar Göttingen";
 
   const subject =
     language === "de" ? "Anfrage RoKo-Bar Buchung" : "RoKo Bar booking request";
@@ -106,7 +107,7 @@ export default function Booking() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <Helmet>
-        <title>{t.seoTitle}</title>
+        <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/booking" />
         <html lang={language === "de" ? "de" : "en"} />

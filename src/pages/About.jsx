@@ -104,11 +104,12 @@ const geoLink = `geo:${LAT},${LON}?z=19`;
 export default function About() {
   const { language } = useLanguage();
   const t = aboutTexts[language] ?? aboutTexts.de;
+  const baseTitle = "RoKo Bar Göttingen";
 
   return (
     <div className="space-y-10 max-w-6xl mx-auto">
       <Helmet>
-        <title>{t.seoTitle}</title>
+        <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/about" />
         <html lang={language === "de" ? "de" : "en"} />

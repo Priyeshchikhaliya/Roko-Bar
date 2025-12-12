@@ -79,11 +79,10 @@ export default function Home() {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const t = texts[language] ?? texts.de;
+  const baseTitle = "RoKo Bar Göttingen";
 
   const pageTitle =
-    language === "de"
-      ? "RoKo-Bar mieten – Studentenbar im Wohnheim Robert-Koch-Straße 38, Göttingen"
-      : "Rent the RoKo Bar – Student bar at Robert-Koch-Str. 38, Göttingen";
+    language === "de" ? "Startseite" : "Home";
 
   const pageDescription =
     language === "de"
@@ -103,7 +102,7 @@ export default function Home() {
   return (
     <div className="space-y-12 md:space-y-16">
       <Helmet>
-        <title>{pageTitle}</title>
+        <title>{`${pageTitle} – ${baseTitle}`}</title>
         <meta name="description" content={pageDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/" />
         <html lang={language === "de" ? "de" : "en"} />

@@ -104,11 +104,12 @@ const texts = {
 export default function Mietbedingungen() {
   const { language } = useLanguage();
   const t = texts[language] ?? texts.de;
+  const baseTitle = "RoKo Bar Göttingen";
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <Helmet>
-        <title>{t.seoTitle}</title>
+        <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/terms" />
         <html lang={language === "de" ? "de" : "en"} />
