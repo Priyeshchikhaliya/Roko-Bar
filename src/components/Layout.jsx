@@ -5,7 +5,7 @@ import ScrollToTop from "./ScrollToTop.jsx";
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-neutral-950 via-black to-neutral-900 text-zinc-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-neutral-950 via-black to-neutral-900 text-zinc-50 select-none">
       <ScrollToTop />
       <Navbar />
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-10">

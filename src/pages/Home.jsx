@@ -37,6 +37,7 @@ const texts = {
       "Gemütliche Kellerbar direkt im Wohnheim.",
       "Theke mit Zapfanlage und Kühlschränken für Getränke.",
       "Tische, Hocker und viel Platz für Geburtstage, WG-Partys und Vereinsfeiern.",
+      "Gute Anlage für Musik und Ansagen – laut genug zum Feiern, trotzdem mit Rücksicht auf die Nachbarschaft.",
       "Einnahmen unterstützen das Wohnheim und gemeinsame Projekte.",
     ],
     seoDescription:
@@ -73,6 +74,7 @@ const texts = {
       "Cozy basement bar right inside the dormitory.",
       "Counter with tap system and fridges for drinks.",
       "Tables, stools, and plenty of space for birthdays, flat parties, and club events.",
+      "Solid sound system for music and announcements—party-ready while staying considerate of neighbours.",
       "Revenue supports the dorm community and shared projects.",
     ],
     seoDescription:
