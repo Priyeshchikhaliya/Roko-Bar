@@ -105,8 +105,11 @@ const geoLink = `geo:${LAT},${LON}?z=19`;
 export default function About() {
   const { language } = useLanguage();
   const t = aboutTexts[language] ?? aboutTexts.de;
-  const baseTitle = "RoKo Bar Göttingen";
-  const fullTitle = `${t.title} – ${baseTitle}`;
+  const pageTitles = {
+    de: "Über RoKo 38 & die Heimkneipe – RoKo Bar Göttingen",
+    en: "About RoKo 38 & the student bar – RoKo Bar Göttingen",
+  };
+  const fullTitle = pageTitles[language] ?? pageTitles.de;
 
   useEffect(() => {
     document.title = fullTitle;

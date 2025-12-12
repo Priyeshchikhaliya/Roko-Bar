@@ -6,11 +6,11 @@ const BOOKING_EMAIL = "heimkneipe@roko-goettingen.de";
 
 const bookingTexts = {
   de: {
-    title: "Buchungsanfrage",
+    title: "Buchungsanfrage RoKo-Bar",
     introParagraphs: [
-      "Hier kannst du die RoKo-Bar für deine Veranstaltung anfragen.",
-      "Die Miete beträgt 75 € für Bewohner:innen des RoKo und 100 € für externe Gäste.",
-      "Die Kaution beträgt 200 € und wird bei ordentlicher Übergabe vollständig zurückgezahlt.",
+      "Hier kannst du die RoKo-Bar für deine Veranstaltung am Wochenende anfragen.",
+      "Die Miete beträgt 75 € für Bewohner:innen des RoKo 38 und 100 € für externe Gäste.",
+      "Die Kaution beträgt 200 € und wird bei ordentlicher, sauberer Rückgabe vollständig zurückgezahlt.",
     ],
     weekdayNote:
       "Aktuell vermieten wir die Heimkneipe nicht an Wochentagen (Montag–Donnerstag). Bitte wähle ein Datum am Wochenende oder an einem Feiertag.",
@@ -24,42 +24,41 @@ const bookingTexts = {
     ],
     mailButtonLabel: "E-Mail mit Buchungsanfrage öffnen",
     mailFallbackLabel: "Oder schreib uns direkt an",
-    seoTitle:
-      "RoKo-Bar Buchung – Studentenbar im Wohnheim Robert-Koch-Straße 38, Göttingen",
+    pageTitle:
+      "Buchungsanfrage RoKo-Bar – RoKo Bar Göttingen",
     seoDescription:
-      "Frage hier die RoKo-Heimkneipe im Wohnheim Robert-Koch-Straße 38 in Göttingen an. Alle Infos zu Miete, Kaution und Wochenendregelung auf einen Blick.",
+      "Buchungsanfrage für die RoKo-Heimkneipe: 75 € für Bewohner:innen, 100 € für Externe, 200 € Kaution bar bei Schlüsselübergabe, Vermietung nur am Wochenende.",
   },
   en: {
-    title: "Booking request",
+    title: "RoKo Bar booking request",
     introParagraphs: [
-      "Here you can request the RoKo Bar for your event.",
+      "Request the RoKo Bar for your weekend event.",
       "The rental fee is €75 for RoKo residents and €100 for external guests.",
-      "The deposit is €200 and will be fully refunded if the bar is handed over in a proper condition.",
+      "The deposit is €200 in cash at key handover and is fully refunded if the bar is returned clean and undamaged.",
     ],
     weekdayNote:
       "We currently do not rent out the bar on weekdays (Monday–Thursday). Please choose a date on a weekend or public holiday.",
     processTitle: "How the booking works",
     processSteps: [
       "You choose a weekend date for your party.",
-      "You send us a booking request by e-mail.",
+      "You send us a booking request by email.",
       "We check the date and send you the correct rental contract (€75 or €100).",
       "You sign the contract and pay the rent.",
       "We countersign, schedule the key handover, and you pay the €200 deposit in cash at that appointment.",
     ],
     mailButtonLabel: "Open booking request email",
     mailFallbackLabel: "Or email us directly at",
-    seoTitle:
-      "RoKo Bar booking – Student bar at Robert-Koch-Str. 38, Göttingen",
+    pageTitle:
+      "RoKo Bar booking request – RoKo Bar Göttingen",
     seoDescription:
-      "Request the RoKo Bar at the student dormitory Robert-Koch-Str. 38 in Göttingen. All information about fees, deposit, and weekend rule at a glance.",
+      "Book the RoKo Bar: €75 residents, €100 external guests, €200 cash deposit at key handover, weekend rentals only.",
   },
 };
 
 export default function Booking() {
   const { language } = useLanguage();
   const t = bookingTexts[language] ?? bookingTexts.de;
-  const baseTitle = "RoKo Bar Göttingen";
-  const fullTitle = `${t.title} – ${baseTitle}`;
+  const fullTitle = t.pageTitle;
 
   useEffect(() => {
     document.title = fullTitle;

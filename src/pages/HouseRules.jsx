@@ -148,8 +148,11 @@ const rulesTexts = {
 export default function HouseRules() {
   const { language } = useLanguage();
   const t = rulesTexts[language] ?? rulesTexts.de;
-  const baseTitle = "RoKo Bar Göttingen";
-  const fullTitle = `${t.title} – ${baseTitle}`;
+  const pageTitles = {
+    de: "Hausregeln RoKo-Bar – RoKo Bar Göttingen",
+    en: "House rules RoKo Bar – RoKo Bar Göttingen",
+  };
+  const fullTitle = pageTitles[language] ?? pageTitles.de;
 
   useEffect(() => {
     document.title = fullTitle;

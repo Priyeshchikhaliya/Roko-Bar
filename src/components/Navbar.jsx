@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 const navLinkBase =
-  "text-sm md:text-base px-3 py-2 rounded-full transition-colors";
+  "text-sm md:text-base px-3 py-2 rounded-full transition-colors whitespace-nowrap";
 const navLinkActive = "bg-zinc-800 text-zinc-50";
 const navLinkInactive = "text-zinc-300 hover:bg-zinc-800/60";
 
@@ -49,15 +49,16 @@ export default function Navbar() {
   const rulesLabel = language === "de" ? "Hausregeln" : "House rules";
   const bookingLabel = language === "de" ? "Buchen" : "Booking";
   const aboutLabel = language === "de" ? "Über die Bar" : "About the bar";
+  const homeLabel = language === "de" ? "Start" : "Home";
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
 
   return (
     <header className="sticky top-0 z-40 bg-black/70 backdrop-blur-md border-b border-zinc-800">
-      <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <nav className="w-full px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 md:gap-4">
         {/* Logo / Brand */}
-        <Link to="/" className="flex flex-col leading-tight">
+        <Link to="/" className="flex flex-col leading-tight min-w-fit">
           <span className="uppercase tracking-[0.22em] text-xs text-zinc-400">
             {brandTop}
           </span>
@@ -67,8 +68,18 @@ export default function Navbar() {
         </Link>
 
         {/* Nav links */}
-        <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-1 md:flex-none justify-end flex-wrap">
+          <div className="hidden md:flex items-center gap-2 flex-wrap">
+            <NavLink
+              to="/"
+              end
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
+              }
+            >
+              {homeLabel}
+            </NavLink>
             <NavLink
               to="/booking"
               onClick={closeMenu}
@@ -133,6 +144,16 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-zinc-800 bg-black/95">
           <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2">
+            <NavLink
+              to="/"
+              end
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
+              }
+            >
+              {homeLabel}
+            </NavLink>
             <NavLink
               to="/booking"
               onClick={closeMenu}

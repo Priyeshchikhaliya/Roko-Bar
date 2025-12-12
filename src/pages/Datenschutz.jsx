@@ -5,94 +5,94 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 const texts = {
   de: {
     title: "Datenschutzerklärung",
-    seoTitle: "Datenschutzerklärung – RoKo-Heimkneipe",
     seoDescription:
-      "Datenschutzhinweise für die RoKo-Heimkneipe: E-Mail-Anfragen, keine Cookies/Analytics, Hosting-Logs nur technisch.",
+      "Datenschutz für die RoKo-Heimkneipe: keine Cookies oder Tracking, E-Mail-Anfragen nur zur Buchungsbearbeitung, Spracheinstellung in localStorage.",
     lastUpdated: "Stand: 12.01.2025",
     intro:
-      "Wir halten es simpel: Wir sammeln nur die Daten, die ihr uns per E-Mail schickt, um eure Buchungsanfragen zu beantworten.",
+      "Wir halten es simpel: Wir sammeln nur die Daten, die ihr uns per E-Mail schickt, um eure Buchungsanfragen zu beantworten. Es gibt keine Tracking-Cookies oder Analytics.",
     sections: [
       {
-        heading: "Welche Daten wir verarbeiten",
+        heading: "Verantwortliche Stelle",
         points: [
-          "Nur die Informationen, die ihr uns per E-Mail zusendet (z. B. Name, Kontaktdaten, gewünschtes Datum).",
-          "Wir speichern eure gewählte Spracheinstellung (\"de\" oder \"en\") lokal im Browser (localStorage), damit die Seite beim nächsten Besuch in eurer Sprache geladen wird.",
-          "Keine Cookies, kein Tracking, keine Formulare auf der Website.",
-        ],
-      },
-      {
-        heading: "Zweck der Verarbeitung",
-        points: [
-          "Bearbeitung und Beantwortung eurer Buchungsanfrage.",
-          "Organisation von Mietverträgen, Schlüsselübergaben und Rückfragen.",
-        ],
-      },
-      {
-        heading: "Hosting & technische Logs",
-        points: [
-          "Das Hosting (z. B. Netlify oder Vercel) kann IP-Adressen kurzfristig in Server-Logs speichern, um den Betrieb sicherzustellen.",
-          "Wir nutzen diese Logs nicht zur Auswertung eurer Nutzung.",
-        ],
-      },
-      {
-        heading: "Aufbewahrung",
-        points: [
-          "E-Mails bleiben so lange gespeichert, wie es für Rückfragen rund um die Buchung nötig ist.",
-          "Auf Wunsch löschen wir eure E-Mail-Korrespondenz, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen.",
-        ],
-      },
-      {
-        heading: "Kontakt",
-        points: [
-          "Für Auskunfts- oder Löschanfragen: ",
+          "Studentenwohnheim RoKo 38, Robert-Koch-Straße 38, 37075 Göttingen.",
           "E-Mail: heimkneipe@roko-goettingen.de",
+        ],
+      },
+      {
+        heading: "Server-Logs",
+        points: [
+          "Der Hosting-Anbieter (z. B. Netlify oder Vercel) speichert technisch notwendige Server-Logs (IP-Adresse, Timestamp, User-Agent), um den Betrieb zu gewährleisten.",
+          "Wir werten diese Logs nicht zu Marketing- oder Tracking-Zwecken aus.",
+        ],
+      },
+      {
+        heading: "E-Mails & Buchungen",
+        points: [
+          "Wir verarbeiten nur die Daten, die ihr uns per E-Mail sendet (z. B. Name, Kontaktdaten, gewünschtes Datum), um eure Buchungsanfrage zu beantworten.",
+          "Die Daten werden ausschließlich zur Organisation von Mietvertrag, Schlüsselübergabe und Rückfragen genutzt.",
+          "Speicherdauer: solange es für Rückfragen zur Buchung nötig ist; auf Wunsch löschen wir die Korrespondenz, sofern keine gesetzlichen Pflichten entgegenstehen.",
+        ],
+      },
+      {
+        heading: "Cookies & localStorage",
+        points: [
+          "Keine Cookies, kein Google Analytics, keine Marketing-Tools.",
+          "Wir speichern nur eure Spracheinstellung (\"de\" oder \"en\") im Browser (localStorage, Schlüssel: \"roko-language\"), damit die Seite beim nächsten Besuch in eurer Sprache lädt.",
+          "Ihr könnt den Eintrag jederzeit über eure Browser-Einstellungen löschen.",
+        ],
+      },
+      {
+        heading: "Eure Rechte",
+        points: [
+          "Ihr könnt Auskunft oder Löschung eurer E-Mails verlangen, soweit keine Aufbewahrungspflichten entgegenstehen.",
+          "Bei Fragen: heimkneipe@roko-goettingen.de",
         ],
       },
     ],
   },
   en: {
     title: "Privacy Policy",
-    seoTitle: "Privacy Policy – RoKo Bar",
     seoDescription:
-      "Privacy notes for the RoKo Bar: email-only data, no cookies/analytics, hosting logs for technical reasons.",
+      "Privacy for the RoKo Bar: no cookies or tracking, booking emails only for handling rentals, language saved in localStorage.",
     lastUpdated: "Last updated: 12 Jan 2025",
     intro:
-      "We keep it simple: the only personal data we process is what you send us by email to handle your booking request.",
+      "We keep it simple: the only personal data we process is what you send us by email to handle your booking request. There are no tracking cookies or analytics tools.",
     sections: [
       {
-        heading: "What data we process",
+        heading: "Controller",
         points: [
-          "Only the information you send via email (e.g., name, contact details, desired date).",
-          "We store your chosen language preference (\"de\" or \"en\") locally in the browser (localStorage) so the site loads in your language next time.",
-          "No cookies, no tracking, no on-site forms.",
-        ],
-      },
-      {
-        heading: "Purpose",
-        points: [
-          "To process and respond to your booking request.",
-          "To organize rental contracts, key handover, and follow-up questions.",
-        ],
-      },
-      {
-        heading: "Hosting & technical logs",
-        points: [
-          "The hosting provider (e.g., Netlify or Vercel) may briefly store IP addresses in server logs for technical operation.",
-          "We do not use these logs to analyze your behavior.",
-        ],
-      },
-      {
-        heading: "Retention",
-        points: [
-          "Emails are kept as long as needed for booking-related communication.",
-          "On request, we delete email correspondence unless legal retention duties apply.",
-        ],
-      },
-      {
-        heading: "Contact",
-        points: [
-          "For access or deletion requests:",
+          "Student dormitory RoKo 38, Robert-Koch-Str. 38, 37075 Göttingen, Germany.",
           "Email: heimkneipe@roko-goettingen.de",
+        ],
+      },
+      {
+        heading: "Server logs",
+        points: [
+          "The hosting provider (e.g., Netlify or Vercel) stores technically necessary server logs (IP address, timestamp, user agent) to keep the site running.",
+          "We do not use these logs for marketing or tracking.",
+        ],
+      },
+      {
+        heading: "Emails & booking",
+        points: [
+          "We only process the data you send via email (e.g., name, contact details, desired date) to handle your booking.",
+          "Data is used solely to organize rental contracts, key handover, and follow-up questions.",
+          "Retention: kept as long as needed for booking-related communication; we delete correspondence on request unless legal duties require keeping it.",
+        ],
+      },
+      {
+        heading: "Cookies & localStorage",
+        points: [
+          "No cookies, no Google Analytics, no marketing tools.",
+          "We only store your language preference (\"de\" or \"en\") in the browser (localStorage, key: \"roko-language\") so the site opens in your language next time.",
+          "You can delete this entry at any time via your browser settings.",
+        ],
+      },
+      {
+        heading: "Your rights",
+        points: [
+          "You can request access to or deletion of your emails unless legal retention duties apply.",
+          "Questions: heimkneipe@roko-goettingen.de",
         ],
       },
     ],
@@ -102,8 +102,11 @@ const texts = {
 export default function Datenschutz() {
   const { language } = useLanguage();
   const t = texts[language] ?? texts.de;
-  const baseTitle = "RoKo Bar Göttingen";
-  const fullTitle = `${t.title} – ${baseTitle}`;
+  const pageTitles = {
+    de: "Datenschutzerklärung – RoKo Bar Göttingen",
+    en: "Privacy Policy – RoKo Bar Göttingen",
+  };
+  const fullTitle = pageTitles[language] ?? pageTitles.de;
 
   useEffect(() => {
     document.title = fullTitle;

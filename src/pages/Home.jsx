@@ -9,8 +9,8 @@ const texts = {
   de: {
     heroTitle: "Miete die RoKo-Bar für deine nächste Party.",
     heroSubtitle:
-      "Studentenbar im Wohnheim Robert-Koch-Straße 38 in Göttingen. Faire Miete, klare Regeln, kurze Wege nach Hause.",
-    heroCTA: "Jetzt Buchungsanfrage per E-Mail stellen",
+      "Studentenbar im Wohnheim Robert-Koch-Straße 38 in Göttingen. Faire Miete, klare Regeln, kurze Wege nach Hause. Vermietung in der Regel am Wochenende.",
+    heroCTA: "Buchung starten",
     heroSecondaryCTA: "Preise & Ablauf ansehen",
     priceResidentTitle: "Bewohner:innen",
     priceResidentAmount: "75 €",
@@ -24,7 +24,7 @@ const texts = {
       "Die Kaution wird NICHT mit der Miete überwiesen, sondern am Tag der Schlüsselübergabe in bar gezahlt und bei ordentlicher Übergabe vollständig zurückerstattet.",
     processTitle: "So läuft die Buchung",
     processSteps: [
-      "Du wählst dein Datum und schickst eine Anfrage.",
+      "Du wählst dein Datum (nur Wochenende) und schickst eine Anfrage.",
       "Wir schicken dir den passenden Mietvertrag (75 € oder 100 €).",
       "Du unterschreibst und überweist die Miete.",
       "Wir unterschreiben gegen, Termin zur Schlüsselübergabe wird vereinbart.",
@@ -45,8 +45,8 @@ const texts = {
   en: {
     heroTitle: "Rent the RoKo Bar for your next party.",
     heroSubtitle:
-      "Student bar in the Robert-Koch-Str. 38 dorm in Göttingen. Fair rental, clear rules, short way home.",
-    heroCTA: "Send booking request by email now",
+      "Student bar in the Robert-Koch-Str. 38 dorm in Göttingen. Fair rental, clear rules, short way home. Rentals are usually on weekends.",
+    heroCTA: "Start booking request",
     heroSecondaryCTA: "View prices & process",
     priceResidentTitle: "Residents",
     priceResidentAmount: "€75",
@@ -60,7 +60,7 @@ const texts = {
       "Do NOT transfer with rent. Pay cash on key handover day; fully refunded with proper return.",
     processTitle: "How booking works",
     processSteps: [
-      "You pick your date and send a request.",
+      "You pick a weekend date and send a request.",
       "We send you the right rental contract (€75 or €100).",
       "You sign and transfer the rent.",
       "We countersign and schedule the key handover.",
@@ -84,10 +84,11 @@ export default function Home() {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const t = texts[language] ?? texts.de;
-  const baseTitle = "RoKo Bar Göttingen";
-
-  const pageTitle = language === "de" ? "Startseite" : "Home";
-  const fullTitle = `${pageTitle} – ${baseTitle}`;
+  const titles = {
+    de: "RoKo-Bar mieten – Studentenbar im Wohnheim Robert-Koch-Straße 38, Göttingen – RoKo Bar Göttingen",
+    en: "Rent the RoKo Bar – Student bar at Robert-Koch-Str. 38, Göttingen – RoKo Bar Göttingen",
+  };
+  const fullTitle = titles[language] ?? titles.de;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -157,8 +158,8 @@ export default function Home() {
           <h2 className="text-xl md:text-2xl font-semibold">{priceHeading}</h2>
           <p className="text-zinc-400 text-sm md:text-base mt-2">
             {language === "de"
-              ? "Miete und Kaution werden klar getrennt. Die Kaution wird erst bei der Schlüsselübergabe in bar bezahlt."
-              : "Rent and deposit are handled separately. The deposit is paid in cash only on the key handover day."}
+              ? "Miete und Kaution werden klar getrennt. Die Kaution wird erst bei der Schlüsselübergabe in bar bezahlt. Vermietungen finden in der Regel nur am Wochenende statt."
+              : "Rent and deposit are handled separately. The deposit is paid in cash only on the key handover day. Rentals are usually weekend-only."}
           </p>
         </div>
 

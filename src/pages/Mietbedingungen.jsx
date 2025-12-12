@@ -105,8 +105,11 @@ const texts = {
 export default function Mietbedingungen() {
   const { language } = useLanguage();
   const t = texts[language] ?? texts.de;
-  const baseTitle = "RoKo Bar Göttingen";
-  const fullTitle = `${t.title} – ${baseTitle}`;
+  const pageTitles = {
+    de: "Mietbedingungen RoKo-Bar – RoKo Bar Göttingen",
+    en: "Rental terms RoKo Bar – RoKo Bar Göttingen",
+  };
+  const fullTitle = pageTitles[language] ?? pageTitles.de;
 
   useEffect(() => {
     document.title = fullTitle;
