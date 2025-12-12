@@ -43,6 +43,8 @@ function LanguageToggle({ onAfterToggle }) {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { language } = useLanguage();
+  const rulesLabel = language === "de" ? "Hausregeln" : "House rules";
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
@@ -73,13 +75,13 @@ export default function Navbar() {
               Buchen
             </NavLink>
             <NavLink
-              to="/faq"
+              to="/house-rules"
               onClick={closeMenu}
               className={({ isActive }) =>
                 `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
               }
             >
-              FAQ
+              {rulesLabel}
             </NavLink>
             <NavLink
               to="/about"
@@ -137,13 +139,13 @@ export default function Navbar() {
               Buchen
             </NavLink>
             <NavLink
-              to="/faq"
+              to="/house-rules"
               onClick={closeMenu}
               className={({ isActive }) =>
                 `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
               }
             >
-              FAQ
+              {rulesLabel}
             </NavLink>
             <NavLink
               to="/about"
