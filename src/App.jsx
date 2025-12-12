@@ -9,7 +9,7 @@ import Datenschutz from "./pages/Datenschutz.jsx";
 import Home from "./pages/Home.jsx";
 import HouseRules from "./pages/HouseRules.jsx";
 import Impressum from "./pages/Impressum.jsx";
-import Terms from "./pages/Terms.jsx";
+import Mietbedingungen from "./pages/Mietbedingungen.jsx";
 
 export default function App() {
   return (
@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/impressum" element={<Impressum />} />
         <Route path="/datenschutz" element={<Datenschutz />} />
-        <Route path="/terms" element={<Terms />} />
+        <Route path="/terms" element={<Mietbedingungen />} />
         <Route path="/house-rules" element={<HouseRules />} />
       </Routes>
     </Layout>
