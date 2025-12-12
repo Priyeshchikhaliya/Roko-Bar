@@ -32,7 +32,7 @@ export default function Impressum() {
   const baseTitle = "RoKo Bar Göttingen";
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-10">
       <Helmet>
         <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />

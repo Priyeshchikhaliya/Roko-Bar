@@ -1,5 +1,5 @@
 // src/components/Navbar.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
@@ -44,7 +44,11 @@ function LanguageToggle({ onAfterToggle }) {
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { language } = useLanguage();
+  const brandTop =
+    language === "de" ? "Studentenwohnheim" : "Student dormitory";
   const rulesLabel = language === "de" ? "Hausregeln" : "House rules";
+  const bookingLabel = language === "de" ? "Buchen" : "Booking";
+  const aboutLabel = language === "de" ? "Über die Bar" : "About the bar";
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
@@ -55,7 +59,7 @@ export default function Navbar() {
         {/* Logo / Brand */}
         <Link to="/" className="flex flex-col leading-tight">
           <span className="uppercase tracking-[0.22em] text-xs text-zinc-400">
-            Studentenwohnheim
+            {brandTop}
           </span>
           <span className="text-sm md:text-lg font-semibold">
             RoKo-Bar · Robert-Koch-Str. 38
@@ -72,7 +76,7 @@ export default function Navbar() {
                 `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
               }
             >
-              Buchen
+              {bookingLabel}
             </NavLink>
             <NavLink
               to="/house-rules"
@@ -90,7 +94,7 @@ export default function Navbar() {
                 `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
               }
             >
-              Über die Bar
+              {aboutLabel}
             </NavLink>
 
             <div className="ml-2">
@@ -136,7 +140,7 @@ export default function Navbar() {
                 `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
               }
             >
-              Buchen
+              {bookingLabel}
             </NavLink>
             <NavLink
               to="/house-rules"
@@ -154,7 +158,7 @@ export default function Navbar() {
                 `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
               }
             >
-              Über die Bar
+              {aboutLabel}
             </NavLink>
 
             <div className="pt-2">

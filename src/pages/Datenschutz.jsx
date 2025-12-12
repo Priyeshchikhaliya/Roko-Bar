@@ -15,6 +15,7 @@ const texts = {
         heading: "Welche Daten wir verarbeiten",
         points: [
           "Nur die Informationen, die ihr uns per E-Mail zusendet (z. B. Name, Kontaktdaten, gewünschtes Datum).",
+          "Wir speichern eure gewählte Spracheinstellung (\"de\" oder \"en\") lokal im Browser (localStorage), damit die Seite beim nächsten Besuch in eurer Sprache geladen wird.",
           "Keine Cookies, kein Tracking, keine Formulare auf der Website.",
         ],
       },
@@ -61,6 +62,7 @@ const texts = {
         heading: "What data we process",
         points: [
           "Only the information you send via email (e.g., name, contact details, desired date).",
+          "We store your chosen language preference (\"de\" or \"en\") locally in the browser (localStorage) so the site loads in your language next time.",
           "No cookies, no tracking, no on-site forms.",
         ],
       },
@@ -102,7 +104,7 @@ export default function Datenschutz() {
   const baseTitle = "RoKo Bar Göttingen";
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-10">
       <Helmet>
         <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />

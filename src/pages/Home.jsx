@@ -38,6 +38,8 @@ const texts = {
       "Tische, Hocker und viel Platz für Geburtstage, WG-Partys und Vereinsfeiern.",
       "Einnahmen unterstützen das Wohnheim und gemeinsame Projekte.",
     ],
+    seoDescription:
+      "Miete die RoKo-Bar im Studentenwohnheim Robert-Koch-Straße 38 in Göttingen. Faire Miete, klare Regeln und einfache Buchung für Bewohner:innen und Gäste.",
   },
   en: {
     heroTitle: "Rent the RoKo Bar for your next party.",
@@ -72,6 +74,8 @@ const texts = {
       "Tables, stools, and plenty of space for birthdays, flat parties, and club events.",
       "Revenue supports the dorm community and shared projects.",
     ],
+    seoDescription:
+      "Rent the RoKo Bar at the dorm Robert-Koch-Str. 38 in Göttingen. Fair prices, clear rules, and simple booking for residents and guests.",
   },
 };
 
@@ -84,11 +88,6 @@ export default function Home() {
   const pageTitle =
     language === "de" ? "Startseite" : "Home";
 
-  const pageDescription =
-    language === "de"
-      ? "Miete die RoKo-Bar im Studentenwohnheim Robert-Koch-Straße 38 in Göttingen. Faire Miete für Bewohner:innen und Externe, einfache Buchung und klare Regeln."
-      : "Rent the RoKo Bar in the student dormitory at Robert-Koch-Str. 38 in Göttingen. Fair prices for residents and external guests, simple booking and clear rules.";
-
   const priceHeading =
     language === "de" ? "Preise & Konditionen" : "Prices & Conditions";
 
@@ -100,10 +99,10 @@ export default function Home() {
   const bookingLabel = language === "de" ? "Buchung" : "Booking";
 
   return (
-    <div className="space-y-12 md:space-y-16">
+    <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
       <Helmet>
         <title>{`${pageTitle} – ${baseTitle}`}</title>
-        <meta name="description" content={pageDescription} />
+        <meta name="description" content={t.seoDescription} />
         <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/" />
         <html lang={language === "de" ? "de" : "en"} />
       </Helmet>

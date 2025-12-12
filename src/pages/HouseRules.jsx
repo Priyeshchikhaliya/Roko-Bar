@@ -150,7 +150,7 @@ export default function HouseRules() {
   const baseTitle = "RoKo Bar Göttingen";
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-10 max-w-6xl mx-auto">
       <Helmet>
         <title>{`${t.title} – ${baseTitle}`}</title>
         <meta name="description" content={t.seoDescription} />
