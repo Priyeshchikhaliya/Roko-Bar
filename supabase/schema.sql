@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS bookings (
   additional_info text,
   lang text DEFAULT 'de'
     CHECK (lang IN ('de', 'en')),
+  payment_method text
+    CHECK (payment_method IN ('cash', 'online')),
   status text NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'approved', 'signed', 'confirmed', 'rejected', 'cancelled')),
   access_token uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -25,6 +27,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   countersigned_at timestamptz,
   rent_paid boolean NOT NULL DEFAULT false,
   rent_paid_at timestamptz,
+  rent_proof_path text,
   deposit_paid boolean NOT NULL DEFAULT false,
   deposit_paid_at timestamptz,
   payment_note text,
@@ -46,6 +49,9 @@ COMMENT ON COLUMN bookings.status IS
 COMMENT ON COLUMN bookings.lang IS
   'Requester UI language captured at booking time for guest-facing transactional emails. Nullable for older rows; application logic falls back to de.';
 
+COMMENT ON COLUMN bookings.payment_method IS
+  'Requester rent payment intent: cash or online bank transfer. This applies only to rent, not the 200 EUR cash deposit.';
+
 COMMENT ON COLUMN bookings.confirm_deadline IS
   'Set when a tutor approves a request. An approved booking past this timestamp that has not advanced is treated as expired by application logic and must not block the night.';
 
@@ -54,6 +60,9 @@ COMMENT ON COLUMN bookings.final_contract_path IS
 
 COMMENT ON COLUMN bookings.rent_paid IS
   'Manual tutor flag. The site never processes money; later phases use this with countersigned_at/final_contract_path to decide when the final contract can be released.';
+
+COMMENT ON COLUMN bookings.rent_proof_path IS
+  'Supabase Storage path in the private payment-proofs bucket for an uploaded rent payment proof. Used only for online rent payments.';
 
 COMMENT ON COLUMN bookings.deposit_paid IS
   'Manual tutor flag for the 200 EUR deposit. The deposit is paid outside the site, typically at key handover.';
@@ -82,3 +91,8 @@ COMMENT ON INDEX one_confirmed_booking_per_night IS
 -- ALTER TABLE bookings
 --   ADD COLUMN IF NOT EXISTS lang text DEFAULT 'de'
 --   CHECK (lang IN ('de', 'en'));
+
+-- Copy/paste this once into the Supabase SQL Editor before testing rent payment proof support:
+-- ALTER TABLE bookings
+--   ADD COLUMN IF NOT EXISTS payment_method text CHECK (payment_method IN ('cash', 'online')),
+--   ADD COLUMN IF NOT EXISTS rent_proof_path text;

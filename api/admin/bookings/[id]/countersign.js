@@ -46,6 +46,12 @@ function privateBookingLink(booking) {
   return `${SITE_URL.replace(/\/$/, "")}/booking/${booking.access_token}`;
 }
 
+function rentPaymentReady(booking) {
+  if (booking.payment_method === "cash") return true;
+  if (booking.payment_method === "online") return Boolean(booking.rent_proof_path);
+  return false;
+}
+
 function buildConfirmationEmailHtml(booking) {
   const lang = normalizeEmailLanguage(booking.lang);
   const nightLabel = formatNight(booking.night, lang);
@@ -125,6 +131,15 @@ export default async function handler(req, res) {
     if (sanitizeBookingForGuest(booking).status === "expired") {
       return sendJson(res, 409, {
         error: "This approval deadline has passed.",
+      });
+    }
+
+    if (!rentPaymentReady(booking)) {
+      return sendJson(res, 409, {
+        error:
+          booking.payment_method === "online"
+            ? "Online rent payment proof must be uploaded before this booking can be counter-signed."
+            : "Rent payment method must be selected before this booking can be counter-signed.",
       });
     }
 

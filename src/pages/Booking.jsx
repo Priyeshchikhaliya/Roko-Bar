@@ -22,6 +22,7 @@ const emptyForm = {
   residency: "",
   guest_count: "",
   additional_info: "",
+  payment_method: "",
 };
 
 function getUtcToday() {
@@ -289,6 +290,7 @@ export default function Booking() {
       residency: formData.residency,
       guest_count: formData.guest_count ? Number(formData.guest_count) : null,
       additional_info: formData.additional_info.trim(),
+      payment_method: formData.payment_method || null,
       lang,
     };
 
@@ -1018,6 +1020,30 @@ function BookingRequestForm({
         </FormField>
 
         <PriceDisplay locale={locale} page={page} rent={selectedRent} />
+
+        <FormField
+          error={fieldErrors.payment_method}
+          id="payment_method"
+          label={page.form.paymentMethodLabel}
+        >
+          <select
+            id="payment_method"
+            name="payment_method"
+            className="form-select w-full px-3 py-2.5"
+            value={formData.payment_method}
+            onChange={onFieldChange}
+          >
+            <option value="">{page.form.paymentMethodPlaceholder}</option>
+            {page.form.paymentMethods.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            {page.form.paymentMethodHint}
+          </p>
+        </FormField>
 
         <FormField
           error={fieldErrors.additional_info}

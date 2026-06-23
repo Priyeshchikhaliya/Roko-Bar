@@ -68,6 +68,12 @@ function buildApprovalEmailHtml(booking) {
   const nightLabel = formatNight(booking.night, lang);
   const deadlineLabel = formatDeadline(booking.confirm_deadline, lang);
   const link = privateBookingLink(booking);
+  const onlinePaymentNote =
+    booking.payment_method === "online"
+      ? lang === "en"
+        ? `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">Because you chose online rent payment, your private link will show the bank details and let you upload proof after the signed contract is uploaded.</p>`
+        : `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">Da du Online-Zahlung fuer die Miete gewaehlt hast, findest du die Bankdaten in deinem privaten Link und kannst dort nach dem Vertragsupload den Zahlungsnachweis hochladen.</p>`
+      : "";
   const copy =
     lang === "en"
       ? {
@@ -96,6 +102,7 @@ function buildApprovalEmailHtml(booking) {
       <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.greeting)}</p>
       <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.approved}</p>
       <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.instructions}</p>
+      ${onlinePaymentNote}
       <p style="margin:0 0 18px 0;font-size:15px;line-height:1.55;color:#26211f;"><a href="${escapeHtml(link)}" style="color:#2F6FBF;font-weight:700;">${escapeHtml(link)}</a></p>
       <p style="margin:0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.finalNote)}</p>
     `,

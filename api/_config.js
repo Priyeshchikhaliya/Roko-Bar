@@ -11,7 +11,16 @@ export const DEPOSIT_AMOUNT = 200;
 // account email as the guest email if the acknowledgement should actually arrive.
 export const EMAIL_FROM = "RoKo Bar <onboarding@resend.dev>";
 export const TUTOR_NOTIFY_EMAIL = "rokobar.goettingen@outlook.com";
-export const SITE_URL = process.env.SITE_URL || "http://localhost:3000";
+function envValue(name) {
+  return (process.env[name] || "").trim();
+}
+
+export const SITE_URL = envValue("SITE_URL") || "http://localhost:3000";
+
+// Rent bank transfer details. Keep real values in environment variables only.
+export const BANK_IBAN = envValue("BANK_IBAN");
+export const BANK_HOLDER = envValue("BANK_HOLDER");
+export const BANK_NAME = envValue("BANK_NAME");
 
 export const RESIDENT_RESIDENCIES = [
   "roko",

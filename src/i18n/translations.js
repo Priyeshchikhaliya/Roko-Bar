@@ -214,6 +214,14 @@ export const de = {
       totalLabel: "Einplanen",
       depositNote:
         "Die Kaution beträgt immer 200 € und wird bar bei der Schlüsselübergabe bezahlt.",
+      paymentMethodLabel: "Wie möchtest du die Miete bezahlen?",
+      paymentMethodHint:
+        "Das ist nur deine aktuelle Absicht und kann später im privaten Link geändert werden. Die Kaution bleibt immer bar.",
+      paymentMethodPlaceholder: "Noch nicht festgelegt",
+      paymentMethods: [
+        { value: "cash", label: "Barzahlung" },
+        { value: "online", label: "Online (Überweisung)" },
+      ],
       priceSourceNote:
         "Die Miete wird aus deinem Wohnstatus abgeleitet; verbindlich berechnet sie der Server beim Absenden.",
       termsPrefix: "Ich habe die",
@@ -799,6 +807,14 @@ export const en = {
       totalLabel: "Plan for",
       depositNote:
         "The deposit is always €200 and is paid in cash at key handover.",
+      paymentMethodLabel: "How will you pay the rent?",
+      paymentMethodHint:
+        "This is only your current intent and can be changed later on the private link. The deposit is always cash.",
+      paymentMethodPlaceholder: "Not decided yet",
+      paymentMethods: [
+        { value: "cash", label: "Cash" },
+        { value: "online", label: "Online (bank transfer)" },
+      ],
       priceSourceNote:
         "Rent is derived from your residency; the server computes the binding amount when you submit.",
       termsPrefix: "I have read and accept the",

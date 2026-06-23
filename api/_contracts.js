@@ -2,13 +2,18 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import {
+  BANK_HOLDER,
+  BANK_IBAN,
+  BANK_NAME,
   DEPOSIT_AMOUNT,
   RESIDENT_RESIDENCIES,
 } from "./_config.js";
 import { sendJson } from "./_responses.js";
 
 export const CONTRACT_BUCKET = "contracts";
+export const PAYMENT_PROOF_BUCKET = "payment-proofs";
 export const MAX_PDF_BYTES = 4 * 1024 * 1024;
+export const MAX_PAYMENT_PROOF_BYTES = 4 * 1024 * 1024;
 export const SIGNED_URL_TTL_SECONDS = 5 * 60;
 
 const CONTRACT_FILES = {
@@ -21,6 +26,8 @@ const CONTRACT_LABELS = {
   resident: "75 EUR resident contract / 75 EUR Bewohner:innen-Vertrag",
   external: "100 EUR external contract / 100 EUR externer Vertrag",
 };
+
+const BANK_CONFIG_WARNING_KEY = "__rokoBankConfigWarningLogged";
 
 function contractsDir() {
   return path.join(process.cwd(), "public", "contracts");
@@ -61,7 +68,14 @@ function parsePartContentType(headerText) {
 
   if (!line) return "";
 
-  return line.split(":").slice(1).join(":").trim().toLowerCase();
+  return normalizeContentType(line.split(":").slice(1).join(":"));
+}
+
+function normalizeContentType(value) {
+  return String(value || "")
+    .split(";")[0]
+    .trim()
+    .toLowerCase();
 }
 
 function findMultipartFile(body, boundary) {
@@ -174,6 +188,7 @@ export function sanitizeBookingForGuest(booking, now = new Date()) {
     new Date(booking.confirm_deadline) <= now;
 
   return {
+    id: booking.id,
     night: booking.night,
     status: isExpired ? "expired" : booking.status,
     isExpired,
@@ -183,6 +198,39 @@ export function sanitizeBookingForGuest(booking, now = new Date()) {
     contract: contractInfoForBooking(booking),
     hasSignedContract: Boolean(booking.signed_contract_path),
     hasFinalContract: Boolean(booking.final_contract_path),
+    payment_method: booking.payment_method || null,
+    hasRentProof: Boolean(booking.rent_proof_path),
+    paymentReference: booking.id,
+    bankDetails: bankDetailsForGuest(),
+  };
+}
+
+function bankDetailsForGuest() {
+  const missingRequired = [];
+  const missingOptional = [];
+
+  if (!BANK_IBAN) missingRequired.push("BANK_IBAN");
+  if (!BANK_HOLDER) missingRequired.push("BANK_HOLDER");
+  if (!BANK_NAME) missingOptional.push("BANK_NAME");
+
+  if (
+    !globalThis[BANK_CONFIG_WARNING_KEY] &&
+    (missingRequired.length > 0 || missingOptional.length > 0)
+  ) {
+    const missing = [...missingRequired, ...missingOptional].join(", ");
+    console.warn(
+      `Rent bank details env incomplete: missing ${missing}. ` +
+        "Restart the local/dev server after updating .env.local."
+    );
+    globalThis[BANK_CONFIG_WARNING_KEY] = true;
+  }
+
+  if (missingRequired.length > 0) return null;
+
+  return {
+    iban: BANK_IBAN,
+    holder: BANK_HOLDER,
+    name: BANK_NAME || null,
   };
 }
 
@@ -273,7 +321,11 @@ export async function readMultipartPdf(req) {
     return { error: "Only PDF files are accepted.", statusCode: 400 };
   }
 
-  if (file.contentType && file.contentType !== "application/pdf") {
+  if (
+    file.contentType &&
+    file.contentType !== "application/pdf" &&
+    file.contentType !== "application/octet-stream"
+  ) {
     return { error: "Only PDF files are accepted.", statusCode: 400 };
   }
 
@@ -284,6 +336,128 @@ export async function readMultipartPdf(req) {
   return { file };
 }
 
+function paymentProofExtension(file) {
+  const filename = file.filename.toLowerCase();
+
+  if (filename.endsWith(".pdf")) return "pdf";
+  if (filename.endsWith(".png")) return "png";
+  if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) return "jpg";
+
+  return "";
+}
+
+function paymentProofContentType(file) {
+  const extension = paymentProofExtension(file);
+  if (extension === "pdf") return "application/pdf";
+  if (extension === "png") return "image/png";
+  if (extension === "jpg") return "image/jpeg";
+
+  return "";
+}
+
+function hasPaymentProofSignature(file) {
+  const { buffer } = file;
+  const extension = paymentProofExtension(file);
+
+  if (extension === "pdf") {
+    return buffer.slice(0, 5).toString("latin1") === "%PDF-";
+  }
+
+  if (extension === "png") {
+    return buffer
+      .slice(0, 8)
+      .equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  }
+
+  if (extension === "jpg") {
+    return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  }
+
+  return false;
+}
+
+export async function readMultipartPaymentProof(req) {
+  const contentType = getHeader(req, "content-type");
+  const boundary = parseBoundary(contentType);
+
+  if (!boundary) {
+    return {
+      error: "Upload must use multipart/form-data with a proof file.",
+      statusCode: 400,
+    };
+  }
+
+  const contentLength = Number(getHeader(req, "content-length"));
+  if (
+    Number.isFinite(contentLength) &&
+    contentLength > MAX_PAYMENT_PROOF_BYTES + 1024 * 1024
+  ) {
+    return {
+      error: `Proof must be ${Math.floor(MAX_PAYMENT_PROOF_BYTES / 1024 / 1024)} MB or smaller.`,
+      statusCode: 413,
+    };
+  }
+
+  let body;
+
+  try {
+    body = await readRequestBuffer(req, MAX_PAYMENT_PROOF_BYTES + 1024 * 1024);
+  } catch (error) {
+    return {
+      error:
+        error.statusCode === 413
+          ? `Proof must be ${Math.floor(MAX_PAYMENT_PROOF_BYTES / 1024 / 1024)} MB or smaller.`
+          : "Could not read upload.",
+      statusCode: error.statusCode || 400,
+    };
+  }
+
+  const file = findMultipartFile(body, boundary);
+
+  if (!file || file.buffer.length === 0) {
+    return { error: "Upload must include a proof file.", statusCode: 400 };
+  }
+
+  if (file.buffer.length > MAX_PAYMENT_PROOF_BYTES) {
+    return {
+      error: `Proof must be ${Math.floor(MAX_PAYMENT_PROOF_BYTES / 1024 / 1024)} MB or smaller.`,
+      statusCode: 413,
+    };
+  }
+
+  const extension = paymentProofExtension(file);
+  const normalizedContentType = paymentProofContentType(file);
+  const allowedContentTypes = new Set([
+    "application/pdf",
+    "application/octet-stream",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+  ]);
+
+  if (!extension || (file.contentType && !allowedContentTypes.has(file.contentType))) {
+    return {
+      error: "Only PDF, JPG, and PNG proof files are accepted.",
+      statusCode: 400,
+    };
+  }
+
+  if (!hasPaymentProofSignature(file)) {
+    return {
+      error: "Uploaded proof file is not a valid PDF, JPG, or PNG.",
+      statusCode: 400,
+    };
+  }
+
+  return {
+    file: {
+      ...file,
+      contentType: normalizedContentType,
+      extension,
+    },
+  };
+}
+
 export async function uploadPdfToContractBucket(supabase, storagePath, buffer) {
   const { error } = await supabase.storage
     .from(CONTRACT_BUCKET)
@@ -292,12 +466,53 @@ export async function uploadPdfToContractBucket(supabase, storagePath, buffer) {
       upsert: true,
     });
 
-  if (error) throw error;
+  if (error) throw storageUploadError(error, CONTRACT_BUCKET);
+}
+
+export async function uploadPaymentProofToBucket(
+  supabase,
+  storagePath,
+  buffer,
+  contentType
+) {
+  const { error } = await supabase.storage
+    .from(PAYMENT_PROOF_BUCKET)
+    .upload(storagePath, buffer, {
+      contentType,
+      upsert: true,
+    });
+
+  if (error) throw storageUploadError(error, PAYMENT_PROOF_BUCKET);
+}
+
+function storageUploadError(error, bucket) {
+  const detail = error?.message || error?.error || "unknown storage error";
+  const uploadError = new Error(`storage error: ${detail} (${bucket})`);
+  uploadError.statusCode = 500;
+  uploadError.publicMessage = uploadError.message;
+  uploadError.cause = error;
+  return uploadError;
 }
 
 export async function signedContractBucketUrl(supabase, storagePath, downloadName) {
   const { data, error } = await supabase.storage
     .from(CONTRACT_BUCKET)
+    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, {
+      download: downloadName,
+    });
+
+  if (error) throw error;
+
+  return data.signedUrl;
+}
+
+export async function signedPaymentProofBucketUrl(
+  supabase,
+  storagePath,
+  downloadName
+) {
+  const { data, error } = await supabase.storage
+    .from(PAYMENT_PROOF_BUCKET)
     .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, {
       download: downloadName,
     });
@@ -316,6 +531,28 @@ export function redirectToSignedUrl(res, signedUrl) {
 
 export function sendUploadValidationError(res, validation) {
   return sendJson(res, validation.statusCode || 400, { error: validation.error });
+}
+
+export function sendSpecificUploadError(res, error, fallback) {
+  if (error?.publicMessage) {
+    return sendJson(res, error.statusCode || 500, { error: error.publicMessage });
+  }
+
+  const message = error?.message || "";
+
+  if (/Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY/i.test(message)) {
+    return sendJson(res, 500, {
+      error: "missing config: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY",
+    });
+  }
+
+  if (error?.code || error?.details || error?.hint) {
+    return sendJson(res, 500, {
+      error: `database error: ${message || error.code}`,
+    });
+  }
+
+  return sendJson(res, 500, { error: `${fallback}: ${message || "unknown error"}` });
 }
 
 export { CONTRACT_FILES };

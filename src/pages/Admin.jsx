@@ -86,8 +86,19 @@ const COPY = {
     payment: {
       rent: "Miete",
       deposit: "Kaution",
+      method: "Mietzahlung",
+      cash: "Bar",
+      online: "Online",
+      methodMissing: "Nicht gewaehlt",
       paid: "bezahlt",
       open: "offen",
+      proofUploaded: "Nachweis hochgeladen",
+      proofAwaiting: "Nachweis fehlt",
+      proofNotNeeded: "Kein Nachweis noetig",
+      proofRequired:
+        "Online-Zahlungsnachweis muss hochgeladen sein, bevor gegengezeichnet werden kann.",
+      methodRequired:
+        "Zahlungsart fuer die Miete muss gewaehlt sein, bevor gegengezeichnet werden kann.",
       markRent: "Miete bezahlt",
       markDeposit: "Kaution bezahlt",
       prompt: "Optionale Zahlungsnotiz fuer {label}",
@@ -111,6 +122,7 @@ const COPY = {
       abort: "Abbrechen",
       downloadSigned: "Signierte PDF",
       downloadFinal: "Finale PDF",
+      downloadProof: "Zahlungsnachweis",
       countersign: "Gegenzeichnen",
       countersigning: "Laedt hoch...",
       chooseFinal: "Finale PDF auswaehlen",
@@ -240,8 +252,19 @@ const COPY = {
     payment: {
       rent: "Rent",
       deposit: "Deposit",
+      method: "Rent payment",
+      cash: "Cash",
+      online: "Online",
+      methodMissing: "Not selected",
       paid: "paid",
       open: "open",
+      proofUploaded: "Proof uploaded",
+      proofAwaiting: "Awaiting proof",
+      proofNotNeeded: "No proof needed",
+      proofRequired:
+        "Online payment proof must be uploaded before this booking can be counter-signed.",
+      methodRequired:
+        "Rent payment method must be selected before this booking can be counter-signed.",
       markRent: "Rent paid",
       markDeposit: "Deposit paid",
       prompt: "Optional payment note for {label}",
@@ -265,6 +288,7 @@ const COPY = {
       abort: "Cancel",
       downloadSigned: "Signed PDF",
       downloadFinal: "Final PDF",
+      downloadProof: "Payment proof",
       countersign: "Counter-sign",
       countersigning: "Uploading...",
       chooseFinal: "Choose final PDF",
@@ -453,6 +477,19 @@ function formatMoney(value, lang) {
     currency: "EUR",
     maximumFractionDigits: 0,
   }).format(Number(value || 0));
+}
+
+function paymentMethodText(booking, copy) {
+  if (booking.payment_method === "cash") return copy.payment.cash;
+  if (booking.payment_method === "online") return copy.payment.online;
+  return copy.payment.methodMissing;
+}
+
+function paymentProofText(booking, copy) {
+  if (booking.payment_method !== "online") return copy.payment.proofNotNeeded;
+  return booking.rent_proof_path
+    ? copy.payment.proofUploaded
+    : copy.payment.proofAwaiting;
 }
 
 function statusText(booking, copy) {
@@ -727,7 +764,37 @@ export default function Admin() {
     }
   };
 
+  const downloadPaymentProof = async (booking) => {
+    setBusyKey(`download:proof:${booking.id}`);
+    setNotice(null);
+
+    try {
+      const data = await apiRequest(
+        `/api/admin/bookings/${booking.id}/payment-proof`,
+        { token }
+      );
+      openSignedUrl(data.signedUrl);
+      setNotice({ type: "success", text: copy.downloadStarted });
+    } catch (error) {
+      if (!handleApiError(error)) {
+        setNotice({ type: "error", text: error.message });
+      }
+    } finally {
+      setBusyKey(null);
+    }
+  };
+
   const countersignBooking = async (booking, file) => {
+    if (!booking.payment_method) {
+      setNotice({ type: "error", text: copy.payment.methodRequired });
+      return;
+    }
+
+    if (booking.payment_method === "online" && !booking.rent_proof_path) {
+      setNotice({ type: "error", text: copy.payment.proofRequired });
+      return;
+    }
+
     if (!file) {
       setNotice({ type: "error", text: copy.fileMissing });
       return;
@@ -994,6 +1061,7 @@ export default function Admin() {
             onCancelEdit={cancelEdit}
             onCountersign={countersignBooking}
             onDownloadFile={downloadContractFile}
+            onDownloadPaymentProof={downloadPaymentProof}
             onEditFieldChange={updateEditField}
             onMarkPayment={markPayment}
             onReject={(booking) => runBookingAction(booking, "reject")}
@@ -1082,6 +1150,7 @@ function BookingsTable({
   onCancelEdit,
   onCountersign,
   onDownloadFile,
+  onDownloadPaymentProof,
   onEditFieldChange,
   onMarkPayment,
   onReject,
@@ -1170,16 +1239,7 @@ function BookingsTable({
                     </span>
                   </td>
                   <td className="px-4 py-4">
-                    <PaymentFlag
-                      copy={copy}
-                      paid={booking.rent_paid}
-                      label={copy.payment.rent}
-                    />
-                    <PaymentFlag
-                      copy={copy}
-                      paid={booking.deposit_paid}
-                      label={copy.payment.deposit}
-                    />
+                    <PaymentSummary booking={booking} copy={copy} />
                   </td>
                   <td className="px-4 py-4">
                     <BookingActions
@@ -1207,6 +1267,7 @@ function BookingsTable({
                         onCancelEdit={onCancelEdit}
                         onCountersign={onCountersign}
                         onDownloadFile={onDownloadFile}
+                        onDownloadPaymentProof={onDownloadPaymentProof}
                         onEditFieldChange={onEditFieldChange}
                         onMarkPayment={onMarkPayment}
                         onStartEdit={onStartEdit}
@@ -1265,12 +1326,7 @@ function BookingsTable({
                   {copy.table.payment}
                 </div>
                 <div className="mt-1 text-sm">
-                  <PaymentFlag copy={copy} paid={booking.rent_paid} label={copy.payment.rent} />
-                  <PaymentFlag
-                    copy={copy}
-                    paid={booking.deposit_paid}
-                    label={copy.payment.deposit}
-                  />
+                  <PaymentSummary booking={booking} copy={copy} />
                 </div>
               </div>
             </div>
@@ -1300,6 +1356,7 @@ function BookingsTable({
                   onCancelEdit={onCancelEdit}
                   onCountersign={onCountersign}
                   onDownloadFile={onDownloadFile}
+                  onDownloadPaymentProof={onDownloadPaymentProof}
                   onEditFieldChange={onEditFieldChange}
                   onMarkPayment={onMarkPayment}
                   onStartEdit={onStartEdit}
@@ -1325,6 +1382,7 @@ function ExpandedBookingContent({
   onCancelEdit,
   onCountersign,
   onDownloadFile,
+  onDownloadPaymentProof,
   onEditFieldChange,
   onMarkPayment,
   onStartEdit,
@@ -1352,9 +1410,35 @@ function ExpandedBookingContent({
       onCancel={onCancel}
       onCountersign={onCountersign}
       onDownloadFile={onDownloadFile}
+      onDownloadPaymentProof={onDownloadPaymentProof}
       onMarkPayment={onMarkPayment}
       onStartEdit={onStartEdit}
     />
+  );
+}
+
+function PaymentSummary({ booking, copy }) {
+  return (
+    <div className="space-y-1">
+      <div className="font-semibold text-ink">
+        {copy.payment.method}: {paymentMethodText(booking, copy)}
+      </div>
+      <PaymentFlag copy={copy} paid={booking.rent_paid} label={copy.payment.rent} />
+      <PaymentFlag
+        copy={copy}
+        paid={booking.deposit_paid}
+        label={copy.payment.deposit}
+      />
+      <div
+        className={
+          booking.payment_method === "online" && booking.rent_proof_path
+            ? "font-semibold text-success"
+            : "text-muted"
+        }
+      >
+        {paymentProofText(booking, copy)}
+      </div>
+    </div>
   );
 }
 
@@ -1420,6 +1504,7 @@ function BookingDetails({
   onCancel,
   onCountersign,
   onDownloadFile,
+  onDownloadPaymentProof,
   onMarkPayment,
   onStartEdit,
 }) {
@@ -1463,6 +1548,7 @@ function BookingDetails({
         booking={booking}
         busyKey={busyKey}
         copy={copy}
+        onDownloadPaymentProof={onDownloadPaymentProof}
         onMarkPayment={onMarkPayment}
       />
       <SecondaryBookingActions
@@ -1483,24 +1569,48 @@ function BookingDetails({
   );
 }
 
-function PaymentActions({ booking, busyKey, copy, onMarkPayment }) {
+function PaymentActions({
+  booking,
+  busyKey,
+  copy,
+  onDownloadPaymentProof,
+  onMarkPayment,
+}) {
   const busy = Boolean(busyKey);
-
-  if (booking.rent_paid && booking.deposit_paid) {
-    return (
-      <DetailBlock
-        label={copy.table.payment}
-        value={`${copy.payment.rent}: ${copy.payment.paid}\n${copy.payment.deposit}: ${copy.payment.paid}`}
-      />
-    );
-  }
 
   return (
     <div className="space-y-3">
       <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
         {copy.table.payment}
       </div>
+      <div className="space-y-1 text-sm">
+        <div>
+          {copy.payment.method}:{" "}
+          <span className="font-semibold">
+            {paymentMethodText(booking, copy)}
+          </span>
+        </div>
+        <div
+          className={
+            booking.payment_method === "online" && booking.rent_proof_path
+              ? "font-semibold text-success"
+              : "text-muted"
+          }
+        >
+          {paymentProofText(booking, copy)}
+        </div>
+      </div>
       <div className="flex flex-wrap gap-2">
+        {booking.payment_method === "online" && booking.rent_proof_path ? (
+          <button
+            className={compactButtonClass("secondary")}
+            disabled={busy}
+            onClick={() => onDownloadPaymentProof(booking)}
+            type="button"
+          >
+            {copy.actions.downloadProof}
+          </button>
+        ) : null}
         {!booking.rent_paid ? (
           <button
             className={compactButtonClass("secondary")}

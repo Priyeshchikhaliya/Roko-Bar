@@ -18,6 +18,7 @@ import {
   renderEmailLayout,
   sendEmail,
 } from "./_email.js";
+import { normalizePaymentMethod } from "./_payments.js";
 import { methodNotAllowed, readJsonBody, sendJson } from "./_responses.js";
 import { getSupabase } from "./_supabase.js";
 
@@ -73,6 +74,12 @@ function detailRow(label, value, { raw = false } = {}) {
 
 function buildTutorNotificationHtml(booking) {
   const nightLabel = formatNight(booking.night, "de");
+  const paymentMethod =
+    booking.payment_method === "online"
+      ? "Online / Ueberweisung"
+      : booking.payment_method === "cash"
+        ? "Barzahlung"
+        : "Nicht angegeben";
   const rows = [
     detailRow("Datum", nightLabel),
     detailRow("Name", booking.requester_name),
@@ -82,6 +89,7 @@ function buildTutorNotificationHtml(booking) {
     detailRow("Residency / Tarif", RESIDENCY_LABELS[booking.residency], {
       raw: true,
     }),
+    detailRow("Mietzahlung", paymentMethod),
     detailRow(
       "Gaestezahl",
       booking.guest_count === null ? "Nicht angegeben" : booking.guest_count
@@ -229,6 +237,11 @@ function validateBookingBody(body) {
   const guestCountResult = normalizeGuestCount(body.guest_count);
   if (guestCountResult?.error) return guestCountResult;
 
+  const paymentMethod = normalizePaymentMethod(body.payment_method);
+  if (paymentMethod === "") {
+    return { error: "payment_method must be cash or online." };
+  }
+
   return {
     booking: {
       night: nightResult.night,
@@ -241,6 +254,7 @@ function validateBookingBody(body) {
       guest_count: guestCountResult?.value ?? null,
       additional_info: optionalText(body.additional_info),
       lang: normalizeBookingLanguage(body.lang),
+      payment_method: paymentMethod,
       status: "pending",
     },
   };
@@ -275,7 +289,7 @@ export default async function handler(req, res) {
       .from("bookings")
       .insert(validation.booking)
       .select(
-        "id, night, requester_name, email, phone, address, residency, price, guest_count, additional_info, lang"
+        "id, night, requester_name, email, phone, address, residency, price, guest_count, additional_info, lang, payment_method"
       )
       .single();
 
