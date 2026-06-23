@@ -1,52 +1,34 @@
 // src/components/Footer.jsx
 import { Link } from "react-router-dom";
-import { useLanguage } from "../context/LanguageContext.jsx";
+import { useLanguage } from "../context/useLanguage.js";
 
 export default function Footer() {
   const year = new Date().getFullYear();
-  const { language } = useLanguage();
-
-  const labels =
-    language === "de"
-      ? {
-          impressum: "Impressum",
-          privacy: "Datenschutz",
-          terms: "Mietbedingungen",
-          rules: "Hausordnung",
-          brand:
-            "© " +
-            year +
-            " RoKo-Bar · Studentenwohnheim Robert-Koch-Str. 38, Göttingen",
-        }
-      : {
-          impressum: "Legal notice",
-          privacy: "Privacy",
-          terms: "Rental terms",
-          rules: "House rules",
-          brand:
-            "© " +
-            year +
-            " RoKo Bar · Student dormitory Robert-Koch-Str. 38, Göttingen",
-        };
+  const { t } = useLanguage();
+  const brand = t.footer.brandTemplate.replace("{year}", year);
+  const footerLinks = [
+    { to: t.common.links.houseRules, label: t.footer.houseRules },
+    { to: t.common.links.terms, label: t.footer.terms },
+    { to: t.common.links.alumni, label: t.footer.alumni },
+    { to: t.common.links.impressum, label: t.footer.impressum },
+    { to: t.common.links.datenschutz, label: t.footer.datenschutz },
+  ];
 
   return (
-    <footer className="border-t border-zinc-800 mt-10">
-      <div className="max-w-6xl mx-auto px-4 py-6 text-xs flex flex-col md:flex-row items-center justify-between gap-3 text-zinc-400">
-        <span>{labels.brand}</span>
+    <footer className="border-t border-line bg-surface">
+      <div className="container-wide py-10 md:py-14 text-xs flex flex-col md:flex-row md:items-end justify-between gap-8 text-muted">
+        <span className="max-w-md leading-relaxed">{brand}</span>
 
-        <div className="flex flex-wrap gap-4">
-          <Link to="/impressum" className="hover:text-zinc-200">
-            {labels.impressum}
-          </Link>
-          <Link to="/datenschutz" className="hover:text-zinc-200">
-            {labels.privacy}
-          </Link>
-          <Link to="/terms" className="hover:text-zinc-200">
-            {labels.terms}
-          </Link>
-          <Link to="/house-rules" className="hover:text-zinc-200">
-            {labels.rules}
-          </Link>
+        <div className="flex flex-wrap gap-x-5 gap-y-3 md:justify-end">
+          {footerLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="text-muted hover:text-primary uppercase tracking-[0.14em]"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>

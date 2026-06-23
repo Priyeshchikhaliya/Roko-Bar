@@ -1,159 +1,113 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { useLanguage } from "../context/LanguageContext.jsx";
-
-const texts = {
-  de: {
-    title: "Mietbedingungen RoKo-Bar",
-    seoTitle: "Mietbedingungen – RoKo-Heimkneipe",
-    seoDescription:
-      "Mietbedingungen der RoKo-Heimkneipe: 75 € Bewohner:innen, 100 € Externe, 200 € Kaution, nur Wochenende, keine kommerziellen Partys.",
-    sections: [
-      {
-        heading: "Miete & Kaution",
-        points: [
-          "Miete: 75 € für Bewohner:innen des RoKo, Christophorusweg oder Rosenbachweg; 100 € für externe Gäste.",
-          "Kaution: 200 € in bar bei der Schlüsselübergabe.",
-        ],
-      },
-      {
-        heading: "Zeitraum",
-        points: [
-          "Vermietung nur am Wochenende (Freitag–Sonntag). Unter der Woche wird die Heimkneipe nicht vermietet.",
-        ],
-      },
-      {
-        heading: "Sauberkeit & Rückgabe",
-        points: [
-          "Die Bar muss gereinigt und im ursprünglichen Zustand übergeben werden.",
-          "Kosten für fehlende Reinigung werden von der Kaution abgezogen.",
-        ],
-      },
-      {
-        heading: "Sicherheit & Notausgang",
-        points: [
-          "Der Notausgang bleibt geschlossen und ist nur für Notfälle. Kein Einlass durch den Notausgang.",
-        ],
-      },
-      {
-        heading: "Keine kommerziellen Partys",
-        points: [
-          "Kein Verkauf von Getränken über Selbstkostenpreis, keine Eintrittsgelder oder Tickets.",
-        ],
-      },
-      {
-        heading: "Verstöße",
-        points: [
-          "Bei Regelverstößen können Teile oder die gesamte Kaution einbehalten werden.",
-        ],
-      },
-    ],
-    bookingLink: "Zur Buchungsseite",
-    bookingText: "Details zum Ablauf findest du auf der Buchungsseite.",
-  },
-  en: {
-    title: "Rental Terms RoKo Bar",
-    seoTitle: "Rental Terms – RoKo Bar",
-    seoDescription:
-      "Rental terms for the RoKo Bar: €75 residents, €100 external guests, €200 deposit, weekends only, no commercial parties.",
-    sections: [
-      {
-        heading: "Rent & deposit",
-        points: [
-          "Rent: €75 for residents of RoKo, Christophorusweg or Rosenbachweg; €100 for external guests.",
-          "Deposit: €200 in cash at key handover.",
-        ],
-      },
-      {
-        heading: "When you can rent",
-        points: [
-          "Rental is weekend only (Friday–Sunday). No weekday rentals.",
-        ],
-      },
-      {
-        heading: "Cleaning & return",
-        points: [
-          "Clean the bar and hand it back in its original condition.",
-          "Cleaning costs for missing cleaning will be taken from the deposit.",
-        ],
-      },
-      {
-        heading: "Safety & emergency exit",
-        points: [
-          "Keep the emergency exit closed; use it only in emergencies. No entrance via that door.",
-        ],
-      },
-      {
-        heading: "No commercial events",
-        points: [
-          "Do not sell drinks above self-cost, and do not charge entry fees or tickets.",
-        ],
-      },
-      {
-        heading: "Violations",
-        points: [
-          "Violations may result in partial or full retention of the deposit.",
-        ],
-      },
-    ],
-    bookingLink: "Go to booking",
-    bookingText: "Find the booking steps and contact on the booking page.",
-  },
-};
+import { useLanguage } from "../context/useLanguage.js";
 
 export default function Mietbedingungen() {
-  const { language } = useLanguage();
-  const t = texts[language] ?? texts.de;
-  const pageTitles = {
-    de: "Mietbedingungen RoKo-Bar – RoKo Bar Göttingen",
-    en: "Rental terms RoKo Bar – RoKo Bar Göttingen",
-  };
-  const fullTitle = pageTitles[language] ?? pageTitles.de;
+  const { t } = useLanguage();
+  const page = t.terms;
 
   useEffect(() => {
-    document.title = fullTitle;
-  }, [fullTitle]);
+    document.title = page.pageTitle;
+  }, [page.pageTitle]);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-10">
+    <>
       <Helmet>
-        <title>{fullTitle}</title>
-        <meta name="description" content={t.seoDescription} />
-        <link rel="canonical" href="https://YOUR-DOMAIN-HERE.de/terms" />
-        <html lang={language === "de" ? "de" : "en"} />
+        <title>{page.pageTitle}</title>
+        <meta name="description" content={page.seoDescription} />
+        <link rel="canonical" href={t.common.canonical.terms} />
+        <html lang={t.common.htmlLang} />
       </Helmet>
 
-      <div className="glass-card p-6 md:p-8 space-y-3">
-        <h1 className="text-2xl md:text-3xl font-semibold">{t.title}</h1>
-      </div>
-
-      {t.sections.map((section) => (
-        <div key={section.heading} className="glass-card p-6 md:p-8 space-y-3">
-          <h2 className="text-lg md:text-xl font-semibold">
-            {section.heading}
-          </h2>
-          <ul className="space-y-2 text-sm md:text-base text-zinc-300 leading-relaxed">
-            {section.points.map((point) => (
-              <li key={point} className="flex gap-3">
-                <span className="mt-2 w-2 h-2 rounded-full bg-orange-400" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
+      <section className="editorial-section section-paper section-pad border-t-0">
+        <div className="container-wide grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end">
+          <div className="space-y-5">
+            <p className="eyebrow">{t.footer.terms}</p>
+            <h1 className="hero-title max-w-5xl">{page.title}</h1>
+          </div>
+          <p className="lead max-w-2xl">{page.intro}</p>
         </div>
-      ))}
+      </section>
 
-      <div className="text-sm text-zinc-300 text-center pb-6">
-        {t.bookingText}{" "}
-        <Link
-          to="/booking"
-          className="text-orange-300 hover:text-orange-200 underline underline-offset-4"
-        >
-          {t.bookingLink}
-        </Link>
-        .
-      </div>
-    </div>
+      <section className="editorial-section section-surface section-pad">
+        <div className="container-wide">
+          <div className="grid gap-px border border-line bg-line lg:grid-cols-2">
+            {page.sections.map((section, index) => (
+              <article key={section.heading} className="bg-surface p-6 md:p-8">
+                <p className="font-display text-5xl font-semibold leading-none text-primary">
+                  {String(index + 1).padStart(2, "0")}
+                </p>
+                <h2 className="mt-8 text-3xl font-semibold">
+                  {section.heading}
+                </h2>
+                <ul className="mt-6 grid gap-3 text-muted">
+                  {section.points.map((point) => (
+                    <li key={point} className="flex gap-4">
+                      <span className="square-bullet" />
+                      <span className="leading-relaxed">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="editorial-section section-paper section-pad">
+        <div className="container-wide grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="space-y-5">
+            <span className="accent-rule" />
+            <h2 className="section-title">{page.contractsTitle}</h2>
+            <p className="lead">{page.contractsIntro}</p>
+          </div>
+
+          <div className="flat-panel flex flex-col justify-between gap-8">
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={t.common.contracts.residentsHref}
+                className="btn-secondary text-xs md:text-sm"
+              >
+                {t.common.contracts.residentsLabel}
+              </a>
+              <a
+                href={t.common.contracts.externalHref}
+                className="btn-secondary text-xs md:text-sm"
+              >
+                {t.common.contracts.externalLabel}
+              </a>
+            </div>
+
+            <details className="border-t border-line pt-6">
+              <summary className="cursor-pointer text-xl font-semibold">
+                {page.legalDetailsSummary}
+              </summary>
+              <div className="pt-5">
+                <h3 className="sr-only">{page.legalDetailsTitle}</h3>
+                <p className="lead text-base">{page.legalDetailsIntro}</p>
+                <ul className="mt-5 grid gap-3 text-muted">
+                  {page.legalDetailsPoints.map((point) => (
+                    <li key={point} className="flex gap-4">
+                      <span className="square-bullet" />
+                      <span className="leading-relaxed">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section className="editorial-section section-ink py-10">
+        <div className="container-wide flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <p className="text-surface/80">{page.bookingText}</p>
+          <Link to={t.common.links.booking} className="btn-primary w-fit">
+            {page.bookingLink}
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }

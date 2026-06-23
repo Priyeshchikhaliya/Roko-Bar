@@ -1,33 +1,50 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import LanguageContext from "./LanguageContextValue.js";
+import translations from "../i18n/translations.js";
 
-const LanguageContext = createContext();
 const STORAGE_KEY = "roko-language";
+const DEFAULT_LANG = "de";
+
+function normalizeLanguage(value) {
+  return value === "de" || value === "en" ? value : DEFAULT_LANG;
+}
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(() => {
-    if (typeof window === "undefined") return "de";
+  const [lang, setLangState] = useState(() => {
+    if (typeof window === "undefined") return DEFAULT_LANG;
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored === "de" || stored === "en" ? stored : "de";
+    return normalizeLanguage(stored);
   });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    window.localStorage.setItem(STORAGE_KEY, language);
-  }, [language]);
+    window.localStorage.setItem(STORAGE_KEY, lang);
+  }, [lang]);
+
+  const setLang = (nextLang) => {
+    setLangState((currentLang) =>
+      normalizeLanguage(
+        typeof nextLang === "function" ? nextLang(currentLang) : nextLang,
+      ),
+    );
+  };
 
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "de" ? "en" : "de"));
+    setLang((prev) => (prev === "de" ? "en" : "de"));
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage }}>
+    <LanguageContext.Provider
+      value={{
+        lang,
+        language: lang,
+        setLang,
+        setLanguage: setLang,
+        toggleLanguage,
+        t: translations[lang] ?? translations[DEFAULT_LANG],
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );
 }
-
-export function useLanguage() {
-  return useContext(LanguageContext);
-}
-
-export default LanguageContext;

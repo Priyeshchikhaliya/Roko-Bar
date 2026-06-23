@@ -1,0 +1,1172 @@
+export const de = {
+  common: {
+    htmlLang: "de",
+    siteName: "RoKo-Bar",
+    siteNameSpaced: "RoKo Bar",
+    location: "Göttingen",
+    brandBadge: "RoKo-Bar · Göttingen",
+    dormName: "Studentenwohnheim Robert-Koch-Str. 38",
+    address: {
+      line1: "Robert-Koch-Straße 38",
+      line2: "37075 Göttingen, Deutschland",
+    },
+    email: "heimkneipe@roko-goettingen.de",
+    languageLabels: {
+      de: "DE",
+      en: "EN",
+    },
+    badges: {
+      booking: "Buchung",
+      simpleClear: "Einfach & klar",
+    },
+    ui: {
+      placeholderImage: "[PLACEHOLDER] Bild ergänzen",
+    },
+    links: {
+      home: "/",
+      booking: "/booking",
+      about: "/about",
+      team: "/team",
+      directions: "/directions",
+      houseRules: "/house-rules",
+      terms: "/terms",
+      alumni: "/alumni",
+      impressum: "/impressum",
+      datenschutz: "/datenschutz",
+    },
+    canonical: {
+      home: "https://YOUR-DOMAIN-HERE.de/",
+      booking: "https://YOUR-DOMAIN-HERE.de/booking",
+      about: "https://YOUR-DOMAIN-HERE.de/about",
+      team: "https://YOUR-DOMAIN-HERE.de/team",
+      directions: "https://YOUR-DOMAIN-HERE.de/directions",
+      houseRules: "https://YOUR-DOMAIN-HERE.de/house-rules",
+      terms: "https://YOUR-DOMAIN-HERE.de/terms",
+      alumni: "https://YOUR-DOMAIN-HERE.de/alumni",
+      impressum: "https://YOUR-DOMAIN-HERE.de/impressum",
+      datenschutz: "https://YOUR-DOMAIN-HERE.de/datenschutz",
+    },
+    contracts: {
+      residentsHref: "/contracts/roko-bar-mietvertrag-75.pdf",
+      externalHref: "/contracts/roko-bar-mietvertrag-100.pdf",
+      residentsLabel: "Mietvertrag für berechtigte Bewohner:innen (75 €)",
+      externalLabel: "Mietvertrag extern (100 €)",
+    },
+  },
+  nav: {
+    brandTop: "Studentenwohnheim",
+    brandMain: "RoKo-Bar · Robert-Koch-Str. 38",
+    home: "Start",
+    booking: "Buchen",
+    houseRules: "Hausregeln",
+    about: "Über die Bar",
+    team: "Team",
+    directions: "Anfahrt",
+    alumni: "Alumni",
+    toggleAria: "Navigation umschalten",
+    toggleSr: "Navigation umschalten",
+  },
+  footer: {
+    impressum: "Impressum",
+    datenschutz: "Datenschutz",
+    terms: "Mietbedingungen",
+    houseRules: "Hausregeln",
+    alumni: "Alumni",
+    brandTemplate:
+      "© {year} RoKo-Bar · Studentenwohnheim Robert-Koch-Str. 38, Göttingen",
+  },
+  home: {
+    pageTitle:
+      "RoKo-Bar mieten – Studentenbar im Wohnheim Robert-Koch-Straße 38, Göttingen – RoKo Bar Göttingen",
+    seoDescription:
+      "Miete die RoKo-Bar im Studentenwohnheim Robert-Koch-Straße 38 in Göttingen. Ganze Freitage und Samstage, klare Preise und ein einfacher Buchungsablauf.",
+    heroTitle: "Dein Fest. Unser Keller. Ein Abend mit Geschichten.",
+    heroSubtitle:
+      "Die RoKo-Bar ist die Kellerbar im Wohnheim Robert-Koch-Str. 38: Theke, Musik, kurze Wege und genug Platz für Geburtstage, WG-Partys und Fachschaftsabende.",
+    heroCTA: "Buchung anfragen",
+    heroSecondaryCTA: "So läuft's",
+    whyKicker: "Warum RoKo",
+    whyTitle: "Kellerbar statt Küchenparty.",
+    whyIntro:
+      "Hier wird aus einer Idee schnell ein Abend: zentral im Wohnheim, unkompliziert organisiert und mit einer Bar, die schon mehr Geschichten gehört hat als manche Hausarbeit.",
+    whyPoints: [
+      "Gemütliche Bar direkt im Keller von RoKo 38.",
+      "Theke, Zapfanlage, Kühlschränke, Tische und Hocker sind vor Ort.",
+      "Gut für Geburtstage, WG-Partys, Fachschaftsabende und private Feiern.",
+      "Die Einnahmen unterstützen das Wohnheim und gemeinsame Projekte.",
+    ],
+    pricesKicker: "Preise",
+    pricesTitle: "Zwei Mieten, eine klare Kaution.",
+    pricesIntro:
+      "Die RoKo-Bar wird immer für einen ganzen Tag vermietet, ausschließlich freitags oder samstags. Miete und Kaution werden getrennt bezahlt.",
+    priceCards: [
+      {
+        title: "75 € Bewohner:innen-Tarif",
+        amount: "75 €",
+        note: "Nur für langfristige Bewohner:innen von RoKo 38 (Robert-Koch-Str. 38), Christophorusweg oder Rosenbachweg. Kurzzeitaufenthalte wie Erasmus zählen nicht für diesen Tarif.",
+      },
+      {
+        title: "100 € externer Tarif",
+        amount: "100 €",
+        note: "Für alle, die nicht unter den Bewohner:innen-Tarif fallen.",
+      },
+      {
+        title: "200 € Kaution",
+        amount: "200 €",
+        note: "Bar bei der Schlüsselübergabe. Nicht mit der Miete überweisen. Bei sauberer, ordentlicher Rückgabe bekommt ihr sie vollständig zurück.",
+      },
+    ],
+    processTitle: "So läuft die Buchung",
+    processIntro:
+      "Der neue Ablauf bleibt übersichtlich: Anfrage stellen, Vertrag hochladen, Zahlung bestätigen lassen, dann Schlüssel abholen.",
+    processSteps: [
+      "Freien Freitag oder Samstag im Live-Kalender auswählen und Anfrage senden.",
+      "Ein:e Bar-Tutor:in prüft die Anfrage. Bei Zusage bekommst du eine E-Mail mit deinem privaten Link.",
+      "Über den Link lädst du den passenden Vertrag herunter, unterschreibst ihn und lädst ihn wieder hoch.",
+      "Du zahlst die Miete per Überweisung oder bar; ein:e Tutor:in bestätigt den Zahlungseingang.",
+      "Wir unterschreiben gegen. Danach kannst du den vollständig unterschriebenen Vertrag über deinen Link herunterladen.",
+      "Bei der Schlüsselübergabe zahlst du die 200 € Kaution bar und bekommst die Schlüssel.",
+    ],
+    closingTitle: "Bereit für Kellerlicht und Lieblingsplaylist?",
+    closingText:
+      "Auf der Buchungsseite findest du die kurze Zusammenfassung, den Live-Kalender und das Formular für deine Anfrage.",
+    closingCTA: "Zur Buchungsseite",
+    imageAlt: "Barbereich der RoKo-Bar mit Theke und Kühlschrank",
+  },
+  booking: {
+    pageTitle: "Buchungsanfrage RoKo-Bar – RoKo Bar Göttingen",
+    seoDescription:
+      "Buchungsanfrage für die RoKo-Bar: ganze Freitage und Samstage, 75 € für berechtigte Bewohner:innen, 100 € extern, 200 € Kaution bar bei Schlüsselübergabe.",
+    title: "RoKo-Bar buchen",
+    intro:
+      "Such dir einen freien Freitag oder Samstag aus und sende deine Anfrage direkt über den Live-Kalender.",
+    recapTitle: "Worauf du dich mit der Anfrage einlässt",
+    recapPoints: [
+      "Die Bar wird für einen ganzen Tag vermietet, ausschließlich freitags oder samstags.",
+      "75 € gelten nur für langfristige Bewohner:innen von RoKo 38 (Robert-Koch-Str. 38), Christophorusweg oder Rosenbachweg; alle anderen zahlen 100 €.",
+      "Die 200 € Kaution zahlst du bar bei der Schlüsselübergabe. Sie wird nicht mit der Miete überwiesen.",
+    ],
+    processReference:
+      "Den vollständigen Ablauf mit Vertrag, Zahlung und Schlüsselübergabe findest du auf der Startseite.",
+    processLink: "Ablauf auf der Startseite ansehen",
+    calendarTitle: "Live-Kalender & Anfrageformular",
+    calendarNote:
+      "Verfügbare Termine sind freitags und samstags auswählbar. Angefragte Termine bleiben auswählbar, weil mehrere Anfragen möglich sind.",
+    calendar: {
+      heading: "Verfügbarkeit",
+      previousMonth: "Vorheriger Monat",
+      nextMonth: "Nächster Monat",
+      loadingTitle: "Verfügbarkeit wird geladen",
+      loadingText:
+        "Wir fragen die aktuellen Buchungen und angefragten Termine ab.",
+      errorTitle: "Verfügbarkeit konnte nicht geladen werden",
+      errorText:
+        "Bitte versuche es erneut. Deine Eingaben im Formular bleiben erhalten.",
+      retry: "Erneut laden",
+      selectedPrefix: "Ausgewählt:",
+      weekdays: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+      states: {
+        free: "frei",
+        pending: "angefragt",
+        taken: "belegt",
+        past: "nicht mehr buchbar",
+        unavailable: "nur Freitag und Samstag buchbar",
+      },
+      requestedHint: "angefragt",
+      takenHint: "belegt",
+      legend: [
+        { status: "free", label: "Frei" },
+        { status: "pending", label: "Angefragt" },
+        { status: "taken", label: "Belegt" },
+      ],
+    },
+    form: {
+      eyebrow: "Anfrage",
+      title: "Buchungsanfrage senden",
+      nightLabel: "Ausgewählte Nacht",
+      noNightSelected: "Noch kein Termin ausgewählt",
+      noNightHint:
+        "Bitte wähle links im Kalender einen freien oder angefragten Freitag oder Samstag.",
+      nameLabel: "Name",
+      emailLabel: "E-Mail",
+      phoneLabel: "Telefon (optional)",
+      addressLabel: "Adresse",
+      residencyLabel: "Wohnstatus",
+      residencyPlaceholder: "Bitte auswählen",
+      residencyOptions: [
+        { value: "roko", label: "RoKo (Robert-Koch-Str. 38)" },
+        { value: "christophorusweg", label: "Christophorusweg" },
+        {
+          value: "rosenbachweg",
+          label: "Rosenbachweg (Dauermieter:innen)",
+        },
+        { value: "external", label: "Extern" },
+      ],
+      rosenbachwegNote:
+        "Dieser Tarif gilt nur für langfristige Bewohner:innen, nicht für Kurzzeitaufenthalte wie Erasmus.",
+      guestCountLabel: "Gästezahl (optional)",
+      additionalInfoLabel: "Weitere Informationen (optional)",
+      priceTitle: "Preis nach Wohnstatus",
+      priceChooseResidency:
+        "Wähle deinen Wohnstatus aus, dann zeigen wir dir die voraussichtliche Miete und Kaution.",
+      rentLabel: "Miete",
+      depositLabel: "Kaution",
+      totalLabel: "Einplanen",
+      depositNote:
+        "Die Kaution beträgt immer 200 € und wird bar bei der Schlüsselübergabe bezahlt.",
+      priceSourceNote:
+        "Die Miete wird aus deinem Wohnstatus abgeleitet; verbindlich berechnet sie der Server beim Absenden.",
+      termsPrefix: "Ich habe die",
+      termsLink: "Mietbedingungen",
+      termsSuffix: " gelesen und akzeptiere sie.",
+      submitNeedsDate: "Wähle zuerst einen gültigen Freitag oder Samstag.",
+      submitNeedsTerms:
+        "Bitte bestätige die Mietbedingungen, bevor du die Anfrage sendest.",
+      submitReady:
+        "Der Termin ist ausgewählt und die Mietbedingungen sind bestätigt.",
+      submit: "Anfrage senden",
+      sending: "Wird gesendet...",
+    },
+    agreement: {
+      title: "Worauf du dich einlässt",
+      points: [
+        "Die Bar kann nur von berechtigten Nutzer:innen gemietet werden; der Wohnstatus bestimmt die Miete.",
+        "Die 200 € Kaution zahlst du bar bei der Schlüsselübergabe.",
+        "Die Miete gilt für einen ganzen Freitag oder Samstag.",
+        "Die Bar muss sauber und ordentlich zurückgegeben werden.",
+        "Die mietende Person muss während der gesamten Veranstaltung anwesend sein.",
+        "Kommerzielle Veranstaltungen, Eintrittsgelder und Gewinne sind nicht erlaubt.",
+      ],
+    },
+    success: {
+      eyebrow: "Anfrage eingegangen",
+      title: "Deine Anfrage ist drin.",
+      body:
+        "Ein:e Bar-Tutor:in prüft sie und schickt dir bei Zusage eine E-Mail mit dem Link zum Unterschreiben des Vertrags.",
+      notConfirmed:
+        "Noch ist nichts bestätigt. Verbindlich wird es erst, wenn du die E-Mail mit dem Vertragslink bekommst.",
+      dateLabel: "Termin",
+      newRequest: "Weitere Anfrage starten",
+    },
+    errors: {
+      dateRequired: "Bitte wähle einen Termin im Kalender.",
+      dateInvalid: "Bitte wähle einen zukünftigen Freitag oder Samstag.",
+      dateTaken: "Dieser Termin ist nicht verfügbar.",
+      nameRequired: "Bitte gib deinen Namen ein.",
+      emailRequired: "Bitte gib deine E-Mail-Adresse ein.",
+      emailInvalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
+      addressRequired: "Bitte gib deine Adresse ein.",
+      residencyRequired: "Bitte wähle deinen Wohnstatus aus.",
+      guestCountInvalid:
+        "Bitte gib eine positive ganze Zahl ein oder lass das Feld leer.",
+      termsRequired: "Bitte akzeptiere die Mietbedingungen.",
+      conflict:
+        "Dieser Termin wurde gerade belegt oder ist nicht mehr verfügbar. Bitte wähle einen anderen Freitag oder Samstag.",
+      conflictField: "Bitte wähle einen anderen Termin.",
+      genericSubmit:
+        "Die Anfrage konnte nicht gesendet werden. Bitte prüfe deine Angaben und versuche es erneut.",
+      network:
+        "Die Anfrage konnte wegen eines Netzwerkfehlers nicht gesendet werden. Bitte versuche es erneut.",
+    },
+  },
+  about: {
+    pageTitle: "Über RoKo 38 & die Heimkneipe – RoKo Bar Göttingen",
+    seoDescription:
+      "Erfahre mehr über das Studentenwohnheim RoKo 38 in Göttingen und die Heimkneipe im Keller. Infos zur Atmosphäre, Nutzung der Bar, Adresse und Anfahrt.",
+    title: "Über RoKo & die Heimkneipe",
+    subtitle:
+      "RoKo 38 ist eines der größten Studentenwohnheime Göttingens, und die Heimkneipe im Keller ist unser gemeinsames Wohnzimmer mit Theke.",
+    introParagraphs: [
+      "Im Studentenwohnheim Robert-Koch-Straße 38, kurz RoKo, leben Studierende aus vielen Studiengängen, Ländern und Kulturen unter einem Dach.",
+      "Die Heimkneipe im Keller ist der Ort für Geburtstage, WG-Partys, Fachschaftsabende und alles, was zu einem lebendigen Wohnheim dazugehört.",
+    ],
+    vibeTitle: "Was RoKo besonders macht",
+    vibePoints: [
+      "Großes Hochhaus mit vielen Studis, kurzen Wegen und jeder Menge Geschichten.",
+      "Eigene Kellerbar im Wohnheim: Nach der Party ist der Heimweg angenehm kurz.",
+      "Engagierte Bewohner:innen und Bar-Tutor:innen kümmern sich um Bar, Technik und Regeln.",
+      "Die Einnahmen aus der Vermietung helfen bei Ausgaben rund ums Wohnheim und gemeinsamen Projekten.",
+    ],
+    barTitle: "Die Heimkneipe in RoKo 38",
+    barParagraphs: [
+      "Die Heimkneipe ist ein separater Raum im Keller des RoKo mit Tresen, Zapfanlage, Kühlschränken und Sitzmöglichkeiten.",
+      "Damit alle etwas davon haben, gibt es klare Mieten, eine Kaution zur Absicherung und Hausregeln, die Rücksicht auf alle Bewohner:innen nehmen.",
+    ],
+    contactTitle: "Kontakt & Anfahrt",
+    addressLabel: "Adresse",
+    emailLabel: "E-Mail",
+    directionsText:
+      "Für die Routenplanung kannst du die eingeblendete Karte oder Google Maps verwenden:",
+    gmapsLabel: "Google Maps (Routenplanung)",
+    mapHint:
+      "Die Heimkneipe befindet sich im Keller des RoKo. Bitte nutze nicht den Notausgang als Eingang.",
+    imageAlt: "Studentenwohnheim RoKo 38 in Göttingen",
+    mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
+  },
+  team: {
+    pageTitle: "Team – RoKo Bar Göttingen",
+    seoDescription:
+      "Die Bar-Tutor:innen der RoKo-Bar: das studentische Team hinter Buchungen, Schlüsselübergabe und Barabenden.",
+    title: "Die Bar-Tutor:innen",
+    intro:
+      "Wir sind das studentische Team hinter der RoKo-Bar: wir prüfen Anfragen, halten den Schlüsselbund zusammen und sorgen dafür, dass der Keller partybereit bleibt.",
+    placeholdersTitle: "[PLACEHOLDER] Tutor:innen eintragen",
+    placeholders: [
+      {
+        name: "[PLACEHOLDER] Name",
+        role: "[PLACEHOLDER] Rolle im Bar-Team",
+        funLine: "[PLACEHOLDER] Fun Fact oder Lieblings-Bar-Moment",
+      },
+      {
+        name: "[PLACEHOLDER] Name",
+        role: "[PLACEHOLDER] Rolle im Bar-Team",
+        funLine: "[PLACEHOLDER] Fun Fact oder Lieblings-Bar-Moment",
+      },
+    ],
+  },
+  alumni: {
+    pageTitle: "Alumni – RoKo Bar Göttingen",
+    seoDescription:
+      "Ehemalige Bar-Tutor:innen, legendäre Abende und Erinnerungen aus der RoKo-Bar.",
+    title: "Ehemalige, Legenden, Kellergeschichten",
+    intro:
+      "Viele Hände haben diese Bar am Laufen gehalten. Hier soll später Platz sein für frühere Tutor:innen, alte Fotos und die Partys, über die man beim Aufräumen noch spricht.",
+    placeholdersTitle: "[PLACEHOLDER] Galerie & Notizen",
+    placeholderText:
+      "[PLACEHOLDER] Fotos, Namen, Jahre und kurze Erinnerungen ehemaliger Bar-Tutor:innen ergänzen.",
+  },
+  directions: {
+    pageTitle: "Anfahrt – RoKo Bar Göttingen",
+    seoDescription:
+      "Anfahrt zur RoKo-Bar im Studentenwohnheim Robert-Koch-Str. 38 in Göttingen.",
+    title: "So findest du zur RoKo-Bar",
+    intro:
+      "Die RoKo-Bar liegt im Keller des Studentenwohnheims Robert-Koch-Str. 38. Genaue Wege und ÖPNV-Hinweise tragen wir vor dem Launch sauber nach.",
+    placeholderTitle: "[PLACEHOLDER — echte Anfahrt ergänzen]",
+    placeholderText:
+      "[PLACEHOLDER — real transit route to be added] Keine Busnummern, Haltestellen oder Laufwege eintragen, bis sie geprüft sind.",
+  },
+  houseRules: {
+    pageTitle: "Hausregeln RoKo-Bar – RoKo Bar Göttingen",
+    seoDescription:
+      "Hausregeln für die RoKo-Bar: Lautstärke, Kaution, Sauberkeit, keine kommerziellen Partys, Freitag/Samstag-Regel und Notausgang.",
+    title: "Hausregeln der RoKo-Bar",
+    intro:
+      "Die kurze Version: Feiert schön, bleibt fair zu Bewohner:innen und Nachbarschaft und gebt die Bar so zurück, dass die nächste Gruppe direkt weiterplanen kann.",
+    sections: [
+      {
+        heading: "Lautstärke & Nachbarschaft",
+        points: [
+          "Haltet die Lautstärke so, dass Bewohner:innen im RoKo und die Nachbarschaft schlafen können.",
+          "Lasst die Tür zur Bar und die obere Tür zum Gemeinschaftshaus nicht dauerhaft offen.",
+          "Ab 22 Uhr keine lauten Gruppen vor dem Gemeinschaftshaus. Gespräche bitte nach drinnen verlegen.",
+        ],
+      },
+      {
+        heading: "Notausgang & Türen",
+        points: [
+          "Der Notausgang ist nur für Notfälle da und bleibt während der Veranstaltung geschlossen.",
+          "Der Notausgang darf nicht als Eingang oder zusätzlicher Zugang genutzt werden.",
+          "Türen zur Bar und zum Gemeinschaftshaus sollen geschlossen bleiben und nicht verkeilt werden.",
+        ],
+      },
+      {
+        heading: "Kaution, Sauberkeit & Schäden",
+        points: [
+          "Die 200 € Kaution bekommt ihr vollständig zurück, wenn die Bar sauber, vollständig und ohne neue Schäden zurückgegeben wird.",
+          "Gebt die Bar so zurück, wie ihr sie übernommen habt. Fehlende Reinigung kann von der Kaution abgezogen werden.",
+          "Meldet Schäden oder fehlendes Inventar von euch aus. Reparaturen werden mit der Kaution verrechnet; höhere Kosten müsst ihr zusätzlich tragen.",
+        ],
+      },
+      {
+        heading: "Keine kommerziellen Veranstaltungen",
+        points: [
+          "Die RoKo-Bar ist kein Club. Eintritt, Tickets oder sonstige Entgelte fürs Reinkommen sind nicht erlaubt.",
+          "Getränke dürfen höchstens zum Selbstkostenpreis abgegeben werden. Gewinne mit der Bar sind nicht erlaubt.",
+          "Kommerzielle Veranstaltungen oder Werbung für kommerzielle Anbieter sind nicht erlaubt.",
+        ],
+      },
+      {
+        heading: "Parken & Feuerwehrzufahrt",
+        points: [
+          "Blockiert niemals die Feuerwehrzufahrt und nutzt nur erlaubte Stellplätze.",
+          "Falls Fahrzeuge abgeschleppt werden müssen, werden die Kosten mit der Kaution verrechnet; höhere Kosten müsst ihr zusätzlich tragen.",
+        ],
+      },
+      {
+        heading: "Verantwortung & Anwesenheit",
+        points: [
+          "Die Person, die den Mietvertrag unterschreibt, muss während der gesamten Veranstaltung anwesend sein.",
+          "Ihr seid dafür verantwortlich, dass eure Gäste die Hausregeln einhalten.",
+          "Hinterlegt eine erreichbare Telefonnummer, damit wir euch im Notfall kontaktieren können.",
+          "SV-Vertretung und Heimsprecher:innen haben Hausrecht und dürfen die Räume betreten.",
+        ],
+      },
+      {
+        heading: "Freitag/Samstag & Gemeinschaftsraum",
+        points: [
+          "Die RoKo-Bar wird nur für ganze Tage am Freitag oder Samstag vermietet.",
+          "Der Gemeinschaftsraum im Gemeinschaftshaus ist ein eigener Raum und nicht Teil der Bar-Miete.",
+          "RoKo-Bewohner:innen dürfen den Gemeinschaftsraum unabhängig nutzen, aber er ist nicht für große Feiern mit vielen Getränken oder Buffets gedacht.",
+        ],
+      },
+    ],
+    linksIntro:
+      "Für die Buchung und die verbindlichen Unterlagen nutzt bitte diese Links:",
+    links: [
+      {
+        label: "Buchungsseite",
+        href: "/booking",
+        type: "internal",
+      },
+      {
+        label: "Mietbedingungen",
+        href: "/terms",
+        type: "internal",
+      },
+      {
+        label: "Mietvertrag Bewohner:innen (75 €)",
+        href: "/contracts/roko-bar-mietvertrag-75.pdf",
+        type: "external",
+      },
+      {
+        label: "Mietvertrag extern (100 €)",
+        href: "/contracts/roko-bar-mietvertrag-100.pdf",
+        type: "external",
+      },
+    ],
+  },
+  terms: {
+    pageTitle: "Mietbedingungen RoKo-Bar – RoKo Bar Göttingen",
+    seoDescription:
+      "Mietbedingungen der RoKo-Bar: 75 € für berechtigte Bewohner:innen, 100 € extern, 200 € Kaution, ganze Freitage und Samstage, keine kommerziellen Veranstaltungen.",
+    title: "Mietbedingungen RoKo-Bar",
+    intro:
+      "Diese Zusammenfassung erklärt, worauf ihr euch bei einer Buchung einigt. Maßgeblich ist der Mietvertrag, den ihr über euren privaten Buchungslink herunterladet und unterschreibt.",
+    sections: [
+      {
+        heading: "Miete & Berechtigung",
+        points: [
+          "75 € zahlen nur langfristige Bewohner:innen von RoKo 38 (Robert-Koch-Str. 38), Christophorusweg oder Rosenbachweg. Kurzzeitaufenthalte wie Erasmus berechtigen nicht zu diesem Tarif.",
+          "Alle anderen Mieter:innen zahlen 100 €.",
+          "Der richtige Vertrag muss passend zur Berechtigung ausgewählt, unterschrieben und hochgeladen werden.",
+        ],
+      },
+      {
+        heading: "Mietzeitraum",
+        points: [
+          "Die Bar wird für einen ganzen Tag vermietet.",
+          "Buchungen sind ausschließlich für Freitag oder Samstag möglich.",
+          "Andere Termine sind nicht buchbar.",
+        ],
+      },
+      {
+        heading: "Kaution",
+        points: [
+          "Die Kaution beträgt 200 €.",
+          "Sie wird bei der Schlüsselübergabe bar bezahlt und niemals zusammen mit der Miete überwiesen.",
+          "Bei sauberer, vollständiger und ordentlicher Rückgabe wird die Kaution vollständig erstattet.",
+        ],
+      },
+      {
+        heading: "Zahlung & Vertrag",
+        points: [
+          "Die Miete kann per Überweisung oder bar gezahlt werden. Ein:e Bar-Tutor:in bestätigt den Zahlungseingang.",
+          "Nach unserer Gegenzeichnung könnt ihr den vollständig unterschriebenen Vertrag über euren privaten Link herunterladen.",
+        ],
+      },
+      {
+        heading: "Reinigung & Rückgabe",
+        points: [
+          "Die Bar muss gereinigt, aufgeräumt und im übernommenen Zustand zurückgegeben werden.",
+          "Fehlende Reinigung, Schäden oder fehlendes Inventar können mit der Kaution verrechnet werden.",
+          "Sind die Kosten höher als die Kaution, müsst ihr den Differenzbetrag zahlen.",
+        ],
+      },
+      {
+        heading: "Lautstärke, Sicherheit & Verantwortung",
+        points: [
+          "Nehmt Rücksicht auf Bewohner:innen und Nachbarschaft, besonders ab 22 Uhr.",
+          "Der Notausgang bleibt geschlossen und darf nur im Notfall genutzt werden. Er ist kein Eingang.",
+          "Die mietende Person muss während der gesamten Veranstaltung anwesend und erreichbar sein.",
+        ],
+      },
+      {
+        heading: "Keine kommerziellen Veranstaltungen",
+        points: [
+          "Eintritt, Tickets, Gewinne aus Getränkeverkauf oder kommerzielle Events sind nicht erlaubt.",
+          "Getränke dürfen höchstens zum Selbstkostenpreis abgegeben werden.",
+        ],
+      },
+      {
+        heading: "Verstöße",
+        points: [
+          "Bei Verstößen gegen Vertrag, Mietbedingungen oder Hausregeln kann die Kaution teilweise oder vollständig einbehalten werden.",
+          "Schwere Verstöße können zum Abbruch der Veranstaltung und zu weiteren Forderungen führen.",
+        ],
+      },
+    ],
+    contractsTitle: "Verträge herunterladen",
+    contractsIntro:
+      "Die endgültige Auswahl und der Upload passieren später über euren privaten Buchungslink. Diese Platzhalter-Links zeigen schon die vorgesehenen Vertragsdateien.",
+    legalDetailsTitle: "Vollständige rechtliche Bedingungen",
+    legalDetailsSummary: "Vollständige rechtliche Bedingungen anzeigen",
+    legalDetailsIntro:
+      "Dieser Abschnitt ist für die ausführliche Vertragsfassung vorgesehen. Bis die PDFs final eingepflegt sind, gelten die unterschriebenen Mietverträge und diese Zusammenfassung als Orientierung.",
+    legalDetailsPoints: [
+      "Der Mietvertrag regelt die verantwortliche Person, Mietdauer, Zahlung, Kaution, Reinigung, Haftung, Hausrecht und Folgen von Verstößen.",
+      "Die Hausregeln sind Bestandteil der Nutzung und müssen von allen Gästen eingehalten werden.",
+      "Vor dem Launch müssen die finalen Vertrags-PDFs geprüft und an dieser Stelle verlinkt werden.",
+    ],
+    bookingText: "Zur Anfrage geht es über die Buchungsseite.",
+    bookingLink: "Zur Buchungsseite",
+  },
+  impressum: {
+    pageTitle: "Impressum – RoKo Bar Göttingen",
+    seoDescription:
+      "Impressum der RoKo-Bar im Studentenwohnheim Robert-Koch-Str. 38, Göttingen. Ansprechpartner und Hinweise zum nicht-kommerziellen Studentenprojekt.",
+    title: "Impressum",
+    operator:
+      "Betreiber: Studentenwohnheim Robert-Koch-Straße 38, 37075 Göttingen",
+    managedBy: "Verantwortlich: [PLACEHOLDER — Name verantwortliche Person]",
+    emailLabel: "E-Mail",
+    disclaimer:
+      "Hinweis: Die RoKo-Bar ist ein nicht-kommerzielles Studentenprojekt und keine geschäftsmäßige Website. Inhalte dienen ausschließlich der Information zu Vermietung und Nutzung der Bar.",
+  },
+  datenschutz: {
+    pageTitle: "Datenschutzerklärung – RoKo Bar Göttingen",
+    seoDescription:
+      "Datenschutz für die RoKo-Bar: keine Cookies oder Tracking, Buchungsanfragen nur zur Bearbeitung, Spracheinstellung in localStorage.",
+    title: "Datenschutzerklärung",
+    lastUpdated: "Stand: 12.01.2025",
+    intro:
+      "Wir halten es simpel: Wir verarbeiten nur die Daten, die ihr uns zur Bearbeitung eurer Buchungsanfragen sendet. Es gibt keine Tracking-Cookies oder Analytics.",
+    sections: [
+      {
+        heading: "Verantwortliche Stelle",
+        points: [
+          "Studentenwohnheim RoKo 38, Robert-Koch-Straße 38, 37075 Göttingen.",
+          "E-Mail: heimkneipe@roko-goettingen.de",
+        ],
+      },
+      {
+        heading: "Server-Logs",
+        points: [
+          "Der Hosting-Anbieter Vercel speichert technisch notwendige Server-Logs (IP-Adresse, Timestamp, User-Agent), um den Betrieb zu gewährleisten.",
+          "Wir werten diese Logs nicht zu Marketing- oder Tracking-Zwecken aus.",
+        ],
+      },
+      {
+        heading: "Kontakt & Buchungen",
+        points: [
+          "Wir verarbeiten nur die Daten, die ihr uns sendet (z. B. Name, Kontaktdaten, gewünschtes Datum), um eure Buchungsanfrage zu beantworten.",
+          "Die Daten werden ausschließlich zur Organisation von Mietvertrag, Schlüsselübergabe und Rückfragen genutzt.",
+          "Speicherdauer: solange es für Rückfragen zur Buchung nötig ist; auf Wunsch löschen wir die Korrespondenz, sofern keine gesetzlichen Pflichten entgegenstehen.",
+        ],
+      },
+      {
+        heading: "Cookies & localStorage",
+        points: [
+          "Keine Cookies, kein Google Analytics, keine Marketing-Tools.",
+          "Wir speichern nur eure Spracheinstellung (\"de\" oder \"en\") im Browser (localStorage, Schlüssel: \"roko-language\"), damit die Seite beim nächsten Besuch in eurer Sprache lädt.",
+          "Ihr könnt den Eintrag jederzeit über eure Browser-Einstellungen löschen.",
+        ],
+      },
+      {
+        heading: "Eure Rechte",
+        points: [
+          "Ihr könnt Auskunft oder Löschung eurer Daten verlangen, soweit keine Aufbewahrungspflichten entgegenstehen.",
+          "Bei Fragen: heimkneipe@roko-goettingen.de",
+        ],
+      },
+    ],
+  },
+};
+
+export const en = {
+  common: {
+    htmlLang: "en",
+    siteName: "RoKo Bar",
+    siteNameSpaced: "RoKo Bar",
+    location: "Göttingen",
+    brandBadge: "RoKo Bar · Göttingen",
+    dormName: "Student dormitory Robert-Koch-Str. 38",
+    address: {
+      line1: "Robert-Koch-Straße 38",
+      line2: "37075 Göttingen, Germany",
+    },
+    email: "heimkneipe@roko-goettingen.de",
+    languageLabels: {
+      de: "DE",
+      en: "EN",
+    },
+    badges: {
+      booking: "Booking",
+      simpleClear: "Simple & clear",
+    },
+    ui: {
+      placeholderImage: "[PLACEHOLDER] Add image",
+    },
+    links: {
+      home: "/",
+      booking: "/booking",
+      about: "/about",
+      team: "/team",
+      directions: "/directions",
+      houseRules: "/house-rules",
+      terms: "/terms",
+      alumni: "/alumni",
+      impressum: "/impressum",
+      datenschutz: "/datenschutz",
+    },
+    canonical: {
+      home: "https://YOUR-DOMAIN-HERE.de/",
+      booking: "https://YOUR-DOMAIN-HERE.de/booking",
+      about: "https://YOUR-DOMAIN-HERE.de/about",
+      team: "https://YOUR-DOMAIN-HERE.de/team",
+      directions: "https://YOUR-DOMAIN-HERE.de/directions",
+      houseRules: "https://YOUR-DOMAIN-HERE.de/house-rules",
+      terms: "https://YOUR-DOMAIN-HERE.de/terms",
+      alumni: "https://YOUR-DOMAIN-HERE.de/alumni",
+      impressum: "https://YOUR-DOMAIN-HERE.de/impressum",
+      datenschutz: "https://YOUR-DOMAIN-HERE.de/datenschutz",
+    },
+    contracts: {
+      residentsHref: "/contracts/roko-bar-mietvertrag-75.pdf",
+      externalHref: "/contracts/roko-bar-mietvertrag-100.pdf",
+      residentsLabel: "Rental contract for eligible residents (€75)",
+      externalLabel: "External rental contract (€100)",
+    },
+  },
+  nav: {
+    brandTop: "Student dormitory",
+    brandMain: "RoKo Bar · Robert-Koch-Str. 38",
+    home: "Home",
+    booking: "Booking",
+    houseRules: "House rules",
+    about: "About the bar",
+    team: "Team",
+    directions: "Getting here",
+    alumni: "Alumni",
+    toggleAria: "Toggle navigation",
+    toggleSr: "Toggle navigation",
+  },
+  footer: {
+    impressum: "Legal notice",
+    datenschutz: "Privacy",
+    terms: "Rental terms",
+    houseRules: "House rules",
+    alumni: "Alumni",
+    brandTemplate:
+      "© {year} RoKo Bar · Student dormitory Robert-Koch-Str. 38, Göttingen",
+  },
+  home: {
+    pageTitle:
+      "Rent the RoKo Bar – Student bar at Robert-Koch-Str. 38, Göttingen – RoKo Bar Göttingen",
+    seoDescription:
+      "Rent the RoKo Bar at the Robert-Koch-Str. 38 student dormitory in Göttingen. Full Fridays and Saturdays, clear prices, and a simple booking flow.",
+    heroTitle: "Your night. Our basement. Stories included.",
+    heroSubtitle:
+      "RoKo Bar is the basement bar at Robert-Koch-Str. 38: counter, music, short ways home, and enough room for birthdays, flat parties, and student society nights.",
+    heroCTA: "Request a booking",
+    heroSecondaryCTA: "How it works",
+    whyKicker: "Why RoKo",
+    whyTitle: "Basement bar beats kitchen party.",
+    whyIntro:
+      "An idea can turn into a night here fast: right inside the dorm, easy to organize, and with a bar that has heard more stories than some term papers.",
+    whyPoints: [
+      "Cozy bar in the basement of RoKo 38.",
+      "Counter, tap system, fridges, tables, and stools are already there.",
+      "Good for birthdays, flat parties, student society nights, and private events.",
+      "Rental income supports the dorm community and shared projects.",
+    ],
+    pricesKicker: "Prices",
+    pricesTitle: "Two rental fees, one clear deposit.",
+    pricesIntro:
+      "RoKo Bar is rented for one full day only, on Fridays or Saturdays. Rent and deposit are paid separately.",
+    priceCards: [
+      {
+        title: "€75 resident rate",
+        amount: "€75",
+        note: "Only for long-term residents of RoKo 38 (Robert-Koch-Str. 38), Christophorusweg, or Rosenbachweg. Short-term stays such as Erasmus do not qualify for this rate.",
+      },
+      {
+        title: "€100 external rate",
+        amount: "€100",
+        note: "For everyone who does not qualify for the resident rate.",
+      },
+      {
+        title: "€200 deposit",
+        amount: "€200",
+        note: "Paid in cash at key handover. Do not transfer it with the rent. It is fully refunded after a clean and proper return.",
+      },
+    ],
+    processTitle: "How booking works",
+    processIntro:
+      "The new flow stays clear: send a request, upload the contract, get payment confirmed, then pick up the keys.",
+    processSteps: [
+      "Pick a free Friday or Saturday in the live calendar and send a request.",
+      "A bar tutor reviews it. If approved, you receive an email with your private link.",
+      "At that link, download the correct contract, sign it, and upload it again.",
+      "Pay the rent by bank transfer or cash; a tutor confirms the payment.",
+      "We countersign. You can then download the fully signed contract from your link.",
+      "At key handover, pay the €200 deposit in cash and collect the keys.",
+    ],
+    closingTitle: "Ready for basement lights and your favourite playlist?",
+    closingText:
+      "The booking page has the short recap, live calendar, and request form for your date.",
+    closingCTA: "Go to booking",
+    imageAlt: "Bar area of the RoKo Bar with counter and fridges",
+  },
+  booking: {
+    pageTitle: "RoKo Bar booking request – RoKo Bar Göttingen",
+    seoDescription:
+      "Booking request for RoKo Bar: full Fridays and Saturdays, €75 for eligible residents, €100 external, €200 cash deposit at key handover.",
+    title: "Book RoKo Bar",
+    intro:
+      "Choose a free Friday or Saturday and send your request through the live calendar.",
+    recapTitle: "What you agree to when requesting",
+    recapPoints: [
+      "The bar is rented for one full day only, on Fridays or Saturdays.",
+      "€75 applies only to long-term residents of RoKo 38 (Robert-Koch-Str. 38), Christophorusweg, or Rosenbachweg; everyone else pays €100.",
+      "The €200 deposit is paid in cash at key handover. It is not transferred with the rent.",
+    ],
+    processReference:
+      "The full flow with contract, payment, and key handover is explained on the home page.",
+    processLink: "View the flow on the home page",
+    calendarTitle: "Live calendar & request form",
+    calendarNote:
+      "Available dates can be selected on Fridays and Saturdays. Requested dates stay selectable because multiple requests are possible.",
+    calendar: {
+      heading: "Availability",
+      previousMonth: "Previous month",
+      nextMonth: "Next month",
+      loadingTitle: "Loading availability",
+      loadingText:
+        "We are checking the current bookings and requested dates.",
+      errorTitle: "Availability could not be loaded",
+      errorText:
+        "Please try again. Anything you entered in the form will stay there.",
+      retry: "Retry",
+      selectedPrefix: "Selected:",
+      weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      states: {
+        free: "free",
+        pending: "requested",
+        taken: "taken",
+        past: "no longer bookable",
+        unavailable: "only Friday and Saturday are bookable",
+      },
+      requestedHint: "requested",
+      takenHint: "taken",
+      legend: [
+        { status: "free", label: "Free" },
+        { status: "pending", label: "Requested" },
+        { status: "taken", label: "Taken" },
+      ],
+    },
+    form: {
+      eyebrow: "Request",
+      title: "Send booking request",
+      nightLabel: "Selected night",
+      noNightSelected: "No date selected yet",
+      noNightHint:
+        "Please choose a free or requested Friday or Saturday in the calendar.",
+      nameLabel: "Name",
+      emailLabel: "Email",
+      phoneLabel: "Phone (optional)",
+      addressLabel: "Address",
+      residencyLabel: "Residency",
+      residencyPlaceholder: "Please choose",
+      residencyOptions: [
+        { value: "roko", label: "RoKo (Robert-Koch-Str. 38)" },
+        { value: "christophorusweg", label: "Christophorusweg" },
+        {
+          value: "rosenbachweg",
+          label: "Rosenbachweg (long-term residents)",
+        },
+        { value: "external", label: "External" },
+      ],
+      rosenbachwegNote:
+        "This rate applies only to long-term residents, not short-term stays such as Erasmus.",
+      guestCountLabel: "Guest count (optional)",
+      additionalInfoLabel: "Additional information (optional)",
+      priceTitle: "Price by residency",
+      priceChooseResidency:
+        "Choose your residency, then we will show the expected rent and deposit.",
+      rentLabel: "Rent",
+      depositLabel: "Deposit",
+      totalLabel: "Plan for",
+      depositNote:
+        "The deposit is always €200 and is paid in cash at key handover.",
+      priceSourceNote:
+        "Rent is derived from your residency; the server computes the binding amount when you submit.",
+      termsPrefix: "I have read and accept the",
+      termsLink: "rental terms",
+      termsSuffix: ".",
+      submitNeedsDate: "Choose a valid Friday or Saturday first.",
+      submitNeedsTerms:
+        "Please accept the rental terms before sending the request.",
+      submitReady: "The date is selected and the rental terms are accepted.",
+      submit: "Send request",
+      sending: "Sending...",
+    },
+    agreement: {
+      title: "What you are agreeing to",
+      points: [
+        "The bar can only be rented by eligible users; residency determines the rent.",
+        "The €200 deposit is paid in cash at key handover.",
+        "The rent covers one full Friday or Saturday.",
+        "The bar must be returned clean and tidy.",
+        "The renting person must be present for the entire event.",
+        "Commercial events, entry fees, and profits are not allowed.",
+      ],
+    },
+    success: {
+      eyebrow: "Request received",
+      title: "Your request is in.",
+      body:
+        "A bar tutor will review it and, if approved, email you a link to sign the contract.",
+      notConfirmed:
+        "Nothing is confirmed yet. It only becomes binding once you receive the email with the contract link.",
+      dateLabel: "Date",
+      newRequest: "Start another request",
+    },
+    errors: {
+      dateRequired: "Please choose a date in the calendar.",
+      dateInvalid: "Please choose a future Friday or Saturday.",
+      dateTaken: "This date is not available.",
+      nameRequired: "Please enter your name.",
+      emailRequired: "Please enter your email address.",
+      emailInvalid: "Please enter a valid email address.",
+      addressRequired: "Please enter your address.",
+      residencyRequired: "Please choose your residency.",
+      guestCountInvalid:
+        "Please enter a positive whole number or leave the field empty.",
+      termsRequired: "Please accept the rental terms.",
+      conflict:
+        "This night was just taken or is no longer available. Please choose another Friday or Saturday.",
+      conflictField: "Please choose another date.",
+      genericSubmit:
+        "The request could not be sent. Please check your details and try again.",
+      network:
+        "The request could not be sent because of a network error. Please try again.",
+    },
+  },
+  about: {
+    pageTitle: "About RoKo 38 & the student bar – RoKo Bar Göttingen",
+    seoDescription:
+      "Learn more about the RoKo 38 student dorm in Göttingen and its basement bar. Atmosphere, bar usage, address and directions at a glance.",
+    title: "About RoKo & the student bar",
+    subtitle:
+      "RoKo 38 is one of Göttingen's largest student dorms, and the basement bar is our shared living room with a counter.",
+    introParagraphs: [
+      "The student dormitory at Robert-Koch-Str. 38, usually called RoKo, is home to students from many study programs, countries, and cultures.",
+      "The basement bar is the place for birthdays, flat parties, student society nights, and everything that makes dorm life lively.",
+    ],
+    vibeTitle: "What makes RoKo special",
+    vibePoints: [
+      "A large high-rise full of students, short distances, and plenty of stories.",
+      "Its own basement bar in the dorm: after the party, the way home is pleasantly short.",
+      "Committed residents and bar tutors take care of the bar, equipment, and rules.",
+      "Rental income helps cover dorm expenses and shared community projects.",
+    ],
+    barTitle: "The RoKo 38 basement bar",
+    barParagraphs: [
+      "The student bar is a separate room in RoKo's basement with a counter, tap system, fridges, and seating.",
+      "To keep it fair for everyone, there are clear rental fees, a deposit for security, and house rules that respect all residents.",
+    ],
+    contactTitle: "Contact & directions",
+    addressLabel: "Address",
+    emailLabel: "Email",
+    directionsText:
+      "For directions, you can use the embedded map or Google Maps:",
+    gmapsLabel: "Google Maps (route planner)",
+    mapHint:
+      "The bar is located in the basement of RoKo. Please do not use the emergency exit as an entrance.",
+    imageAlt: "RoKo 38 student dormitory in Göttingen",
+    mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
+  },
+  team: {
+    pageTitle: "Team – RoKo Bar Göttingen",
+    seoDescription:
+      "The RoKo Bar tutors: the student team behind bookings, key handover, and bar nights.",
+    title: "The bar tutors",
+    intro:
+      "We are the student team behind RoKo Bar: we review requests, keep the key bundle under control, and make sure the basement stays party-ready.",
+    placeholdersTitle: "[PLACEHOLDER] Add tutor entries",
+    placeholders: [
+      {
+        name: "[PLACEHOLDER] Name",
+        role: "[PLACEHOLDER] Role in the bar team",
+        funLine: "[PLACEHOLDER] Fun fact or favourite bar moment",
+      },
+      {
+        name: "[PLACEHOLDER] Name",
+        role: "[PLACEHOLDER] Role in the bar team",
+        funLine: "[PLACEHOLDER] Fun fact or favourite bar moment",
+      },
+    ],
+  },
+  alumni: {
+    pageTitle: "Alumni – RoKo Bar Göttingen",
+    seoDescription:
+      "Former bar tutors, legendary nights, and memories from RoKo Bar.",
+    title: "Alumni, legends, basement stories",
+    intro:
+      "Many hands have kept this bar running. Later, this page should hold former tutors, old photos, and the parties people still mention while cleaning up.",
+    placeholdersTitle: "[PLACEHOLDER] Gallery & notes",
+    placeholderText:
+      "[PLACEHOLDER] Add photos, names, years, and short memories from former bar tutors.",
+  },
+  directions: {
+    pageTitle: "Getting here – RoKo Bar Göttingen",
+    seoDescription:
+      "How to get to RoKo Bar at the Robert-Koch-Str. 38 student dormitory in Göttingen.",
+    title: "Getting to RoKo Bar",
+    intro:
+      "RoKo Bar is in the basement of the student dormitory at Robert-Koch-Str. 38. Exact routes and transit notes will be added carefully before launch.",
+    placeholderTitle: "[PLACEHOLDER — add real directions]",
+    placeholderText:
+      "[PLACEHOLDER — real transit route to be added] Do not add bus numbers, stop names, or walking directions until they have been checked.",
+  },
+  houseRules: {
+    pageTitle: "House rules RoKo Bar – RoKo Bar Göttingen",
+    seoDescription:
+      "House rules for RoKo Bar: noise, deposit, cleaning, no commercial events, Friday/Saturday rule, and emergency exit.",
+    title: "RoKo Bar house rules",
+    intro:
+      "Short version: party well, stay fair to residents and neighbours, and return the bar ready for the next group.",
+    sections: [
+      {
+        heading: "Noise & neighbours",
+        points: [
+          "Keep the volume low enough for RoKo residents and neighbours to sleep.",
+          "Do not leave the bar door or the upper community house door open for long periods.",
+          "After 10 pm, no loud groups outside the community house. Please move conversations indoors.",
+        ],
+      },
+      {
+        heading: "Emergency exit & doors",
+        points: [
+          "The emergency exit is for emergencies only and stays closed during the event.",
+          "The emergency exit must not be used as an entrance or additional access point.",
+          "Doors to the bar and community house should stay closed and must not be propped open.",
+        ],
+      },
+      {
+        heading: "Deposit, cleaning & damage",
+        points: [
+          "The €200 deposit is fully refunded if the bar is returned clean, complete, and without new damage.",
+          "Return the bar in the condition you received it. Missing cleaning can be deducted from the deposit.",
+          "Report damage or missing inventory proactively. Repairs are offset against the deposit; higher costs must be paid separately.",
+        ],
+      },
+      {
+        heading: "No commercial events",
+        points: [
+          "RoKo Bar is not a club. Entry fees, tickets, or other charges for getting in are not allowed.",
+          "Drinks may only be sold at cost price. Making profit with the bar is not allowed.",
+          "Commercial events or advertising for commercial providers are not allowed.",
+        ],
+      },
+      {
+        heading: "Parking & fire access",
+        points: [
+          "Never block the fire lane and use only permitted parking spaces.",
+          "If vehicles need to be towed, the costs are offset against the deposit; higher costs must be paid separately.",
+        ],
+      },
+      {
+        heading: "Responsibility & presence",
+        points: [
+          "The person who signs the rental contract must be present for the entire event.",
+          "You are responsible for making sure your guests follow the house rules.",
+          "Leave a reachable phone number so we can contact you in an emergency.",
+          "SV representatives and dorm speakers have house rights and may enter the rooms.",
+        ],
+      },
+      {
+        heading: "Friday/Saturday & common room",
+        points: [
+          "RoKo Bar is rented only for full days on Friday or Saturday.",
+          "The common room in the community house is a separate room and is not part of the bar rental.",
+          "RoKo residents may use the common room independently, but it is not intended for large parties with lots of drinks or buffets.",
+        ],
+      },
+    ],
+    linksIntro:
+      "For booking and binding documents, please use these links:",
+    links: [
+      {
+        label: "Booking page",
+        href: "/booking",
+        type: "internal",
+      },
+      {
+        label: "Rental terms",
+        href: "/terms",
+        type: "internal",
+      },
+      {
+        label: "Resident contract (€75)",
+        href: "/contracts/roko-bar-mietvertrag-75.pdf",
+        type: "external",
+      },
+      {
+        label: "External contract (€100)",
+        href: "/contracts/roko-bar-mietvertrag-100.pdf",
+        type: "external",
+      },
+    ],
+  },
+  terms: {
+    pageTitle: "Rental terms RoKo Bar – RoKo Bar Göttingen",
+    seoDescription:
+      "Rental terms for RoKo Bar: €75 for eligible residents, €100 external, €200 deposit, full Fridays and Saturdays, no commercial events.",
+    title: "RoKo Bar rental terms",
+    intro:
+      "This summary explains what you agree to when booking. The binding document is the rental contract you download and sign through your private booking link.",
+    sections: [
+      {
+        heading: "Rent & eligibility",
+        points: [
+          "€75 is only for long-term residents of RoKo 38 (Robert-Koch-Str. 38), Christophorusweg, or Rosenbachweg. Short-term stays such as Erasmus do not qualify for this rate.",
+          "All other renters pay €100.",
+          "The correct contract must match your eligibility, be signed, and be uploaded.",
+        ],
+      },
+      {
+        heading: "Rental period",
+        points: [
+          "The bar is rented for one full day.",
+          "Bookings are available only for Friday or Saturday.",
+          "Other dates are not bookable.",
+        ],
+      },
+      {
+        heading: "Deposit",
+        points: [
+          "The deposit is €200.",
+          "It is paid in cash at key handover and is never transferred together with the rent.",
+          "After a clean, complete, and proper return, the deposit is fully refunded.",
+        ],
+      },
+      {
+        heading: "Payment & contract",
+        points: [
+          "Rent can be paid by bank transfer or cash. A bar tutor confirms the payment.",
+          "After we countersign, you can download the fully signed contract through your private link.",
+        ],
+      },
+      {
+        heading: "Cleaning & return",
+        points: [
+          "The bar must be cleaned, tidied, and returned in the condition in which it was handed over.",
+          "Missing cleaning, damage, or missing inventory can be offset against the deposit.",
+          "If costs exceed the deposit, you must pay the difference.",
+        ],
+      },
+      {
+        heading: "Noise, safety & responsibility",
+        points: [
+          "Be considerate of residents and neighbours, especially after 10 pm.",
+          "The emergency exit stays closed and may only be used in an emergency. It is not an entrance.",
+          "The renting person must be present and reachable during the entire event.",
+        ],
+      },
+      {
+        heading: "No commercial events",
+        points: [
+          "Entry fees, tickets, profits from drink sales, and commercial events are not allowed.",
+          "Drinks may only be provided at cost price.",
+        ],
+      },
+      {
+        heading: "Violations",
+        points: [
+          "Violations of the contract, rental terms, or house rules may lead to partial or full retention of the deposit.",
+          "Severe violations may lead to the event being stopped and to further claims.",
+        ],
+      },
+    ],
+    contractsTitle: "Download contracts",
+    contractsIntro:
+      "The final selection and upload happen later through your private booking link. These placeholder links show the intended contract files.",
+    legalDetailsTitle: "Full legal terms",
+    legalDetailsSummary: "Show full legal terms",
+    legalDetailsIntro:
+      "This section is reserved for the detailed contract text. Until the PDFs are final, the signed rental contracts and this summary serve as guidance.",
+    legalDetailsPoints: [
+      "The rental contract covers the responsible person, rental period, payment, deposit, cleaning, liability, house rights, and consequences of violations.",
+      "The house rules are part of the use of the bar and must be followed by all guests.",
+      "Before launch, the final contract PDFs must be checked and linked here.",
+    ],
+    bookingText: "Requests are made through the booking page.",
+    bookingLink: "Go to booking",
+  },
+  impressum: {
+    pageTitle: "Legal notice – RoKo Bar Göttingen",
+    seoDescription:
+      "Legal notice for RoKo Bar at the Robert-Koch-Str. 38 dormitory in Göttingen. Contact and notes about the non-commercial student project.",
+    title: "Legal notice",
+    operator:
+      "Operator: Studentenwohnheim Robert-Koch-Straße 38, 37075 Göttingen",
+    managedBy: "Responsible person: [PLACEHOLDER — responsible person name]",
+    emailLabel: "Email",
+    disclaimer:
+      "Note: RoKo Bar is a non-commercial student project, not a business website. The content only provides information about renting and using the bar.",
+  },
+  datenschutz: {
+    pageTitle: "Privacy Policy – RoKo Bar Göttingen",
+    seoDescription:
+      "Privacy for RoKo Bar: no cookies or tracking, booking requests only for handling rentals, language saved in localStorage.",
+    title: "Privacy Policy",
+    lastUpdated: "Last updated: 12 Jan 2025",
+    intro:
+      "We keep it simple: we only process the data you send us to handle your booking request. There are no tracking cookies or analytics tools.",
+    sections: [
+      {
+        heading: "Controller",
+        points: [
+          "Student dormitory RoKo 38, Robert-Koch-Str. 38, 37075 Göttingen, Germany.",
+          "Email: heimkneipe@roko-goettingen.de",
+        ],
+      },
+      {
+        heading: "Server logs",
+        points: [
+          "The hosting provider Vercel stores technically necessary server logs (IP address, timestamp, user agent) to keep the site running.",
+          "We do not use these logs for marketing or tracking.",
+        ],
+      },
+      {
+        heading: "Contact & booking",
+        points: [
+          "We only process the data you send us (e.g., name, contact details, desired date) to handle your booking request.",
+          "Data is used solely to organize rental contracts, key handover, and follow-up questions.",
+          "Retention: kept as long as needed for booking-related communication; we delete correspondence on request unless legal duties require keeping it.",
+        ],
+      },
+      {
+        heading: "Cookies & localStorage",
+        points: [
+          "No cookies, no Google Analytics, no marketing tools.",
+          "We only store your language preference (\"de\" or \"en\") in the browser (localStorage, key: \"roko-language\") so the site opens in your language next time.",
+          "You can delete this entry at any time via your browser settings.",
+        ],
+      },
+      {
+        heading: "Your rights",
+        points: [
+          "You can request access to or deletion of your data unless legal retention duties apply.",
+          "Questions: heimkneipe@roko-goettingen.de",
+        ],
+      },
+    ],
+  },
+};
+
+const translations = { de, en };
+
+export default translations;

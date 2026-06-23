@@ -1,16 +1,16 @@
 // src/components/Navbar.jsx
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useLanguage } from "../context/LanguageContext.jsx";
+import { useLanguage } from "../context/useLanguage.js";
 
 const navLinkBase =
-  "text-sm md:text-base px-3 py-2 rounded-full transition-colors whitespace-nowrap";
-const navLinkActive = "bg-zinc-800 text-zinc-50";
-const navLinkInactive = "text-zinc-300 hover:bg-zinc-800/60";
+  "text-xs uppercase tracking-[0.14em] px-2 py-3.5 border-b transition-colors whitespace-nowrap";
+const navLinkActive = "border-primary text-ink";
+const navLinkInactive = "border-transparent text-muted hover:text-primary";
 
 function LanguageToggle({ onAfterToggle }) {
-  const { language, toggleLanguage } = useLanguage();
-  const isGerman = language === "de";
+  const { lang, toggleLanguage, t } = useLanguage();
+  const isGerman = lang === "de";
 
   const handleClick = () => {
     toggleLanguage();
@@ -21,21 +21,21 @@ function LanguageToggle({ onAfterToggle }) {
     <button
       type="button"
       onClick={handleClick}
-      className="text-xs border border-zinc-700 rounded-full px-1 py-1 text-zinc-300 hover:border-zinc-500 bg-zinc-900 flex items-center gap-1"
+      className="min-h-11 text-xs border border-line px-1 py-1 text-muted hover:border-primary bg-surface flex items-center gap-1 transition-colors"
     >
       <span
-        className={`px-2 py-1 rounded-full font-semibold transition-colors ${
-          isGerman ? "bg-zinc-700 text-zinc-50" : "text-zinc-400"
+        className={`px-2 py-1 font-semibold transition-colors ${
+          isGerman ? "bg-primary text-surface" : "text-muted"
         }`}
       >
-        DE
+        {t.common.languageLabels.de}
       </span>
       <span
-        className={`px-2 py-1 rounded-full font-semibold transition-colors ${
-          !isGerman ? "bg-zinc-700 text-zinc-50" : "text-zinc-400"
+        className={`px-2 py-1 font-semibold transition-colors ${
+          !isGerman ? "bg-primary text-surface" : "text-muted"
         }`}
       >
-        EN
+        {t.common.languageLabels.en}
       </span>
     </button>
   );
@@ -43,70 +43,57 @@ function LanguageToggle({ onAfterToggle }) {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { language } = useLanguage();
-  const brandTop =
-    language === "de" ? "Studentenwohnheim" : "Student dormitory";
-  const rulesLabel = language === "de" ? "Hausregeln" : "House rules";
-  const bookingLabel = language === "de" ? "Buchen" : "Booking";
-  const aboutLabel = language === "de" ? "Über die Bar" : "About the bar";
-  const homeLabel = language === "de" ? "Start" : "Home";
+  const { t } = useLanguage();
+  const primaryLinks = [
+    { to: t.common.links.home, label: t.nav.home, end: true },
+    { to: t.common.links.booking, label: t.nav.booking },
+    { to: t.common.links.about, label: t.nav.about },
+    { to: t.common.links.team, label: t.nav.team },
+    { to: t.common.links.directions, label: t.nav.directions },
+  ];
+  const secondaryLinks = [
+    { to: t.common.links.houseRules, label: t.nav.houseRules },
+    { to: t.common.links.terms, label: t.footer.terms },
+    { to: t.common.links.alumni, label: t.nav.alumni },
+    { to: t.common.links.impressum, label: t.footer.impressum },
+    { to: t.common.links.datenschutz, label: t.footer.datenschutz },
+  ];
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-black/70 backdrop-blur-md border-b border-zinc-800">
-      <nav className="w-full px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 md:gap-4">
-        {/* Logo / Brand */}
-        <Link to="/" className="flex flex-col leading-tight min-w-fit">
-          <span className="uppercase tracking-[0.22em] text-xs text-zinc-400">
-            {brandTop}
+    <header className="sticky top-0 z-40 bg-surface border-b border-line">
+      <nav className="container-wide py-3 flex flex-wrap items-center justify-between gap-3 md:gap-4">
+        <Link
+          to={t.common.links.home}
+          className="flex flex-col leading-tight min-w-fit"
+        >
+          <span className="uppercase tracking-[0.22em] text-xs text-muted">
+            {t.nav.brandTop}
           </span>
-          <span className="text-sm md:text-lg font-semibold">
-            RoKo-Bar · Robert-Koch-Str. 38
+          <span className="text-sm md:text-lg font-semibold text-primary-dark">
+            {t.nav.brandMain}
           </span>
         </Link>
 
-        {/* Nav links */}
         <div className="flex items-center gap-2 flex-1 md:flex-none justify-end flex-wrap">
           <div className="hidden md:flex items-center gap-2 flex-wrap">
-            <NavLink
-              to="/"
-              end
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-              }
-            >
-              {homeLabel}
-            </NavLink>
-            <NavLink
-              to="/booking"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-              }
-            >
-              {bookingLabel}
-            </NavLink>
-            <NavLink
-              to="/house-rules"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-              }
-            >
-              {rulesLabel}
-            </NavLink>
-            <NavLink
-              to="/about"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive}`
-              }
-            >
-              {aboutLabel}
-            </NavLink>
+            {primaryLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.end}
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `${navLinkBase} ${
+                    isActive ? navLinkActive : navLinkInactive
+                  }`
+                }
+              >
+                {link.label}
+              </NavLink>
+            ))}
 
             <div className="ml-2">
               <LanguageToggle />
@@ -115,24 +102,24 @@ export default function Navbar() {
 
           <button
             type="button"
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-full border border-zinc-700 text-zinc-200 hover:bg-zinc-800 transition"
+            className="md:hidden inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-primary transition"
             onClick={toggleMenu}
-            aria-label="Toggle navigation"
+            aria-label={t.nav.toggleAria}
           >
-            <span className="sr-only">Toggle navigation</span>
+            <span className="sr-only">{t.nav.toggleSr}</span>
             <div className="space-y-1">
               <span
-                className={`block h-0.5 w-5 bg-zinc-200 transition-transform ${
+                className={`block h-0.5 w-5 bg-ink transition-transform ${
                   isOpen ? "rotate-45 translate-y-1.5" : ""
                 }`}
               />
               <span
-                className={`block h-0.5 w-5 bg-zinc-200 transition-opacity ${
+                className={`block h-0.5 w-5 bg-ink transition-opacity ${
                   isOpen ? "opacity-0" : "opacity-100"
                 }`}
               />
               <span
-                className={`block h-0.5 w-5 bg-zinc-200 transition-transform ${
+                className={`block h-0.5 w-5 bg-ink transition-transform ${
                   isOpen ? "-rotate-45 -translate-y-1.5" : ""
                 }`}
               />
@@ -142,45 +129,23 @@ export default function Navbar() {
       </nav>
 
       {isOpen && (
-        <div className="md:hidden border-t border-zinc-800 bg-black/95">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2">
-            <NavLink
-              to="/"
-              end
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
-              }
-            >
-              {homeLabel}
-            </NavLink>
-            <NavLink
-              to="/booking"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
-              }
-            >
-              {bookingLabel}
-            </NavLink>
-            <NavLink
-              to="/house-rules"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
-              }
-            >
-              {rulesLabel}
-            </NavLink>
-            <NavLink
-              to="/about"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `${navLinkBase} ${isActive ? navLinkActive : navLinkInactive} w-full text-left`
-              }
-            >
-              {aboutLabel}
-            </NavLink>
+        <div className="md:hidden border-t border-line bg-surface">
+          <div className="container-wide py-5 flex flex-col gap-1">
+            {[...primaryLinks, ...secondaryLinks].map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.end}
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `${navLinkBase} ${
+                    isActive ? navLinkActive : navLinkInactive
+                  } w-full text-left`
+                }
+              >
+                {link.label}
+              </NavLink>
+            ))}
 
             <div className="pt-2">
               <LanguageToggle onAfterToggle={closeMenu} />
