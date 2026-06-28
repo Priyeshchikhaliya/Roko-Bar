@@ -5,13 +5,13 @@ import {
   BOOKING_COLUMNS,
   getQueryValue,
   isNotFoundError,
-} from "../../../_adminUtils.js";
-import { requireAdmin } from "../../../_auth.js";
-import { isTakingBooking } from "../../../_bookingRules.js";
-import { CONFIRM_WINDOW_DAYS } from "../../../_config.js";
-import { sendApprovalEmailWithStatus } from "../../../_email.js";
-import { methodNotAllowed, sendError, sendJson } from "../../../_responses.js";
-import { getSupabase } from "../../../_supabase.js";
+} from "../api/_adminUtils.js";
+import { requireAdmin } from "../api/_auth.js";
+import { isTakingBooking } from "../api/_bookingRules.js";
+import { CONFIRM_WINDOW_DAYS } from "../api/_config.js";
+import { sendApprovalEmailWithStatus } from "../api/_email.js";
+import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 async function isNightTakenByOtherBooking(supabase, night, bookingId, now = new Date()) {
   const [bookingResult, blockedResult] = await Promise.all([

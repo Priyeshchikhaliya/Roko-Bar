@@ -3,17 +3,17 @@ import {
   BOOKING_COLUMNS,
   getQueryValue,
   isNotFoundError,
-} from "../../../_adminUtils.js";
-import { requireAdmin } from "../../../_auth.js";
-import { sendTutorIntroEmailWithStatus } from "../../../_email.js";
+} from "../api/_adminUtils.js";
+import { requireAdmin } from "../api/_auth.js";
+import { sendTutorIntroEmailWithStatus } from "../api/_email.js";
 import {
   methodNotAllowed,
   readJsonBody,
   sendError,
   sendJson,
-} from "../../../_responses.js";
-import { getSupabase } from "../../../_supabase.js";
-import { getTutorByName, TutorConfigError } from "../../../_tutors.js";
+} from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
+import { getTutorByName, TutorConfigError } from "../api/_tutors.js";
 
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;

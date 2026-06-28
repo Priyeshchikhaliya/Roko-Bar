@@ -3,15 +3,15 @@ import {
   BOOKING_COLUMNS,
   getQueryValue,
   isNotFoundError,
-} from "../../_adminUtils.js";
+} from "../../../server/api/_adminUtils.js";
 import {
   isValidResidency,
   normalizeResidency,
   priceForResidency,
-} from "../../_bookingRules.js";
-import { requireAdmin } from "../../_auth.js";
-import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../../_responses.js";
-import { getSupabase } from "../../_supabase.js";
+} from "../../../server/api/_bookingRules.js";
+import { requireAdmin } from "../../../server/api/_auth.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../../../server/api/_responses.js";
+import { getSupabase } from "../../../server/api/_supabase.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EDITABLE_FIELDS = new Set([

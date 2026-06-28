@@ -2,11 +2,11 @@ import {
   BOOKING_COLUMNS,
   getQueryValue,
   isNotFoundError,
-} from "../../../_adminUtils.js";
-import { requireAdmin } from "../../../_auth.js";
-import { sendApprovalEmailWithStatus } from "../../../_email.js";
-import { methodNotAllowed, sendError, sendJson } from "../../../_responses.js";
-import { getSupabase } from "../../../_supabase.js";
+} from "../api/_adminUtils.js";
+import { requireAdmin } from "../api/_auth.js";
+import { sendApprovalEmailWithStatus } from "../api/_email.js";
+import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;

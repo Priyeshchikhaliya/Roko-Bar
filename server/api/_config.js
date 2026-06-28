@@ -9,7 +9,8 @@ export const DEPOSIT_AMOUNT = 200;
 // Resend test-sender note: until a domain is verified, onboarding@resend.dev can
 // only deliver to the Resend account's own email. During testing, use that same
 // account email as the guest email if the acknowledgement should actually arrive.
-export const EMAIL_FROM = "RoKo Bar <onboarding@resend.dev>";
+export const EMAIL_FROM =
+  process.env.EMAIL_FROM || "RoKo Bar <noreply@rokobar.de>";
 export const TUTOR_NOTIFY_EMAIL = "rokobar.goettingen@outlook.com";
 function envValue(name) {
   return (process.env[name] || "").trim();

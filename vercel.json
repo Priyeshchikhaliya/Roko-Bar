@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/admin/blocked",
+      "destination": "/api/admin/blocked/__collection"
+    },
+    {
       "source": "/((?!api/|src/|node_modules/|assets/|@|.*\\..*).*)",
       "destination": "/index.html"
     }

@@ -3,24 +3,24 @@ import {
   sanitizeBookingForGuest,
   sendUploadValidationError,
   uploadPdfToContractBucket,
-} from "../../../_contracts.js";
+} from "../api/_contracts.js";
 import {
   addBookingDerivedFields,
   BOOKING_COLUMNS,
   getQueryValue,
   isNotFoundError,
-} from "../../../_adminUtils.js";
-import { requireAdmin } from "../../../_auth.js";
-import { SITE_URL } from "../../../_config.js";
+} from "../api/_adminUtils.js";
+import { requireAdmin } from "../api/_auth.js";
+import { SITE_URL } from "../api/_config.js";
 import {
   escapeHtml,
   formatNight,
   normalizeEmailLanguage,
   renderEmailLayout,
   sendEmail,
-} from "../../../_email.js";
-import { methodNotAllowed, sendError, sendJson } from "../../../_responses.js";
-import { getSupabase } from "../../../_supabase.js";
+} from "../api/_email.js";
+import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 export const config = {
   api: {

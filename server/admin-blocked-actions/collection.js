@@ -1,7 +1,7 @@
-import { requireAdmin } from "../_auth.js";
-import { isNightTaken, validateBookableNight } from "../_bookingRules.js";
-import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../_responses.js";
-import { getSupabase } from "../_supabase.js";
+import { requireAdmin } from "../api/_auth.js";
+import { isNightTaken, validateBookableNight } from "../api/_bookingRules.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 const BLOCKED_COLUMNS = "id, night, reason, created_at";
 const NIGHT_ERROR_CODES = {

@@ -1,8 +1,8 @@
 import {
   createAdminSessionToken,
   verifyAdminPassword,
-} from "../_auth.js";
-import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../_responses.js";
+} from "../../server/api/_auth.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../../server/api/_responses.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

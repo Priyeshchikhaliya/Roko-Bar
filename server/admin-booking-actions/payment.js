@@ -3,10 +3,10 @@ import {
   BOOKING_COLUMNS,
   getQueryValue,
   isNotFoundError,
-} from "../../../_adminUtils.js";
-import { requireAdmin } from "../../../_auth.js";
-import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../../../_responses.js";
-import { getSupabase } from "../../../_supabase.js";
+} from "../api/_adminUtils.js";
+import { requireAdmin } from "../api/_auth.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 function hasOwn(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);

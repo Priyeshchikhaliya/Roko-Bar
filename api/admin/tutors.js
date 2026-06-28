@@ -1,6 +1,6 @@
-import { requireAdmin } from "../_auth.js";
-import { methodNotAllowed, sendError, sendJson } from "../_responses.js";
-import { getTutors, TutorConfigError } from "../_tutors.js";
+import { requireAdmin } from "../../server/api/_auth.js";
+import { methodNotAllowed, sendError, sendJson } from "../../server/api/_responses.js";
+import { getTutors, TutorConfigError } from "../../server/api/_tutors.js";
 
 export default function handler(req, res) {
   if (!requireAdmin(req, res)) return;

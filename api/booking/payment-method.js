@@ -1,4 +1,4 @@
-import { methodNotAllowed, sendError } from "../_responses.js";
+import { methodNotAllowed, sendError } from "../../server/api/_responses.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

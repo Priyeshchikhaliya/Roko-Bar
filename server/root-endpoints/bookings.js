@@ -4,23 +4,23 @@ import {
   normalizeResidency,
   priceForResidency,
   validateBookableNight,
-} from "./_bookingRules.js";
+} from "../api/_bookingRules.js";
 import {
   DEPOSIT_AMOUNT,
   PRICE_EXTERNAL,
   PRICE_RESIDENT,
   TUTOR_NOTIFY_EMAIL,
-} from "./_config.js";
+} from "../api/_config.js";
 import {
   escapeHtml,
   formatNight,
   normalizeEmailLanguage,
   renderEmailLayout,
   sendEmail,
-} from "./_email.js";
-import { normalizePaymentMethod } from "./_payments.js";
-import { methodNotAllowed, readJsonBody, sendError, sendJson } from "./_responses.js";
-import { getSupabase } from "./_supabase.js";
+} from "../api/_email.js";
+import { normalizePaymentMethod } from "../api/_payments.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^\+?[\d\s()./-]{7,25}$/;

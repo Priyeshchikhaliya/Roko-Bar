@@ -1,36 +1,15 @@
-import { getQueryValue } from "../../_adminUtils.js";
-import { requireAdmin } from "../../_auth.js";
-import { methodNotAllowed, sendError, sendJson } from "../../_responses.js";
-import { getSupabase } from "../../_supabase.js";
+import collectionHandler from "../../../server/admin-blocked-actions/collection.js";
+import itemHandler from "../../../server/admin-blocked-actions/item.js";
 
-const BLOCKED_COLUMNS = "id, night, reason, created_at";
+const COLLECTION_ROUTE_ID = "__collection";
 
 export default async function handler(req, res) {
-  if (!requireAdmin(req, res)) return;
+  const value = req.query?.id;
+  const id = Array.isArray(value) ? value[0] : value;
 
-  if (req.method !== "DELETE") {
-    return methodNotAllowed(req, res, "DELETE");
+  if (id === COLLECTION_ROUTE_ID) {
+    return collectionHandler(req, res);
   }
 
-  try {
-    const { data, error } = await getSupabase()
-      .from("blocked_dates")
-      .delete()
-      .eq("id", getQueryValue(req, "id"))
-      .select(BLOCKED_COLUMNS)
-      .single();
-
-    if (error) {
-      if (error.code === "PGRST116") {
-        return sendError(req, res, 404, "blocked_date_not_found");
-      }
-
-      throw error;
-    }
-
-    return sendJson(res, 200, { blockedDate: data });
-  } catch (error) {
-    console.error("admin blocked delete error", error);
-    return sendError(req, res, 500, "blocked_date_remove_failed");
-  }
+  return itemHandler(req, res);
 }

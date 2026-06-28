@@ -1,6 +1,6 @@
-import { getAvailabilityNights } from "./_bookingRules.js";
-import { methodNotAllowed, sendJson } from "./_responses.js";
-import { getSupabase } from "./_supabase.js";
+import { getAvailabilityNights } from "../api/_bookingRules.js";
+import { methodNotAllowed, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {

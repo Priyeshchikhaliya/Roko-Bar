@@ -8,11 +8,11 @@ import {
   uploadPdfToContractBucket,
   validatePaymentProofFile,
   validatePdfFile,
-} from "../_contracts.js";
-import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../_adminUtils.js";
-import { normalizePaymentMethod } from "../_payments.js";
-import { methodNotAllowed, sendError, sendJson } from "../_responses.js";
-import { getSupabase } from "../_supabase.js";
+} from "../../server/api/_contracts.js";
+import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../../server/api/_adminUtils.js";
+import { normalizePaymentMethod } from "../../server/api/_payments.js";
+import { methodNotAllowed, sendError, sendJson } from "../../server/api/_responses.js";
+import { getSupabase } from "../../server/api/_supabase.js";
 
 export const config = {
   api: {

@@ -3,10 +3,10 @@ import {
   BOOKING_COLUMNS,
   BOOKING_STATUSES,
   getQueryValue,
-} from "../_adminUtils.js";
-import { requireAdmin } from "../_auth.js";
-import { methodNotAllowed, sendError, sendJson } from "../_responses.js";
-import { getSupabase } from "../_supabase.js";
+} from "../../server/api/_adminUtils.js";
+import { requireAdmin } from "../../server/api/_auth.js";
+import { methodNotAllowed, sendError, sendJson } from "../../server/api/_responses.js";
+import { getSupabase } from "../../server/api/_supabase.js";
 
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;

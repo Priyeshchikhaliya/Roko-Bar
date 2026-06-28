@@ -1,7 +1,7 @@
-import { sanitizeBookingForGuest } from "../_contracts.js";
-import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../_adminUtils.js";
-import { methodNotAllowed, sendError, sendJson } from "../_responses.js";
-import { getSupabase } from "../_supabase.js";
+import { sanitizeBookingForGuest } from "../api/_contracts.js";
+import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../api/_adminUtils.js";
+import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
+import { getSupabase } from "../api/_supabase.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
