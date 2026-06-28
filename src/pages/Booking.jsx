@@ -13,6 +13,12 @@ const RESIDENCY_PRICES = {
 };
 const BOOKABLE_WEEKDAYS = new Set([5, 6]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^\+?[\d\s()./-]{7,25}$/;
+
+function isValidPhone(value) {
+  const digits = value.replace(/\D/g, "");
+  return PHONE_RE.test(value) && digits.length >= 7 && digits.length <= 15;
+}
 
 const emptyForm = {
   requester_name: "",
@@ -250,6 +256,12 @@ export default function Booking() {
       nextErrors.email = page.errors.emailInvalid;
     }
 
+    if (!formData.phone.trim()) {
+      nextErrors.phone = page.errors.phoneRequired;
+    } else if (!isValidPhone(formData.phone.trim())) {
+      nextErrors.phone = page.errors.phoneInvalid;
+    }
+
     if (!formData.address.trim()) {
       nextErrors.address = page.errors.addressRequired;
     }
@@ -299,7 +311,9 @@ export default function Booking() {
         method: "POST",
         headers: {
           Accept: "application/json",
+          "Accept-Language": lang,
           "Content-Type": "application/json",
+          "X-Roko-Lang": lang,
         },
         body: JSON.stringify(payload),
       });
@@ -947,7 +961,10 @@ function BookingRequestForm({
               className="form-input w-full px-3 py-2.5"
               value={formData.phone}
               onChange={onFieldChange}
+              required
               autoComplete="tel"
+              aria-invalid={fieldErrors.phone ? "true" : undefined}
+              aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
             />
           </FormField>
 

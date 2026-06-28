@@ -11,65 +11,39 @@ const COPY = {
   de: {
     pageTitle: "Buchungsstatus | RoKo Bar",
     eyebrow: "Privater Buchungslink",
-    loading: "Buchung wird geladen...",
-    notFound: "Dieser private Link ist nicht gueltig oder nicht mehr aktiv.",
+    loading: "Buchung wird geladen ...",
+    notFound: "Dieser private Link ist nicht gültig oder nicht mehr aktiv.",
     genericError: "Die Buchung konnte nicht geladen werden.",
     retry: "Erneut laden",
     statusLabel: "Status",
-    nextLabel: "Naechster Schritt",
+    nextLabel: "Nächster Schritt",
     bookingTitle: "Deine Buchung",
+    summaryTitle: "Buchungsübersicht",
     downloadContract: "Vertrag herunterladen",
     downloadRules: "Hausordnung herunterladen",
     downloadFinal: "Finalen Vertrag herunterladen",
-    submitButton: "Submit / Absenden",
-    sending: "Wird gesendet...",
-    successTitle: "Gesendet.",
-    successSaved: "Deine Angaben wurden gespeichert.",
-    successWaitingProof:
-      "Deine Angaben wurden gespeichert. Der Zahlungsnachweis kann nach der Ueberweisung nachgereicht werden.",
-    successWaitingReview:
-      "Deine Unterlagen sind angekommen. Die Tutor:innen pruefen sie und zeichnen den Vertrag gegen.",
-    fixErrors: "Bitte pruefe die markierten Felder.",
-    nothingToSubmit: "Es gibt keine neuen Angaben oder Dateien zum Absenden.",
-    date: "Termin",
-    rent: "Miete",
-    deposit: "Kaution",
-    depositSuffix: "bar",
-    contract: "Vertrag",
-    deadline: "Frist",
-    missingDeadline: "Nicht gesetzt",
-    signedUploaded: "Unterschriebener Vertrag",
-    proofUploaded: "Zahlungsnachweis",
-    finalUploaded: "Finaler Vertrag",
-    yes: "Ja",
-    no: "Nein",
-    step1Title: "Dein Vertrag",
-    step1Meta: "Schritt 1",
-    step1Body:
-      "Lade Vertrag und Hausordnung herunter. Unterschreibe den Vertrag und speichere ihn als PDF.",
-    step2Title: "Unterschreiben & bezahlen",
-    step2Meta: "Schritt 2",
-    step2Body:
-      "Fuege den unterschriebenen Vertrag hinzu, waehle die Mietzahlung und sende alles mit einem Klick ab.",
+    submitButton: "Absenden",
+    sending: "Wird gesendet ...",
+    submitted: "Deine Unterlagen wurden übermittelt.",
+    formTitle: "Unterlagen einreichen",
+    formIntro:
+      "Lade Vertrag und Hausordnung herunter, unterschreibe den Vertrag und sende anschließend alle erforderlichen Angaben gemeinsam ab.",
     signedContractLabel: "Unterschriebener Vertrag",
-    chooseContract: "PDF auswaehlen",
-    replaceContract: "Neue PDF auswaehlen",
+    chooseContract: "PDF auswählen",
     contractHint: "PDF, maximal 4 MB.",
-    contractAlreadyUploaded:
-      "Es ist bereits ein Vertrag hochgeladen. Du kannst ihn bis zur Bestaetigung ersetzen.",
     contractRequired: "Bitte lade den unterschriebenen Vertrag als PDF hoch.",
     contractTypeError: "Der unterschriebene Vertrag muss eine PDF-Datei sein.",
-    contractSizeError: "Der unterschriebene Vertrag darf maximal 4 MB gross sein.",
-    paymentMethodLabel: "Wie moechtest du die Miete bezahlen?",
-    paymentRequired: "Bitte waehle Barzahlung oder Online-Ueberweisung.",
+    contractSizeError: "Der unterschriebene Vertrag darf maximal 4 MB groß sein.",
+    paymentMethodLabel: "Wie möchtest du die Miete bezahlen?",
+    paymentRequired: "Bitte wähle Barzahlung oder Online-Überweisung.",
     paymentMethods: {
       cash: "Barzahlung",
-      online: "Online-Ueberweisung",
+      online: "Online-Überweisung",
     },
     cashPaymentNote:
-      "Die Miete zahlst du bar nach Absprache oder spaetestens bei der Schluesseluebergabe.",
+      "Die Miete zahlst du bar nach Absprache oder spätestens bei der Schlüsselübergabe.",
     onlinePaymentNote:
-      "Ueberweise die Miete mit dem Verwendungszweck unten. Den Nachweis kannst du direkt oder spaeter hochladen.",
+      "Überweise die Miete mit dem Verwendungszweck unten und lade den Zahlungsnachweis direkt mit hoch.",
     bankDetails: "Bankdaten",
     bankName: "Bank",
     bankHolder: "Kontoinhaber",
@@ -78,40 +52,58 @@ const COPY = {
     bankMissing:
       "Die Bankdaten sind noch nicht konfiguriert. Bitte melde dich bei den Bar-Tutor:innen.",
     proofLabel: "Zahlungsnachweis",
-    chooseProof: "Nachweis auswaehlen",
-    replaceProof: "Neuen Nachweis auswaehlen",
+    chooseProof: "Nachweis auswählen",
     proofHint: "PDF, JPG oder PNG, maximal 4 MB.",
-    proofAlreadyUploaded:
-      "Es ist bereits ein Zahlungsnachweis hochgeladen. Du kannst ihn bis zur Bestaetigung ersetzen.",
+    proofRequired: "Bitte lade den Zahlungsnachweis hoch.",
     proofTypeError: "Der Zahlungsnachweis muss PDF, JPG oder PNG sein.",
-    proofSizeError: "Der Zahlungsnachweis darf maximal 4 MB gross sein.",
-    confirmationPending:
-      "Die Buchung wird bestaetigt, sobald ein:e Tutor:in die Unterlagen geprueft und den Vertrag gegengezeichnet hat.",
+    proofSizeError: "Der Zahlungsnachweis darf maximal 4 MB groß sein.",
+    readyHint: "Alle erforderlichen Angaben sind bereit.",
+    missingContractHint: "Es fehlt noch der unterschriebene Vertrag.",
+    missingMethodHint: "Es fehlt noch die Zahlungsart.",
+    missingProofHint: "Für Online-Überweisung fehlt noch der Zahlungsnachweis.",
+    date: "Termin",
+    rent: "Miete",
+    deposit: "Kaution",
+    depositSuffix: "bar",
+    contract: "Vertrag",
+    deadline: "Frist",
+    missingDeadline: "Nicht gesetzt",
+    paymentMethod: "Mietzahlung",
+    signedUploaded: "Unterschriebener Vertrag",
+    proofUploaded: "Zahlungsnachweis",
+    finalUploaded: "Finaler Vertrag",
+    yes: "Ja",
+    no: "Nein",
     finalTitle: "Alles bereit",
     finalBody:
-      "Deine Buchung ist bestaetigt. Lade hier den gegengezeichneten Vertrag herunter.",
-    cashReminder: "Bitte denke an die 200 EUR Kaution bar bei der Uebergabe.",
-    blockedHint:
-      "Dieser Link zeigt den aktuellen Stand. Fuer Aenderungen melde dich bitte bei den Bar-Tutor:innen.",
-    needed: {
+      "Deine Buchung ist bestätigt. Lade hier den gegengezeichneten Vertrag herunter.",
+    cashReminder: "Bitte denke an die 200 EUR Kaution bar bei der Übergabe.",
+    stateBodies: {
       pending:
-        "Deine Anfrage wird noch geprueft. Du bekommst eine E-Mail nach der Freigabe.",
-      approved:
-        "Vertrag herunterladen, unterschreiben, Zahlungsart waehlen und absenden.",
-      signedOnlineMissingProof:
-        "Zahlungsnachweis hochladen oder bereits gesendete Dateien ersetzen.",
+        "Deine Anfrage wird geprüft. Du bekommst eine E-Mail, sobald ein:e Tutor:in sie freigegeben hat.",
       signed:
-        "Wir pruefen deine Unterlagen. Bis zur Bestaetigung kannst du Dateien ersetzen.",
-      confirmed: "Der finale Vertrag ist bereit.",
-      rejected: "Diese Anfrage wurde abgelehnt.",
-      cancelled: "Diese Buchung wurde storniert.",
-      expired: "Die Upload-Frist ist abgelaufen.",
+        "Deine Unterlagen sind angekommen. Diese Abgabe ist jetzt gesperrt; die Tutor:innen prüfen alles und zeichnen den Vertrag gegen.",
+      rejected:
+        "Diese Anfrage wurde abgelehnt. Für Rückfragen melde dich bitte bei den Bar-Tutor:innen.",
+      cancelled:
+        "Diese Buchung wurde storniert. Für Rückfragen melde dich bitte bei den Bar-Tutor:innen.",
+      expired:
+        "Die Upload-Frist ist abgelaufen. Bitte melde dich bei den Bar-Tutor:innen, wenn der Termin noch relevant ist.",
+    },
+    needed: {
+      pending: "Auf Freigabe durch die Tutor:innen warten.",
+      approved: "Vertrag unterschreiben, Zahlungsart wählen und alles gemeinsam absenden.",
+      signed: "Auf Prüfung und Gegenzeichnung durch die Tutor:innen warten.",
+      confirmed: "Finalen Vertrag herunterladen und Kaution für die Übergabe einplanen.",
+      rejected: "Keine Aktion möglich.",
+      cancelled: "Keine Aktion möglich.",
+      expired: "Tutor:innen kontaktieren, falls du den Termin weiterhin möchtest.",
     },
     statuses: {
-      pending: "In Pruefung",
+      pending: "In Prüfung",
       approved: "Freigegeben",
-      signed: "Hochgeladen",
-      confirmed: "Bestaetigt",
+      signed: "Eingereicht",
+      confirmed: "Bestätigt",
       rejected: "Abgelehnt",
       cancelled: "Storniert",
       expired: "Abgelaufen",
@@ -120,52 +112,26 @@ const COPY = {
   en: {
     pageTitle: "Booking status | RoKo Bar",
     eyebrow: "Private booking link",
-    loading: "Loading booking...",
+    loading: "Loading booking ...",
     notFound: "This private link is not valid or no longer active.",
     genericError: "Could not load the booking.",
     retry: "Try again",
     statusLabel: "Status",
     nextLabel: "Next step",
     bookingTitle: "Your booking",
+    summaryTitle: "Booking summary",
     downloadContract: "Download contract",
     downloadRules: "Download house rules",
     downloadFinal: "Download final contract",
-    submitButton: "Submit / Absenden",
-    sending: "Sending...",
-    successTitle: "Submitted.",
-    successSaved: "Your details were saved.",
-    successWaitingProof:
-      "Your details were saved. You can upload payment proof after the transfer.",
-    successWaitingReview:
-      "Your documents were received. The tutors will review them and counter-sign the contract.",
-    fixErrors: "Please check the highlighted fields.",
-    nothingToSubmit: "There are no new details or files to submit.",
-    date: "Date",
-    rent: "Rent",
-    deposit: "Deposit",
-    depositSuffix: "cash",
-    contract: "Contract",
-    deadline: "Deadline",
-    missingDeadline: "Not set",
-    signedUploaded: "Signed contract",
-    proofUploaded: "Payment proof",
-    finalUploaded: "Final contract",
-    yes: "Yes",
-    no: "No",
-    step1Title: "Your contract",
-    step1Meta: "Step 1",
-    step1Body:
-      "Download the contract and house rules. Sign the contract and save it as a PDF.",
-    step2Title: "Sign & pay",
-    step2Meta: "Step 2",
-    step2Body:
-      "Attach the signed contract, choose the rent payment method, and submit everything with one button.",
+    submitButton: "Submit",
+    sending: "Sending ...",
+    submitted: "Your documents were submitted.",
+    formTitle: "Submit documents",
+    formIntro:
+      "Download the contract and house rules, sign the contract, then send every required item together.",
     signedContractLabel: "Signed contract",
     chooseContract: "Choose PDF",
-    replaceContract: "Choose new PDF",
     contractHint: "PDF, up to 4 MB.",
-    contractAlreadyUploaded:
-      "A signed contract is already uploaded. You can replace it until confirmation.",
     contractRequired: "Please upload the signed contract as a PDF.",
     contractTypeError: "The signed contract must be a PDF file.",
     contractSizeError: "The signed contract must be 4 MB or smaller.",
@@ -178,7 +144,7 @@ const COPY = {
     cashPaymentNote:
       "Pay the rent in cash by arrangement or at the latest on key-handover day.",
     onlinePaymentNote:
-      "Transfer the rent using the reference below. You can upload proof now or later.",
+      "Transfer the rent using the reference below and upload the payment proof with this submission.",
     bankDetails: "Bank details",
     bankName: "Bank",
     bankHolder: "Account holder",
@@ -188,38 +154,56 @@ const COPY = {
       "Bank details are not configured yet. Please contact the bar tutors.",
     proofLabel: "Payment proof",
     chooseProof: "Choose proof",
-    replaceProof: "Choose new proof",
     proofHint: "PDF, JPG, or PNG, up to 4 MB.",
-    proofAlreadyUploaded:
-      "A payment proof is already uploaded. You can replace it until confirmation.",
+    proofRequired: "Please upload the payment proof.",
     proofTypeError: "Payment proof must be PDF, JPG, or PNG.",
     proofSizeError: "Payment proof must be 4 MB or smaller.",
-    confirmationPending:
-      "The booking is confirmed after a tutor reviews the documents and counter-signs the contract.",
+    readyHint: "All required items are ready.",
+    missingContractHint: "The signed contract is still missing.",
+    missingMethodHint: "The rent payment method is still missing.",
+    missingProofHint: "Online bank transfer still needs payment proof.",
+    date: "Date",
+    rent: "Rent",
+    deposit: "Deposit",
+    depositSuffix: "cash",
+    contract: "Contract",
+    deadline: "Deadline",
+    missingDeadline: "Not set",
+    paymentMethod: "Rent payment",
+    signedUploaded: "Signed contract",
+    proofUploaded: "Payment proof",
+    finalUploaded: "Final contract",
+    yes: "Yes",
+    no: "No",
     finalTitle: "You are all set",
     finalBody:
       "Your booking is confirmed. Download the counter-signed contract here.",
     cashReminder: "Please remember the 200 EUR cash deposit at handover.",
-    blockedHint:
-      "This link shows the current status. Please contact the bar tutors for changes.",
-    needed: {
+    stateBodies: {
       pending:
-        "Your request is still under review. You will receive an email after approval.",
-      approved:
-        "Download the contract, sign it, choose payment, and submit.",
-      signedOnlineMissingProof:
-        "Upload payment proof or replace files you already sent.",
+        "Your request is being reviewed. You will receive an email once a tutor approves it.",
       signed:
-        "We are reviewing your documents. You can replace files until confirmation.",
-      confirmed: "The final contract is ready.",
-      rejected: "This request was rejected.",
-      cancelled: "This booking was cancelled.",
-      expired: "The upload deadline has passed.",
+        "Your documents were received. This submission is now locked; the tutors will review everything and counter-sign the contract.",
+      rejected:
+        "This request was rejected. Please contact the bar tutors if you have questions.",
+      cancelled:
+        "This booking was cancelled. Please contact the bar tutors if you have questions.",
+      expired:
+        "The upload deadline has passed. Please contact the bar tutors if this date is still relevant.",
+    },
+    needed: {
+      pending: "Wait for tutor approval.",
+      approved: "Sign the contract, choose payment, and submit everything together.",
+      signed: "Wait for tutor review and counter-signing.",
+      confirmed: "Download the final contract and plan the cash deposit for handover.",
+      rejected: "No action is available.",
+      cancelled: "No action is available.",
+      expired: "Contact the tutors if you still want this date.",
     },
     statuses: {
       pending: "In review",
       approved: "Approved",
-      signed: "Uploaded",
+      signed: "Submitted",
       confirmed: "Confirmed",
       rejected: "Rejected",
       cancelled: "Cancelled",
@@ -283,30 +267,6 @@ function formatMoney(value, lang) {
   }).format(Number(value || 0));
 }
 
-function statusClass(status) {
-  if (status === "confirmed") {
-    return "border-success bg-surface text-success";
-  }
-
-  if (status === "signed") {
-    return "border-sky bg-surface text-sky";
-  }
-
-  if (status === "approved") {
-    return "border-warning bg-surface text-warning";
-  }
-
-  if (status === "rejected" || status === "cancelled" || status === "expired") {
-    return "border-line bg-paper text-muted";
-  }
-
-  return "border-primary bg-brick-tint text-primary-dark";
-}
-
-function fileUrl(token, which) {
-  return `/api/booking/file?token=${encodeURIComponent(token)}&which=${which}`;
-}
-
 function isPdfFile(file) {
   if (!file) return false;
 
@@ -338,21 +298,50 @@ function isAcceptedProofFile(file) {
   return hasAcceptedName && hasAcceptedType;
 }
 
+function statusClass(status) {
+  if (status === "confirmed") return "border-success bg-surface text-success";
+  if (status === "signed") return "border-sky bg-surface text-sky";
+  if (status === "approved") return "border-warning bg-surface text-warning";
+  if (status === "rejected" || status === "cancelled" || status === "expired") {
+    return "border-line bg-paper text-muted";
+  }
+
+  return "border-primary bg-brick-tint text-primary-dark";
+}
+
+function fileUrl(token, which) {
+  return `/api/booking/file?token=${encodeURIComponent(token)}&which=${which}`;
+}
+
+function paymentMethodText(method, copy) {
+  if (method === "cash") return copy.paymentMethods.cash;
+  if (method === "online") return copy.paymentMethods.online;
+  return "-";
+}
+
+function hasBankDetails(booking) {
+  return Boolean(booking?.bankDetails?.iban && booking?.bankDetails?.holder);
+}
+
 async function readJsonOrText(response) {
   const text = await response.text();
-
   if (!text) return {};
 
   try {
     return JSON.parse(text);
   } catch {
-    return { error: text.trim().slice(0, 280) };
+    return {};
   }
 }
 
-async function apiJson(url, options, fallback) {
+async function apiJson(url, { lang, ...options } = {}, fallback) {
   const response = await fetch(url, {
-    headers: { Accept: "application/json", ...(options?.headers || {}) },
+    headers: {
+      Accept: "application/json",
+      "Accept-Language": lang,
+      "X-Roko-Lang": lang,
+      ...(options?.headers || {}),
+    },
     ...options,
   });
   const data = await readJsonOrText(response);
@@ -360,28 +349,11 @@ async function apiJson(url, options, fallback) {
   if (!response.ok) {
     const error = new Error(data.error || fallback);
     error.status = response.status;
+    error.code = data.code;
     throw error;
   }
 
   return data;
-}
-
-function getNeededText(booking, copy) {
-  if (!booking) return "";
-
-  if (
-    booking.status === "signed" &&
-    booking.payment_method === "online" &&
-    !booking.hasRentProof
-  ) {
-    return copy.needed.signedOnlineMissingProof;
-  }
-
-  return copy.needed[booking.status] || copy.needed.pending;
-}
-
-function hasBankDetails(booking) {
-  return Boolean(booking?.bankDetails?.iban && booking?.bankDetails?.holder);
 }
 
 export default function BookingStatus() {
@@ -406,7 +378,7 @@ export default function BookingStatus() {
     try {
       const data = await apiJson(
         `/api/booking/status?token=${encodeURIComponent(token)}`,
-        undefined,
+        { lang },
         copy.genericError
       );
       setBooking(data.booking);
@@ -416,7 +388,7 @@ export default function BookingStatus() {
       setLoadStatus("error");
       setLoadError(error.status === 404 ? copy.notFound : error.message);
     }
-  }, [copy.genericError, copy.notFound, token]);
+  }, [copy.genericError, copy.notFound, lang, token]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -426,16 +398,80 @@ export default function BookingStatus() {
     return () => window.clearTimeout(timeoutId);
   }, [loadBooking]);
 
-  const canDownloadBlankFiles =
-    booking?.status === "approved" ||
-    booking?.status === "signed" ||
-    booking?.status === "confirmed";
-  const canEdit = booking?.status === "approved" || booking?.status === "signed";
-  const canDownloadFinal = booking?.status === "confirmed" && booking.hasFinalContract;
-  const isSending = submitStatus === "sending";
   const selectedOnline = selectedPaymentMethod === "online";
   const bankConfigured = hasBankDetails(booking);
-  const neededText = useMemo(() => getNeededText(booking, copy), [booking, copy]);
+  const isSending = submitStatus === "sending";
+
+  const localValidation = useMemo(() => {
+    const errors = {};
+
+    if (!contractFile) {
+      errors.contract = copy.contractRequired;
+    } else if (!isPdfFile(contractFile)) {
+      errors.contract = copy.contractTypeError;
+    } else if (contractFile.size > MAX_CONTRACT_BYTES) {
+      errors.contract = copy.contractSizeError;
+    }
+
+    if (!selectedPaymentMethod) {
+      errors.payment = copy.paymentRequired;
+    } else if (selectedOnline && !bankConfigured) {
+      errors.payment = copy.bankMissing;
+    }
+
+    if (selectedOnline) {
+      if (!proofFile) {
+        errors.proof = copy.proofRequired;
+      } else if (!isAcceptedProofFile(proofFile)) {
+        errors.proof = copy.proofTypeError;
+      } else if (proofFile.size > MAX_PROOF_BYTES) {
+        errors.proof = copy.proofSizeError;
+      }
+    }
+
+    return errors;
+  }, [
+    bankConfigured,
+    contractFile,
+    copy.bankMissing,
+    copy.contractRequired,
+    copy.contractSizeError,
+    copy.contractTypeError,
+    copy.paymentRequired,
+    copy.proofRequired,
+    copy.proofSizeError,
+    copy.proofTypeError,
+    proofFile,
+    selectedOnline,
+    selectedPaymentMethod,
+  ]);
+
+  const submitHint = useMemo(() => {
+    if (!contractFile) return copy.missingContractHint;
+    if (localValidation.contract) return localValidation.contract;
+    if (!selectedPaymentMethod) return copy.missingMethodHint;
+    if (localValidation.payment) return localValidation.payment;
+    if (selectedOnline && !proofFile) return copy.missingProofHint;
+    if (localValidation.proof) return localValidation.proof;
+    return copy.readyHint;
+  }, [
+    contractFile,
+    copy.missingContractHint,
+    copy.missingMethodHint,
+    copy.missingProofHint,
+    copy.readyHint,
+    localValidation.contract,
+    localValidation.payment,
+    localValidation.proof,
+    proofFile,
+    selectedOnline,
+    selectedPaymentMethod,
+  ]);
+
+  const canSubmit =
+    booking?.status === "approved" &&
+    !isSending &&
+    Object.keys(localValidation).length === 0;
 
   const onContractChange = (event) => {
     const selected = event.target.files?.[0] || null;
@@ -453,138 +489,45 @@ export default function BookingStatus() {
 
   const onPaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
+    if (method === "cash") setProofFile(null);
     setFormMessage(null);
-    setFieldErrors((current) => ({ ...current, payment: "" }));
-  };
-
-  const validateSubmission = () => {
-    const errors = {};
-
-    if (booking.status === "approved" && !contractFile) {
-      errors.contract = copy.contractRequired;
-    }
-
-    if (contractFile && !isPdfFile(contractFile)) {
-      errors.contract = copy.contractTypeError;
-    } else if (contractFile && contractFile.size > MAX_CONTRACT_BYTES) {
-      errors.contract = copy.contractSizeError;
-    }
-
-    if (!selectedPaymentMethod) {
-      errors.payment = copy.paymentRequired;
-    }
-
-    if (selectedOnline && !bankConfigured) {
-      errors.payment = copy.bankMissing;
-    }
-
-    if (proofFile && !isAcceptedProofFile(proofFile)) {
-      errors.proof = copy.proofTypeError;
-    } else if (proofFile && proofFile.size > MAX_PROOF_BYTES) {
-      errors.proof = copy.proofSizeError;
-    }
-
-    const methodChanged =
-      Boolean(selectedPaymentMethod) &&
-      selectedPaymentMethod !== booking.payment_method;
-    const hasChanges = Boolean(contractFile || proofFile || methodChanged);
-
-    if (Object.keys(errors).length === 0 && !hasChanges) {
-      errors.form = copy.nothingToSubmit;
-    }
-
-    return errors;
-  };
-
-  const uploadContract = async () => {
-    const body = new FormData();
-    body.append("file", contractFile);
-
-    const data = await apiJson(
-      `/api/booking/upload?token=${encodeURIComponent(token)}`,
-      { method: "POST", body },
-      "Signed contract upload failed."
-    );
-    setBooking(data.booking);
-    return data.booking;
-  };
-
-  const savePaymentMethod = async (paymentMethod) => {
-    const data = await apiJson(
-      `/api/booking/payment-method?token=${encodeURIComponent(token)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ payment_method: paymentMethod }),
-      },
-      "Payment method could not be saved."
-    );
-    setBooking(data.booking);
-    return data.booking;
-  };
-
-  const uploadProof = async () => {
-    const body = new FormData();
-    body.append("file", proofFile);
-
-    const data = await apiJson(
-      `/api/booking/payment-proof?token=${encodeURIComponent(token)}`,
-      { method: "POST", body },
-      "Payment proof upload failed."
-    );
-    setBooking(data.booking);
-    return data.booking;
+    setFieldErrors((current) => ({ ...current, payment: "", proof: "" }));
   };
 
   const submitFlow = async (event) => {
     event.preventDefault();
-    if (!canEdit || isSending) return;
+    if (booking?.status !== "approved" || isSending) return;
 
-    const errors = validateSubmission();
-    setFieldErrors(errors);
+    setFieldErrors(localValidation);
 
-    if (errors.form) {
-      setFormMessage({ type: "error", text: errors.form });
+    if (Object.keys(localValidation).length > 0) {
+      setFormMessage({ type: "error", text: submitHint });
       return;
     }
 
-    if (Object.keys(errors).length > 0) {
-      setFormMessage({ type: "error", text: copy.fixErrors });
-      return;
+    const body = new FormData();
+    body.append("payment_method", selectedPaymentMethod);
+    body.append("signed_contract", contractFile);
+    if (selectedPaymentMethod === "online") {
+      body.append("payment_proof", proofFile);
     }
 
     setSubmitStatus("sending");
     setFormMessage(null);
 
     try {
-      let latestBooking = booking;
-
-      if (contractFile) {
-        latestBooking = await uploadContract();
-      }
-
-      if (selectedPaymentMethod !== latestBooking.payment_method) {
-        latestBooking = await savePaymentMethod(selectedPaymentMethod);
-      }
-
-      if (selectedPaymentMethod === "online" && proofFile) {
-        latestBooking = await uploadProof();
-      }
-
+      const data = await apiJson(
+        `/api/booking/submit?token=${encodeURIComponent(token)}`,
+        { method: "POST", body, lang },
+        copy.genericError
+      );
+      setBooking(data.booking);
       setContractFile(null);
       setProofFile(null);
       setInputVersion((value) => value + 1);
       setSubmitStatus("idle");
       setFieldErrors({});
-
-      const text =
-        selectedPaymentMethod === "online" && !latestBooking.hasRentProof
-          ? copy.successWaitingProof
-          : latestBooking.status === "signed"
-            ? copy.successWaitingReview
-            : copy.successSaved;
-
-      setFormMessage({ type: "success", text: `${copy.successTitle} ${text}` });
+      setFormMessage({ type: "success", text: copy.submitted });
     } catch (error) {
       setSubmitStatus("idle");
       setFormMessage({ type: "error", text: error.message });
@@ -624,135 +567,48 @@ export default function BookingStatus() {
                 booking={booking}
                 copy={copy}
                 lang={lang}
-                neededText={neededText}
+                message={formMessage}
               />
 
-              {booking.status === "confirmed" ? (
-                <AllSetPanel
-                  canDownloadFinal={canDownloadFinal}
-                  copy={copy}
-                  token={token}
-                />
-              ) : null}
-
-              {canEdit ? (
+              {booking.status === "approved" ? (
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-                  <div className="space-y-5">
-                    <StepBlock meta={copy.step1Meta} title={copy.step1Title}>
-                      <div className="space-y-4">
-                        <p className="text-sm leading-relaxed text-muted">
-                          {copy.step1Body}
-                        </p>
-                        {canDownloadBlankFiles ? (
-                          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                            <a
-                              className="btn-primary min-h-12 w-full sm:w-auto"
-                              href={fileUrl(token, "contract")}
-                            >
-                              {copy.downloadContract}
-                            </a>
-                            <a
-                              className="btn-secondary min-h-12 w-full sm:w-auto"
-                              href={fileUrl(token, "rules")}
-                            >
-                              {copy.downloadRules}
-                            </a>
-                          </div>
-                        ) : null}
-                      </div>
-                    </StepBlock>
-
-                    <StepBlock meta={copy.step2Meta} title={copy.step2Title}>
-                      <form className="space-y-6" onSubmit={submitFlow}>
-                        <p className="text-sm leading-relaxed text-muted">
-                          {copy.step2Body}
-                        </p>
-
-                        <FileField
-                          alreadyUploaded={booking.hasSignedContract}
-                          alreadyUploadedText={copy.contractAlreadyUploaded}
-                          chooseText={
-                            booking.hasSignedContract
-                              ? copy.replaceContract
-                              : copy.chooseContract
-                          }
-                          disabled={isSending}
-                          error={fieldErrors.contract}
-                          file={contractFile}
-                          hint={copy.contractHint}
-                          inputKey={`contract-${inputVersion}`}
-                          label={copy.signedContractLabel}
-                          onChange={onContractChange}
-                          accept="application/pdf,.pdf"
-                        />
-
-                        <PaymentMethodPicker
-                          copy={copy}
-                          disabled={isSending}
-                          error={fieldErrors.payment}
-                          selected={selectedPaymentMethod}
-                          onSelect={onPaymentMethodChange}
-                        />
-
-                        {selectedPaymentMethod === "cash" ? (
-                          <div className="border border-line bg-paper p-4 text-sm leading-relaxed text-muted">
-                            {copy.cashPaymentNote}
-                          </div>
-                        ) : null}
-
-                        {selectedOnline ? (
-                          <OnlinePaymentFields
-                            booking={booking}
-                            copy={copy}
-                            disabled={isSending}
-                            error={fieldErrors.proof}
-                            inputVersion={inputVersion}
-                            onProofChange={onProofChange}
-                            proofFile={proofFile}
-                          />
-                        ) : null}
-
-                        <div className="space-y-3 border-t border-line pt-5">
-                          <button
-                            className="btn-primary min-h-12 w-full sm:w-auto"
-                            disabled={isSending}
-                            type="submit"
-                          >
-                            {isSending ? copy.sending : copy.submitButton}
-                          </button>
-                          <FormNotice message={formMessage} />
-                        </div>
-                      </form>
-                    </StepBlock>
-                  </div>
-
+                  <GuestSubmitForm
+                    bankConfigured={bankConfigured}
+                    booking={booking}
+                    canSubmit={canSubmit}
+                    contractFile={contractFile}
+                    copy={copy}
+                    fieldErrors={fieldErrors}
+                    inputVersion={inputVersion}
+                    isSending={isSending}
+                    lang={lang}
+                    onContractChange={onContractChange}
+                    onPaymentMethodChange={onPaymentMethodChange}
+                    onProofChange={onProofChange}
+                    onSubmit={submitFlow}
+                    proofFile={proofFile}
+                    selectedPaymentMethod={selectedPaymentMethod}
+                    submitHint={submitHint}
+                    token={token}
+                  />
                   <BookingDetails booking={booking} copy={copy} lang={lang} />
                 </div>
               ) : null}
 
-              {!canEdit && booking.status !== "confirmed" ? (
+              {booking.status === "confirmed" ? (
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-                  <div className="flat-panel space-y-4">
-                    <p className="text-sm leading-relaxed text-muted">
-                      {copy.blockedHint}
-                    </p>
-                    {canDownloadBlankFiles ? (
-                      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                        <a
-                          className="btn-secondary min-h-12 w-full sm:w-auto"
-                          href={fileUrl(token, "contract")}
-                        >
-                          {copy.downloadContract}
-                        </a>
-                        <a
-                          className="btn-secondary min-h-12 w-full sm:w-auto"
-                          href={fileUrl(token, "rules")}
-                        >
-                          {copy.downloadRules}
-                        </a>
-                      </div>
-                    ) : null}
-                  </div>
+                  <AllSetPanel
+                    canDownloadFinal={booking.hasFinalContract}
+                    copy={copy}
+                    token={token}
+                  />
+                  <BookingDetails booking={booking} copy={copy} lang={lang} />
+                </div>
+              ) : null}
+
+              {booking.status !== "approved" && booking.status !== "confirmed" ? (
+                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+                  <StatePanel booking={booking} copy={copy} />
                   <BookingDetails booking={booking} copy={copy} lang={lang} />
                 </div>
               ) : null}
@@ -764,7 +620,7 @@ export default function BookingStatus() {
   );
 }
 
-function StatusHeader({ booking, copy, lang, neededText }) {
+function StatusHeader({ booking, copy, lang, message }) {
   return (
     <header className="flat-panel space-y-5">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -789,8 +645,10 @@ function StatusHeader({ booking, copy, lang, neededText }) {
 
       <div className="grid gap-3 border-t border-line pt-4 sm:grid-cols-2">
         <HeaderFact label={copy.statusLabel} value={copy.statuses[booking.status]} />
-        <HeaderFact label={copy.nextLabel} value={neededText} />
+        <HeaderFact label={copy.nextLabel} value={copy.needed[booking.status]} />
       </div>
+
+      <FormNotice message={message} />
     </header>
   );
 }
@@ -806,24 +664,99 @@ function HeaderFact({ label, value }) {
   );
 }
 
-function StepBlock({ children, meta, title }) {
+function GuestSubmitForm({
+  bankConfigured,
+  booking,
+  canSubmit,
+  contractFile,
+  copy,
+  fieldErrors,
+  inputVersion,
+  isSending,
+  onContractChange,
+  onPaymentMethodChange,
+  onProofChange,
+  onSubmit,
+  proofFile,
+  selectedPaymentMethod,
+  submitHint,
+  token,
+}) {
+  const selectedOnline = selectedPaymentMethod === "online";
+
   return (
-    <section className="flat-panel space-y-4">
-      <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
-          {meta}
-        </p>
-        <h2 className="font-display text-3xl font-semibold">{title}</h2>
+    <form className="flat-panel space-y-6" onSubmit={onSubmit}>
+      <div className="space-y-2">
+        <h2 className="font-display text-3xl font-semibold">{copy.formTitle}</h2>
+        <p className="text-sm leading-relaxed text-muted">{copy.formIntro}</p>
       </div>
-      {children}
-    </section>
+
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <a className="btn-primary min-h-12 w-full sm:w-auto" href={fileUrl(token, "contract")}>
+          {copy.downloadContract}
+        </a>
+        <a className="btn-secondary min-h-12 w-full sm:w-auto" href={fileUrl(token, "rules")}>
+          {copy.downloadRules}
+        </a>
+      </div>
+
+      <FileField
+        accept="application/pdf,.pdf"
+        chooseText={copy.chooseContract}
+        disabled={isSending}
+        error={fieldErrors.contract}
+        file={contractFile}
+        hint={copy.contractHint}
+        inputKey={`contract-${inputVersion}`}
+        label={copy.signedContractLabel}
+        onChange={onContractChange}
+      />
+
+      <PaymentMethodPicker
+        copy={copy}
+        disabled={isSending}
+        error={fieldErrors.payment}
+        selected={selectedPaymentMethod}
+        onSelect={onPaymentMethodChange}
+      />
+
+      {selectedPaymentMethod === "cash" ? (
+        <div className="border border-line bg-paper p-4 text-sm leading-relaxed text-muted">
+          {copy.cashPaymentNote}
+        </div>
+      ) : null}
+
+      {selectedOnline ? (
+        <OnlinePaymentFields
+          bankConfigured={bankConfigured}
+          booking={booking}
+          copy={copy}
+          disabled={isSending}
+          error={fieldErrors.proof}
+          inputVersion={inputVersion}
+          onProofChange={onProofChange}
+          proofFile={proofFile}
+        />
+      ) : null}
+
+      <div className="space-y-3 border-t border-line pt-5">
+        <p className={canSubmit ? "text-sm font-semibold text-success" : "text-sm font-semibold text-muted"}>
+          {submitHint}
+        </p>
+        <button
+          className="btn-primary min-h-12 w-full disabled:cursor-not-allowed disabled:border-muted disabled:bg-muted sm:w-auto"
+          disabled={!canSubmit}
+          type="submit"
+        >
+          {isSending ? copy.sending : copy.submitButton}
+        </button>
+      </div>
+    </form>
   );
 }
 
 function FileField({
   accept,
-  alreadyUploaded,
-  alreadyUploadedText,
   chooseText,
   disabled,
   error,
@@ -835,16 +768,9 @@ function FileField({
 }) {
   return (
     <div className="space-y-3">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <div className="text-sm font-semibold text-ink">{label}</div>
-          <p className="text-sm text-muted">{hint}</p>
-        </div>
-        {alreadyUploaded ? (
-          <span className="text-sm font-semibold text-success">
-            {alreadyUploadedText}
-          </span>
-        ) : null}
+      <div>
+        <div className="text-sm font-semibold text-ink">{label}</div>
+        <p className="text-sm text-muted">{hint}</p>
       </div>
       <label className="block space-y-2">
         <span className="text-xs font-semibold uppercase tracking-[0.1em] text-muted">
@@ -893,6 +819,7 @@ function PaymentMethodPicker({ copy, disabled, error, onSelect, selected }) {
 }
 
 function OnlinePaymentFields({
+  bankConfigured,
   booking,
   copy,
   disabled,
@@ -902,7 +829,6 @@ function OnlinePaymentFields({
   proofFile,
 }) {
   const bankDetails = booking.bankDetails || {};
-  const configured = hasBankDetails(booking);
 
   return (
     <div className="space-y-5">
@@ -910,7 +836,7 @@ function OnlinePaymentFields({
 
       <div className="border border-line bg-paper p-4">
         <h3 className="text-sm font-semibold">{copy.bankDetails}</h3>
-        {configured ? (
+        {bankConfigured ? (
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             {bankDetails.name ? (
               <PaymentDetail label={copy.bankName} value={bankDetails.name} />
@@ -932,9 +858,7 @@ function OnlinePaymentFields({
 
       <FileField
         accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
-        alreadyUploaded={booking.hasRentProof}
-        alreadyUploadedText={copy.proofAlreadyUploaded}
-        chooseText={booking.hasRentProof ? copy.replaceProof : copy.chooseProof}
+        chooseText={copy.chooseProof}
         disabled={disabled}
         error={error}
         file={proofFile}
@@ -943,10 +867,6 @@ function OnlinePaymentFields({
         label={copy.proofLabel}
         onChange={onProofChange}
       />
-
-      <p className="border-l border-primary pl-4 text-sm leading-relaxed text-muted">
-        {copy.confirmationPending}
-      </p>
     </div>
   );
 }
@@ -969,9 +889,40 @@ function PaymentDetail({ label, mono = false, value }) {
   );
 }
 
+function StatePanel({ booking, copy }) {
+  return (
+    <section className="flat-panel space-y-3">
+      <h2 className="font-display text-3xl font-semibold">
+        {copy.statuses[booking.status] || booking.status}
+      </h2>
+      <p className="text-sm leading-relaxed text-muted">
+        {copy.stateBodies[booking.status]}
+      </p>
+    </section>
+  );
+}
+
+function AllSetPanel({ canDownloadFinal, copy, token }) {
+  return (
+    <section className="flat-panel space-y-4">
+      <div className="space-y-2">
+        <h2 className="font-display text-3xl font-semibold">{copy.finalTitle}</h2>
+        <p className="text-sm leading-relaxed text-muted">{copy.finalBody}</p>
+      </div>
+      {canDownloadFinal ? (
+        <a className="btn-primary min-h-12 w-full sm:w-auto" href={fileUrl(token, "final")}>
+          {copy.downloadFinal}
+        </a>
+      ) : null}
+      <p className="text-sm font-semibold text-success">{copy.cashReminder}</p>
+    </section>
+  );
+}
+
 function BookingDetails({ booking, copy, lang }) {
   return (
     <aside className="flat-panel h-fit space-y-4">
+      <h2 className="font-display text-2xl font-semibold">{copy.summaryTitle}</h2>
       <DetailRow label={copy.date} value={formatNight(booking.night, lang)} />
       <DetailRow label={copy.rent} value={formatMoney(booking.price, lang)} />
       <DetailRow
@@ -982,6 +933,10 @@ function BookingDetails({ booking, copy, lang }) {
       <DetailRow
         label={copy.deadline}
         value={formatDateTime(booking.confirm_deadline, lang, copy.missingDeadline)}
+      />
+      <DetailRow
+        label={copy.paymentMethod}
+        value={paymentMethodText(booking.payment_method, copy)}
       />
       <DetailRow
         label={copy.signedUploaded}
@@ -1006,23 +961,6 @@ function DetailRow({ label, value }) {
         {label}
       </div>
       <div className="mt-1 break-words text-sm font-semibold text-ink">{value}</div>
-    </div>
-  );
-}
-
-function AllSetPanel({ canDownloadFinal, copy, token }) {
-  return (
-    <div className="flat-panel space-y-4">
-      <div className="space-y-2">
-        <h2 className="font-display text-3xl font-semibold">{copy.finalTitle}</h2>
-        <p className="text-sm leading-relaxed text-muted">{copy.finalBody}</p>
-      </div>
-      {canDownloadFinal ? (
-        <a className="btn-primary min-h-12 w-full sm:w-auto" href={fileUrl(token, "final")}>
-          {copy.downloadFinal}
-        </a>
-      ) : null}
-      <p className="text-sm font-semibold text-success">{copy.cashReminder}</p>
     </div>
   );
 }
