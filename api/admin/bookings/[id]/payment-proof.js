@@ -5,7 +5,7 @@ import {
   isNotFoundError,
 } from "../../../_adminUtils.js";
 import { requireAdmin } from "../../../_auth.js";
-import { methodNotAllowed, sendJson } from "../../../_responses.js";
+import { methodNotAllowed, sendError, sendJson } from "../../../_responses.js";
 import { getSupabase } from "../../../_supabase.js";
 
 function downloadNameForPath(storagePath) {
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "GET") {
-    return methodNotAllowed(res, "GET");
+    return methodNotAllowed(req, res, "GET");
   }
 
   try {
@@ -30,14 +30,14 @@ export default async function handler(req, res) {
 
     if (error) {
       if (isNotFoundError(error)) {
-        return sendJson(res, 404, { error: "Booking not found." });
+        return sendError(req, res, 404, "booking_not_found");
       }
 
       throw error;
     }
 
     if (!booking.rent_proof_path) {
-      return sendJson(res, 404, { error: "Payment proof not found." });
+      return sendError(req, res, 404, "payment_proof_not_found");
     }
 
     const signedUrl = await signedPaymentProofBucketUrl(
@@ -49,6 +49,6 @@ export default async function handler(req, res) {
     return sendJson(res, 200, { signedUrl, expiresIn: 300 });
   } catch (error) {
     console.error("admin payment proof file error", error);
-    return sendJson(res, 500, { error: "Could not load payment proof." });
+    return sendError(req, res, 500, "payment_proof_load_failed");
   }
 }

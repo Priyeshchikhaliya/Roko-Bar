@@ -5,7 +5,7 @@ import {
   isNotFoundError,
 } from "../../../_adminUtils.js";
 import { requireAdmin } from "../../../_auth.js";
-import { methodNotAllowed, readJsonBody, sendJson } from "../../../_responses.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../../../_responses.js";
 import { getSupabase } from "../../../_supabase.js";
 
 function hasOwn(object, key) {
@@ -20,7 +20,7 @@ function optionalText(value) {
 
 function buildPaymentUpdate(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
-    return { error: "Request body must be an object." };
+    return { code: "request_body_object" };
   }
 
   const now = new Date().toISOString();
@@ -28,7 +28,7 @@ function buildPaymentUpdate(body) {
 
   if (hasOwn(body, "rent_paid")) {
     if (typeof body.rent_paid !== "boolean") {
-      return { error: "rent_paid must be a boolean." };
+      return { code: "payment_rent_boolean" };
     }
 
     update.rent_paid = body.rent_paid;
@@ -37,7 +37,7 @@ function buildPaymentUpdate(body) {
 
   if (hasOwn(body, "deposit_paid")) {
     if (typeof body.deposit_paid !== "boolean") {
-      return { error: "deposit_paid must be a boolean." };
+      return { code: "payment_deposit_boolean" };
     }
 
     update.deposit_paid = body.deposit_paid;
@@ -49,7 +49,7 @@ function buildPaymentUpdate(body) {
   }
 
   if (Object.keys(update).length === 0) {
-    return { error: "No payment fields were provided." };
+    return { code: "no_payment_fields" };
   }
 
   return { update };
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "POST") {
-    return methodNotAllowed(res, "POST");
+    return methodNotAllowed(req, res, "POST");
   }
 
   let body;
@@ -67,12 +67,12 @@ export default async function handler(req, res) {
   try {
     body = await readJsonBody(req);
   } catch {
-    return sendJson(res, 400, { error: "Request body must be valid JSON." });
+    return sendError(req, res, 400, "request_json_invalid");
   }
 
   const validation = buildPaymentUpdate(body);
-  if (validation.error) {
-    return sendJson(res, 400, { error: validation.error });
+  if (validation.code) {
+    return sendError(req, res, 400, validation.code);
   }
 
   try {
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
 
     if (error) {
       if (isNotFoundError(error)) {
-        return sendJson(res, 404, { error: "Booking not found." });
+        return sendError(req, res, 404, "booking_not_found");
       }
 
       throw error;
@@ -94,6 +94,6 @@ export default async function handler(req, res) {
     return sendJson(res, 200, { booking: addBookingDerivedFields(data) });
   } catch (error) {
     console.error("admin booking payment error", error);
-    return sendJson(res, 500, { error: "Could not update payment." });
+    return sendError(req, res, 500, "payment_failed");
   }
 }

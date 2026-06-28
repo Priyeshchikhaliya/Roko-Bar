@@ -19,7 +19,7 @@ import {
   renderEmailLayout,
   sendEmail,
 } from "../../../_email.js";
-import { methodNotAllowed, sendJson } from "../../../_responses.js";
+import { methodNotAllowed, sendError, sendJson } from "../../../_responses.js";
 import { getSupabase } from "../../../_supabase.js";
 
 export const config = {
@@ -47,6 +47,7 @@ function privateBookingLink(booking) {
 }
 
 function rentPaymentReady(booking) {
+  if (!booking.rent_paid) return false;
   if (booking.payment_method === "cash") return true;
   if (booking.payment_method === "online") return Boolean(booking.rent_proof_path);
   return false;
@@ -101,7 +102,7 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "POST") {
-    return methodNotAllowed(res, "POST");
+    return methodNotAllowed(req, res, "POST");
   }
 
   const id = getQueryValue(req, "id");
@@ -116,42 +117,39 @@ export default async function handler(req, res) {
 
     if (loadError) {
       if (isNotFoundError(loadError)) {
-        return sendJson(res, 404, { error: "Booking not found." });
+        return sendError(req, res, 404, "booking_not_found");
       }
 
       throw loadError;
     }
 
     if (booking.status !== "signed" || !booking.signed_contract_path) {
-      return sendJson(res, 409, {
-        error: "Only bookings with an uploaded signed contract can be counter-signed.",
-      });
+      return sendError(req, res, 409, "cannot_counter_sign");
     }
 
     if (sanitizeBookingForGuest(booking).status === "expired") {
-      return sendJson(res, 409, {
-        error: "This approval deadline has passed.",
-      });
+      return sendError(req, res, 409, "approval_deadline_passed");
     }
 
     if (!rentPaymentReady(booking)) {
-      return sendJson(res, 409, {
-        error:
-          booking.payment_method === "online"
-            ? "Online rent payment proof must be uploaded before this booking can be counter-signed."
-            : "Rent payment method must be selected before this booking can be counter-signed.",
-      });
+      if (!booking.payment_method) {
+        return sendError(req, res, 409, "payment_method_required");
+      }
+
+      if (booking.payment_method === "online" && !booking.rent_proof_path) {
+        return sendError(req, res, 409, "payment_proof_required");
+      }
+
+      return sendError(req, res, 409, "rent_not_paid");
     }
 
     if (await hasOtherConfirmedBooking(supabase, booking.night, id)) {
-      return sendJson(res, 409, {
-        error: "This night already has a confirmed booking.",
-      });
+      return sendError(req, res, 409, "conflict_confirmed");
     }
 
     const validation = await readMultipartPdf(req);
-    if (validation.error) {
-      return sendUploadValidationError(res, validation);
+    if (validation.code) {
+      return sendUploadValidationError(req, res, validation);
     }
 
     const storagePath = `final/${booking.id}.pdf`;
@@ -171,9 +169,7 @@ export default async function handler(req, res) {
 
     if (error) {
       if (error.code === "23505") {
-        return sendJson(res, 409, {
-          error: "This night already has a confirmed booking.",
-        });
+        return sendError(req, res, 409, "conflict_confirmed");
       }
 
       throw error;
@@ -188,6 +184,6 @@ export default async function handler(req, res) {
     return sendJson(res, 200, { booking: addBookingDerivedFields(data) });
   } catch (error) {
     console.error("admin booking countersign error", error);
-    return sendJson(res, 500, { error: "Could not counter-sign booking." });
+    return sendError(req, res, 500, "countersign_failed");
   }
 }

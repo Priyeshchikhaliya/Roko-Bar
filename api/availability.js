@@ -4,7 +4,7 @@ import { getSupabase } from "./_supabase.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    return methodNotAllowed(res, "GET");
+    return methodNotAllowed(req, res, "GET");
   }
 
   try {

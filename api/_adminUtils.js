@@ -26,6 +26,7 @@ export const BOOKING_COLUMNS = [
   "deposit_paid_at",
   "payment_note",
   "internal_notes",
+  "assigned_tutor",
 ].join(", ");
 
 export const BOOKING_STATUSES = [

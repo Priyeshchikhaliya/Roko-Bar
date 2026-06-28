@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-import { sendJson } from "./_responses.js";
+import { sendError } from "./_responses.js";
 
 const ADMIN_SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 
@@ -108,14 +108,14 @@ export function requireAdmin(req, res) {
     const token = getBearerToken(req);
 
     if (!token || !validateAdminSessionToken(token)) {
-      sendJson(res, 401, { error: "Unauthorized." });
+      sendError(req, res, 401, "unauthorized");
       return null;
     }
 
     return { token };
   } catch (error) {
     console.error("admin auth error", error);
-    sendJson(res, 500, { error: "Admin authentication is not configured." });
+    sendError(req, res, 500, "admin_auth_config");
     return null;
   }
 }

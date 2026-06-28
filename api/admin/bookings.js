@@ -5,40 +5,49 @@ import {
   getQueryValue,
 } from "../_adminUtils.js";
 import { requireAdmin } from "../_auth.js";
-import { methodNotAllowed, sendJson } from "../_responses.js";
+import { methodNotAllowed, sendError, sendJson } from "../_responses.js";
 import { getSupabase } from "../_supabase.js";
 
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "GET") {
-    return methodNotAllowed(res, "GET");
+    return methodNotAllowed(req, res, "GET");
   }
 
   const status = getQueryValue(req, "status");
+  const allowedStatuses = [...BOOKING_STATUSES, "expired"];
 
-  if (status && status !== "all" && !BOOKING_STATUSES.includes(status)) {
-    return sendJson(res, 400, { error: "Invalid status filter." });
+  if (status && status !== "all" && !allowedStatuses.includes(status)) {
+    return sendError(req, res, 400, "invalid_status_filter");
   }
 
   try {
-    let query = getSupabase()
+    const query = getSupabase()
       .from("bookings")
       .select(BOOKING_COLUMNS)
       .order("created_at", { ascending: false });
 
-    if (status && status !== "all") {
-      query = query.eq("status", status);
-    }
-
     const { data, error } = await query;
     if (error) throw error;
 
+    const bookings = data.map((booking) => addBookingDerivedFields(booking));
+    const filteredBookings =
+      !status || status === "all"
+        ? bookings
+        : status === "expired"
+          ? bookings.filter((booking) => booking.isExpired)
+          : status === "approved"
+            ? bookings.filter(
+                (booking) => booking.status === "approved" && !booking.isExpired
+              )
+            : bookings.filter((booking) => booking.status === status);
+
     return sendJson(res, 200, {
-      bookings: data.map((booking) => addBookingDerivedFields(booking)),
+      bookings: filteredBookings,
     });
   } catch (error) {
     console.error("admin bookings list error", error);
-    return sendJson(res, 500, { error: "Could not load bookings." });
+    return sendError(req, res, 500, "booking_load_failed");
   }
 }

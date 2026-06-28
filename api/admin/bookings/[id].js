@@ -10,7 +10,7 @@ import {
   priceForResidency,
 } from "../../_bookingRules.js";
 import { requireAdmin } from "../../_auth.js";
-import { methodNotAllowed, readJsonBody, sendJson } from "../../_responses.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../../_responses.js";
 import { getSupabase } from "../../_supabase.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,7 +31,7 @@ function hasOwn(object, key) {
 
 function requiredText(value, fieldName) {
   if (typeof value !== "string" || value.trim() === "") {
-    return { error: `${fieldName} must not be empty.` };
+    return { code: "edit_field_empty", params: { field: fieldName } };
   }
 
   return { value: value.trim() };
@@ -50,7 +50,7 @@ function normalizeGuestCount(value) {
 
   const guestCount = Number(value);
   if (!Number.isInteger(guestCount) || guestCount <= 0) {
-    return { error: "guest_count must be a positive integer." };
+    return { code: "edit_guest_count_invalid" };
   }
 
   return { value: guestCount };
@@ -58,11 +58,11 @@ function normalizeGuestCount(value) {
 
 function buildBookingUpdate(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
-    return { error: "Request body must be an object." };
+    return { code: "request_body_object" };
   }
 
   if (hasOwn(body, "price")) {
-    return { error: "price cannot be edited directly." };
+    return { code: "edit_price_direct" };
   }
 
   const update = {};
@@ -74,18 +74,18 @@ function buildBookingUpdate(body) {
 
     if (key === "requester_name" || key === "address") {
       const result = requiredText(body[key], key);
-      if (result.error) return result;
+      if (result.code) return result;
       update[key] = result.value;
       continue;
     }
 
     if (key === "email") {
       const result = requiredText(body.email, "email");
-      if (result.error) return result;
+      if (result.code) return result;
 
       const email = result.value.toLowerCase();
       if (!EMAIL_RE.test(email)) {
-        return { error: "email must be a valid email address." };
+        return { code: "edit_email_invalid" };
       }
 
       update.email = email;
@@ -99,7 +99,7 @@ function buildBookingUpdate(body) {
 
     if (key === "guest_count") {
       const result = normalizeGuestCount(body.guest_count);
-      if (result.error) return result;
+      if (result.code) return result;
       update.guest_count = result.value;
       continue;
     }
@@ -108,8 +108,7 @@ function buildBookingUpdate(body) {
       const residency = normalizeResidency(body.residency);
       if (!isValidResidency(residency)) {
         return {
-          error:
-            "residency must be one of roko, christophorusweg, rosenbachweg, external.",
+          code: "edit_residency_invalid",
         };
       }
 
@@ -119,7 +118,7 @@ function buildBookingUpdate(body) {
   }
 
   if (Object.keys(update).length === 0) {
-    return { error: "No editable fields were provided." };
+    return { code: "edit_no_fields" };
   }
 
   return { update };
@@ -129,7 +128,7 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "PATCH") {
-    return methodNotAllowed(res, "PATCH");
+    return methodNotAllowed(req, res, "PATCH");
   }
 
   let body;
@@ -137,12 +136,12 @@ export default async function handler(req, res) {
   try {
     body = await readJsonBody(req);
   } catch {
-    return sendJson(res, 400, { error: "Request body must be valid JSON." });
+    return sendError(req, res, 400, "request_json_invalid");
   }
 
   const validation = buildBookingUpdate(body);
-  if (validation.error) {
-    return sendJson(res, 400, { error: validation.error });
+  if (validation.code) {
+    return sendError(req, res, 400, validation.code, validation.params);
   }
 
   try {
@@ -155,7 +154,7 @@ export default async function handler(req, res) {
 
     if (error) {
       if (isNotFoundError(error)) {
-        return sendJson(res, 404, { error: "Booking not found." });
+        return sendError(req, res, 404, "booking_not_found");
       }
 
       throw error;
@@ -164,6 +163,6 @@ export default async function handler(req, res) {
     return sendJson(res, 200, { booking: addBookingDerivedFields(data) });
   } catch (error) {
     console.error("admin booking update error", error);
-    return sendJson(res, 500, { error: "Could not update booking." });
+    return sendError(req, res, 500, "edit_failed");
   }
 }

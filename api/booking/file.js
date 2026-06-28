@@ -7,7 +7,7 @@ import {
   signedContractBucketUrl,
 } from "../_contracts.js";
 import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../_adminUtils.js";
-import { methodNotAllowed, sendJson } from "../_responses.js";
+import { methodNotAllowed, sendError } from "../_responses.js";
 import { getSupabase } from "../_supabase.js";
 
 const STORAGE_FILE_NAMES = {
@@ -21,18 +21,18 @@ function canDownloadBlankFiles(status) {
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    return methodNotAllowed(res, "GET");
+    return methodNotAllowed(req, res, "GET");
   }
 
   const token = getQueryValue(req, "token");
   const which = getQueryValue(req, "which");
 
   if (typeof token !== "string" || token.trim() === "") {
-    return sendJson(res, 400, { error: "Missing booking token." });
+    return sendError(req, res, 400, "missing_booking_token");
   }
 
   if (!["contract", "rules", "signed", "final"].includes(which)) {
-    return sendJson(res, 400, { error: "Invalid file requested." });
+    return sendError(req, res, 400, "invalid_file_requested");
   }
 
   try {
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     if (error) {
       if (isNotFoundError(error)) {
-        return sendJson(res, 404, { error: "Booking not found." });
+        return sendError(req, res, 404, "booking_not_found");
       }
 
       throw error;
@@ -55,9 +55,12 @@ export default async function handler(req, res) {
 
     if (which === "contract" || which === "rules") {
       if (!canDownloadBlankFiles(publicBooking.status)) {
-        return sendJson(res, publicBooking.status === "expired" ? 410 : 409, {
-          error: "This file is not available for the current booking status.",
-        });
+        return sendError(
+          req,
+          res,
+          publicBooking.status === "expired" ? 410 : 409,
+          "file_not_available"
+        );
       }
 
       const filename =
@@ -70,7 +73,7 @@ export default async function handler(req, res) {
 
     if (which === "signed") {
       if (!booking.signed_contract_path) {
-        return sendJson(res, 404, { error: "Signed contract not found." });
+        return sendError(req, res, 404, "signed_contract_not_found");
       }
 
       const signedUrl = await signedContractBucketUrl(
@@ -83,7 +86,7 @@ export default async function handler(req, res) {
     }
 
     if (publicBooking.status !== "confirmed" || !booking.final_contract_path) {
-      return sendJson(res, 404, { error: "Final contract not found." });
+      return sendError(req, res, 404, "final_contract_not_found");
     }
 
     const signedUrl = await signedContractBucketUrl(
@@ -95,6 +98,6 @@ export default async function handler(req, res) {
     return redirectToSignedUrl(res, signedUrl);
   } catch (error) {
     console.error("booking file error", error);
-    return sendJson(res, 500, { error: "Could not load file." });
+    return sendError(req, res, 500, "file_load_failed");
   }
 }

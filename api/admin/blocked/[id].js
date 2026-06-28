@@ -1,6 +1,6 @@
 import { getQueryValue } from "../../_adminUtils.js";
 import { requireAdmin } from "../../_auth.js";
-import { methodNotAllowed, sendJson } from "../../_responses.js";
+import { methodNotAllowed, sendError, sendJson } from "../../_responses.js";
 import { getSupabase } from "../../_supabase.js";
 
 const BLOCKED_COLUMNS = "id, night, reason, created_at";
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "DELETE") {
-    return methodNotAllowed(res, "DELETE");
+    return methodNotAllowed(req, res, "DELETE");
   }
 
   try {
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
     if (error) {
       if (error.code === "PGRST116") {
-        return sendJson(res, 404, { error: "Blocked date not found." });
+        return sendError(req, res, 404, "blocked_date_not_found");
       }
 
       throw error;
@@ -31,6 +31,6 @@ export default async function handler(req, res) {
     return sendJson(res, 200, { blockedDate: data });
   } catch (error) {
     console.error("admin blocked delete error", error);
-    return sendJson(res, 500, { error: "Could not remove blocked date." });
+    return sendError(req, res, 500, "blocked_date_remove_failed");
   }
 }

@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS bookings (
   deposit_paid boolean NOT NULL DEFAULT false,
   deposit_paid_at timestamptz,
   payment_note text,
-  internal_notes text
+  internal_notes text,
+  assigned_tutor text
 );
 
 COMMENT ON TABLE bookings IS
@@ -67,6 +68,9 @@ COMMENT ON COLUMN bookings.rent_proof_path IS
 COMMENT ON COLUMN bookings.deposit_paid IS
   'Manual tutor flag for the 200 EUR deposit. The deposit is paid outside the site, typically at key handover.';
 
+COMMENT ON COLUMN bookings.assigned_tutor IS
+  'Display name of the configured tutor responsible for this booking. Contact details remain in server-side configuration.';
+
 CREATE TABLE IF NOT EXISTS blocked_dates (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   night date NOT NULL UNIQUE,
@@ -96,3 +100,6 @@ COMMENT ON INDEX one_confirmed_booking_per_night IS
 -- ALTER TABLE bookings
 --   ADD COLUMN IF NOT EXISTS payment_method text CHECK (payment_method IN ('cash', 'online')),
 --   ADD COLUMN IF NOT EXISTS rent_proof_path text;
+
+-- Copy/paste this once into the Supabase SQL Editor before deploying tutor assignment:
+-- ALTER TABLE bookings ADD COLUMN IF NOT EXISTS assigned_tutor text;

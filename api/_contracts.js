@@ -8,7 +8,7 @@ import {
   DEPOSIT_AMOUNT,
   RESIDENT_RESIDENCIES,
 } from "./_config.js";
-import { sendJson } from "./_responses.js";
+import { sendError, sendJson } from "./_responses.js";
 
 export const CONTRACT_BUCKET = "contracts";
 export const PAYMENT_PROOF_BUCKET = "payment-proofs";
@@ -120,6 +120,52 @@ function findMultipartFile(body, boundary) {
   }
 
   return null;
+}
+
+function parseMultipartParts(body, boundary) {
+  const boundaryBuffer = Buffer.from(`--${boundary}`, "latin1");
+  const parts = [];
+  let boundaryStart = body.indexOf(boundaryBuffer);
+
+  while (boundaryStart !== -1) {
+    let partStart = boundaryStart + boundaryBuffer.length;
+
+    if (body.slice(partStart, partStart + 2).toString("latin1") === "--") {
+      break;
+    }
+
+    if (body.slice(partStart, partStart + 2).toString("latin1") === "\r\n") {
+      partStart += 2;
+    }
+
+    const headerEnd = body.indexOf(Buffer.from("\r\n\r\n", "latin1"), partStart);
+    if (headerEnd === -1) break;
+
+    const headerText = body.slice(partStart, headerEnd).toString("latin1");
+    const { filename, name } = parseDisposition(headerText);
+    const contentType = parsePartContentType(headerText);
+    const contentStart = headerEnd + 4;
+    const nextBoundaryStart = body.indexOf(
+      Buffer.from(`\r\n--${boundary}`, "latin1"),
+      contentStart
+    );
+
+    if (nextBoundaryStart === -1) break;
+
+    const buffer = body.slice(contentStart, nextBoundaryStart);
+    if (name) {
+      parts.push({
+        buffer,
+        contentType,
+        filename,
+        fieldName: name,
+      });
+    }
+
+    boundaryStart = nextBoundaryStart + 2;
+  }
+
+  return parts;
 }
 
 async function readRequestBuffer(req, maxBytes) {
@@ -238,6 +284,61 @@ export async function readLocalContractFile(filename) {
   return fs.readFile(path.join(contractsDir(), filename));
 }
 
+export async function readMultipartForm(req, { maxBytes, multipartCode, sizeCode }) {
+  const contentType = getHeader(req, "content-type");
+  const boundary = parseBoundary(contentType);
+
+  if (!boundary) {
+    return {
+      code: multipartCode,
+      statusCode: 400,
+    };
+  }
+
+  const contentLength = Number(getHeader(req, "content-length"));
+  if (Number.isFinite(contentLength) && contentLength > maxBytes) {
+    return {
+      code: sizeCode,
+      statusCode: 413,
+    };
+  }
+
+  let body;
+
+  try {
+    body = await readRequestBuffer(req, maxBytes);
+  } catch (error) {
+    return {
+      code: error.statusCode === 413 ? sizeCode : "submit_failed",
+      statusCode: error.statusCode || 400,
+    };
+  }
+
+  const fields = {};
+  const files = {};
+
+  for (const part of parseMultipartParts(body, boundary)) {
+    if (part.filename) {
+      if (!files[part.fieldName]) files[part.fieldName] = [];
+      files[part.fieldName].push(part);
+      continue;
+    }
+
+    fields[part.fieldName] = part.buffer.toString("utf8").trim();
+  }
+
+  return { fields, files };
+}
+
+export function firstMultipartFile(files, fieldNames) {
+  for (const fieldName of fieldNames) {
+    const file = files?.[fieldName]?.[0];
+    if (file) return file;
+  }
+
+  return null;
+}
+
 export async function approvalEmailAttachments(booking) {
   const contractFilename = contractFilenameForBooking(booking);
 
@@ -277,7 +378,7 @@ export async function readMultipartPdf(req) {
 
   if (!boundary) {
     return {
-      error: "Upload must use multipart/form-data with a PDF file.",
+      code: "signed_contract_upload_required",
       statusCode: 400,
     };
   }
@@ -285,7 +386,7 @@ export async function readMultipartPdf(req) {
   const contentLength = Number(getHeader(req, "content-length"));
   if (Number.isFinite(contentLength) && contentLength > MAX_PDF_BYTES + 1024 * 1024) {
     return {
-      error: `PDF must be ${Math.floor(MAX_PDF_BYTES / 1024 / 1024)} MB or smaller.`,
+      code: "signed_contract_pdf_size",
       statusCode: 413,
     };
   }
@@ -296,10 +397,7 @@ export async function readMultipartPdf(req) {
     body = await readRequestBuffer(req, MAX_PDF_BYTES + 1024 * 1024);
   } catch (error) {
     return {
-      error:
-        error.statusCode === 413
-          ? `PDF must be ${Math.floor(MAX_PDF_BYTES / 1024 / 1024)} MB or smaller.`
-          : "Could not read upload.",
+      code: error.statusCode === 413 ? "signed_contract_pdf_size" : "submit_failed",
       statusCode: error.statusCode || 400,
     };
   }
@@ -307,18 +405,26 @@ export async function readMultipartPdf(req) {
   const file = findMultipartFile(body, boundary);
 
   if (!file || file.buffer.length === 0) {
-    return { error: "Upload must include a PDF file.", statusCode: 400 };
+    return { code: "signed_contract_missing", statusCode: 400 };
+  }
+
+  return validatePdfFile(file);
+}
+
+export function validatePdfFile(file) {
+  if (!file || file.buffer.length === 0) {
+    return { code: "signed_contract_missing", statusCode: 400 };
   }
 
   if (file.buffer.length > MAX_PDF_BYTES) {
     return {
-      error: `PDF must be ${Math.floor(MAX_PDF_BYTES / 1024 / 1024)} MB or smaller.`,
+      code: "signed_contract_pdf_size",
       statusCode: 413,
     };
   }
 
   if (!file.filename.toLowerCase().endsWith(".pdf")) {
-    return { error: "Only PDF files are accepted.", statusCode: 400 };
+    return { code: "signed_contract_pdf_type", statusCode: 400 };
   }
 
   if (
@@ -326,11 +432,11 @@ export async function readMultipartPdf(req) {
     file.contentType !== "application/pdf" &&
     file.contentType !== "application/octet-stream"
   ) {
-    return { error: "Only PDF files are accepted.", statusCode: 400 };
+    return { code: "signed_contract_pdf_type", statusCode: 400 };
   }
 
   if (file.buffer.slice(0, 5).toString("latin1") !== "%PDF-") {
-    return { error: "Uploaded file is not a valid PDF.", statusCode: 400 };
+    return { code: "signed_contract_pdf_invalid", statusCode: 400 };
   }
 
   return { file };
@@ -382,7 +488,7 @@ export async function readMultipartPaymentProof(req) {
 
   if (!boundary) {
     return {
-      error: "Upload must use multipart/form-data with a proof file.",
+      code: "proof_multipart_required",
       statusCode: 400,
     };
   }
@@ -393,7 +499,7 @@ export async function readMultipartPaymentProof(req) {
     contentLength > MAX_PAYMENT_PROOF_BYTES + 1024 * 1024
   ) {
     return {
-      error: `Proof must be ${Math.floor(MAX_PAYMENT_PROOF_BYTES / 1024 / 1024)} MB or smaller.`,
+      code: "proof_size",
       statusCode: 413,
     };
   }
@@ -404,10 +510,7 @@ export async function readMultipartPaymentProof(req) {
     body = await readRequestBuffer(req, MAX_PAYMENT_PROOF_BYTES + 1024 * 1024);
   } catch (error) {
     return {
-      error:
-        error.statusCode === 413
-          ? `Proof must be ${Math.floor(MAX_PAYMENT_PROOF_BYTES / 1024 / 1024)} MB or smaller.`
-          : "Could not read upload.",
+      code: error.statusCode === 413 ? "proof_size" : "submit_failed",
       statusCode: error.statusCode || 400,
     };
   }
@@ -415,12 +518,20 @@ export async function readMultipartPaymentProof(req) {
   const file = findMultipartFile(body, boundary);
 
   if (!file || file.buffer.length === 0) {
-    return { error: "Upload must include a proof file.", statusCode: 400 };
+    return { code: "proof_missing", statusCode: 400 };
+  }
+
+  return validatePaymentProofFile(file);
+}
+
+export function validatePaymentProofFile(file) {
+  if (!file || file.buffer.length === 0) {
+    return { code: "proof_missing", statusCode: 400 };
   }
 
   if (file.buffer.length > MAX_PAYMENT_PROOF_BYTES) {
     return {
-      error: `Proof must be ${Math.floor(MAX_PAYMENT_PROOF_BYTES / 1024 / 1024)} MB or smaller.`,
+      code: "proof_size",
       statusCode: 413,
     };
   }
@@ -437,14 +548,14 @@ export async function readMultipartPaymentProof(req) {
 
   if (!extension || (file.contentType && !allowedContentTypes.has(file.contentType))) {
     return {
-      error: "Only PDF, JPG, and PNG proof files are accepted.",
+      code: "proof_type",
       statusCode: 400,
     };
   }
 
   if (!hasPaymentProofSignature(file)) {
     return {
-      error: "Uploaded proof file is not a valid PDF, JPG, or PNG.",
+      code: "proof_invalid",
       statusCode: 400,
     };
   }
@@ -529,8 +640,8 @@ export function redirectToSignedUrl(res, signedUrl) {
   res.end();
 }
 
-export function sendUploadValidationError(res, validation) {
-  return sendJson(res, validation.statusCode || 400, { error: validation.error });
+export function sendUploadValidationError(req, res, validation) {
+  return sendError(req, res, validation.statusCode || 400, validation.code);
 }
 
 export function sendSpecificUploadError(res, error, fallback) {

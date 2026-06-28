@@ -2,11 +2,11 @@ import {
   createAdminSessionToken,
   verifyAdminPassword,
 } from "../_auth.js";
-import { methodNotAllowed, readJsonBody, sendJson } from "../_responses.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../_responses.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return methodNotAllowed(res, "POST");
+    return methodNotAllowed(req, res, "POST");
   }
 
   let body;
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   try {
     body = await readJsonBody(req);
   } catch {
-    return sendJson(res, 400, { error: "Request body must be valid JSON." });
+    return sendError(req, res, 400, "request_json_invalid");
   }
 
   try {
@@ -24,12 +24,12 @@ export default async function handler(req, res) {
         : undefined;
 
     if (!verifyAdminPassword(password)) {
-      return sendJson(res, 401, { error: "Unauthorized." });
+      return sendError(req, res, 401, "unauthorized");
     }
 
     return sendJson(res, 200, createAdminSessionToken());
   } catch (error) {
     console.error("admin login error", error);
-    return sendJson(res, 500, { error: "Admin login is not configured." });
+    return sendError(req, res, 500, "admin_login_config");
   }
 }

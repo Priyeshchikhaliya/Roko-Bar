@@ -19,10 +19,11 @@ import {
   sendEmail,
 } from "./_email.js";
 import { normalizePaymentMethod } from "./_payments.js";
-import { methodNotAllowed, readJsonBody, sendJson } from "./_responses.js";
+import { methodNotAllowed, readJsonBody, sendError, sendJson } from "./_responses.js";
 import { getSupabase } from "./_supabase.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^\+?[\d\s()./-]{7,25}$/;
 const RESIDENCY_LABELS = {
   roko: `RoKo resident rate (${PRICE_RESIDENT} &euro;)`,
   christophorusweg: `Christophorusweg resident rate (${PRICE_RESIDENT} &euro;)`,
@@ -42,6 +43,11 @@ function optionalText(value) {
   if (value === undefined || value === null) return null;
   const text = String(value).trim();
   return text === "" ? null : text;
+}
+
+function isValidPhone(value) {
+  const digits = value.replace(/\D/g, "");
+  return PHONE_RE.test(value) && digits.length >= 7 && digits.length <= 15;
 }
 
 function normalizeGuestCount(value) {
@@ -223,6 +229,10 @@ function validateBookingBody(body) {
     return { error: "email must be a valid email address." };
   }
 
+  const phoneResult = requiredText(body.phone, "phone");
+  if (phoneResult.error) return { code: "phone_required" };
+  if (!isValidPhone(phoneResult.value)) return { code: "phone_invalid" };
+
   const addressResult = requiredText(body.address, "address");
   if (addressResult.error) return addressResult;
 
@@ -247,7 +257,7 @@ function validateBookingBody(body) {
       night: nightResult.night,
       requester_name: requesterNameResult.value,
       email,
-      phone: optionalText(body.phone),
+      phone: phoneResult.value,
       address: addressResult.value,
       residency,
       price: priceForResidency(residency),
@@ -262,7 +272,7 @@ function validateBookingBody(body) {
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return methodNotAllowed(res, "POST");
+    return methodNotAllowed(req, res, "POST");
   }
 
   let body;
@@ -274,6 +284,9 @@ export default async function handler(req, res) {
   }
 
   const validation = validateBookingBody(body);
+  if (validation.code) {
+    return sendError(req, res, 400, validation.code);
+  }
   if (validation.error) {
     return sendJson(res, 400, { error: validation.error });
   }
