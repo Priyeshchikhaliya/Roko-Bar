@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { Analytics } from "@vercel/analytics/react";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
 import App from "./App.jsx";
 import "@fontsource-variable/fraunces";
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <LanguageProvider>
         <BrowserRouter>
           <App />
+          <Analytics />
         </BrowserRouter>
       </LanguageProvider>
     </HelmetProvider>
