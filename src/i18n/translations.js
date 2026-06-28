@@ -22,6 +22,11 @@ export const de = {
     ui: {
       placeholderImage: "[PLACEHOLDER] Bild ergänzen",
     },
+    confirmModal: {
+      confirm: "Bestätigen",
+      cancel: "Abbrechen",
+      busy: "Wird ausgeführt ...",
+    },
     links: {
       home: "/",
       booking: "/booking",
@@ -189,7 +194,7 @@ export const de = {
         "Bitte wähle links im Kalender einen freien oder angefragten Freitag oder Samstag.",
       nameLabel: "Name",
       emailLabel: "E-Mail",
-      phoneLabel: "Telefon (optional)",
+      phoneLabel: "Telefon",
       addressLabel: "Adresse",
       residencyLabel: "Wohnstatus",
       residencyPlaceholder: "Bitte auswählen",
@@ -263,6 +268,9 @@ export const de = {
       nameRequired: "Bitte gib deinen Namen ein.",
       emailRequired: "Bitte gib deine E-Mail-Adresse ein.",
       emailInvalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
+      phoneRequired: "Bitte gib eine Telefonnummer ein.",
+      phoneInvalid:
+        "Bitte gib eine gültige Telefonnummer mit mindestens 7 Ziffern ein.",
       addressRequired: "Bitte gib deine Adresse ein.",
       residencyRequired: "Bitte wähle deinen Wohnstatus aus.",
       guestCountInvalid:
@@ -529,6 +537,43 @@ export const de = {
     bookingText: "Zur Anfrage geht es über die Buchungsseite.",
     bookingLink: "Zur Buchungsseite",
   },
+  admin: {
+    approvalEmail: {
+      approvedButFailed: "Freigegeben, aber die E-Mail konnte nicht gesendet werden",
+      resend: "Freigabe-E-Mail erneut senden",
+      sent: "E-Mail gesendet",
+      failed: "E-Mail konnte nicht gesendet werden",
+    },
+    confirmations: {
+      rentPaid: "Die Miete wird als bezahlt markiert. Diese Änderung ist sofort in der Buchung sichtbar.",
+      rentOpen: "Die Miete wird wieder als offen markiert. Gegenzeichnen ist danach nicht möglich, bis sie erneut als bezahlt markiert wurde.",
+      depositPaid: "Die Kaution wird als bezahlt markiert. Diese Änderung ist sofort in der Buchung sichtbar.",
+      depositOpen: "Die Kaution wird wieder als offen markiert.",
+      countersign: "Der finale Vertrag wird hochgeladen, die Buchung verbindlich bestätigt und die buchende Person per E-Mail benachrichtigt.",
+      reject: "Die Anfrage wird endgültig abgelehnt und kann danach nicht mehr freigegeben werden.",
+      cancel: "Die Buchung wird storniert. Dieser Vorgang kann hier nicht rückgängig gemacht werden.",
+      redo: "Die vorhandenen Vertrags- und Zahlungsdateien werden entfernt. Die buchende Person erhält eine neue Frist zur Abgabe.",
+      unblock: "Die Sperre für {date} wird entfernt und der Termin wieder buchbar.",
+    },
+    tutor: {
+      assignAction: "Tutor zuweisen",
+      modalTitle: "Tutor zuweisen",
+      modalMessage:
+        "Der ausgewählte Tutor wird dieser Buchung zugewiesen und der buchenden Person mit WhatsApp-Kontakt vorgestellt.",
+      selectLabel: "Tutor auswählen",
+      detailLabel: "Zugewiesener Tutor",
+      assigned: "Zugewiesen: {name}",
+      emailSent: "Tutor zugewiesen und Vorstellungs-E-Mail gesendet.",
+      emailFailed:
+        "Tutor zugewiesen, aber die Vorstellungs-E-Mail konnte nicht gesendet werden.",
+      unavailable: "Die Tutor-Liste ist derzeit nicht verfügbar.",
+      introEmail: {
+        subject: "RoKo Bar - Dein Kontakt {tutor}",
+        body:
+          "Hallo {tenant}, ich bin {tutor} und dein Kontakt für die Buchung am {date}. Schreib mir gern per WhatsApp für eine Besichtigung, die Schlüsselübergabe oder alle offenen Fragen.",
+      },
+    },
+  },
   impressum: {
     pageTitle: "Impressum – RoKo Bar Göttingen",
     seoDescription:
@@ -614,6 +659,11 @@ export const en = {
     },
     ui: {
       placeholderImage: "[PLACEHOLDER] Add image",
+    },
+    confirmModal: {
+      confirm: "Confirm",
+      cancel: "Cancel",
+      busy: "Working...",
     },
     links: {
       home: "/",
@@ -782,7 +832,7 @@ export const en = {
         "Please choose a free or requested Friday or Saturday in the calendar.",
       nameLabel: "Name",
       emailLabel: "Email",
-      phoneLabel: "Phone (optional)",
+      phoneLabel: "Phone",
       addressLabel: "Address",
       residencyLabel: "Residency",
       residencyPlaceholder: "Please choose",
@@ -855,6 +905,9 @@ export const en = {
       nameRequired: "Please enter your name.",
       emailRequired: "Please enter your email address.",
       emailInvalid: "Please enter a valid email address.",
+      phoneRequired: "Please enter a phone number.",
+      phoneInvalid:
+        "Please enter a valid phone number with at least 7 digits.",
       addressRequired: "Please enter your address.",
       residencyRequired: "Please choose your residency.",
       guestCountInvalid:
@@ -1120,6 +1173,43 @@ export const en = {
     ],
     bookingText: "Requests are made through the booking page.",
     bookingLink: "Go to booking",
+  },
+  admin: {
+    approvalEmail: {
+      approvedButFailed: "Approved, but the email failed to send",
+      resend: "Resend approval email",
+      sent: "Email sent",
+      failed: "Email failed to send",
+    },
+    confirmations: {
+      rentPaid: "The rent will be marked as paid. This change will be visible on the booking immediately.",
+      rentOpen: "The rent will be marked as outstanding again. Counter-signing will be unavailable until it is marked as paid again.",
+      depositPaid: "The deposit will be marked as paid. This change will be visible on the booking immediately.",
+      depositOpen: "The deposit will be marked as outstanding again.",
+      countersign: "The final contract will be uploaded, the booking will be confirmed, and the requester will be notified by email.",
+      reject: "The request will be rejected permanently and cannot be approved afterward.",
+      cancel: "The booking will be cancelled. This cannot be undone here.",
+      redo: "Existing contract and payment files will be removed. The requester will receive a new submission deadline.",
+      unblock: "The block for {date} will be removed and the date will become bookable again.",
+    },
+    tutor: {
+      assignAction: "Assign tutor",
+      modalTitle: "Assign tutor",
+      modalMessage:
+        "The selected tutor will be assigned to this booking and introduced to the requester with their WhatsApp contact.",
+      selectLabel: "Choose tutor",
+      detailLabel: "Assigned tutor",
+      assigned: "Assigned: {name}",
+      emailSent: "Tutor assigned and introduction email sent.",
+      emailFailed:
+        "Tutor assigned, but the introduction email could not be sent.",
+      unavailable: "The tutor list is currently unavailable.",
+      introEmail: {
+        subject: "RoKo Bar - Meet your tutor {tutor}",
+        body:
+          "Hi {tenant}, I’m {tutor}, your contact for the booking on {date}. Message me on WhatsApp about a visit, key pickup, or any questions.",
+      },
+    },
   },
   impressum: {
     pageTitle: "Legal notice – RoKo Bar Göttingen",

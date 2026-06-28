@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 import { useLanguage } from "../context/useLanguage.js";
 
 const SESSION_KEY = "roko-admin-session";
@@ -12,12 +13,12 @@ const COPY = {
     notSet: "Nicht gesetzt",
     admin: "Admin",
     loginTitle: "RoKo Bar Verwaltung",
-    loginIntro: "Anmeldung fuer Tutorinnen und Tutoren.",
+    loginIntro: "Anmeldung für Tutorinnen und Tutoren.",
     password: "Passwort",
-    checking: "Pruefe...",
+    checking: "Prüfe ...",
     login: "Anmelden",
     dashboardTitle: "Buchungsverwaltung",
-    sessionUntil: "Sitzung gueltig bis {date}",
+    sessionUntil: "Sitzung gültig bis {date}",
     refresh: "Aktualisieren",
     logout: "Abmelden",
     language: "Sprache",
@@ -30,34 +31,37 @@ const COPY = {
     editSaved: "Buchung aktualisiert.",
     blockedSaved: "Datum gesperrt.",
     blockedRemoved: "Sperre entfernt.",
-    needsFridaySaturday: "Bitte einen Freitag oder Samstag auswaehlen.",
-    fileMissing: "Bitte eine PDF-Datei auswaehlen.",
+    needsFridaySaturday: "Bitte einen Freitag oder Samstag auswählen.",
+    fileMissing: "Bitte eine PDF-Datei auswählen.",
     fileType: "Bitte eine PDF-Datei hochladen.",
-    fileSize: "Die PDF-Datei darf maximal 4 MB gross sein.",
+    fileSize: "Die PDF-Datei darf maximal 4 MB groß sein.",
     countersignSaved: "Gegengezeichneter Vertrag gespeichert.",
     downloadStarted: "Download vorbereitet.",
     confirms: {
       reject: "Diese Anfrage ablehnen?",
       cancel: "Diese Buchung stornieren?",
+      redo: "Erneute Abgabe anfordern? Vorhandene Uploads werden entfernt.",
       unblock: "{date} freigeben?",
     },
     actionSaved: {
       approve: "Freigabe gespeichert.",
       reject: "Ablehnung gespeichert.",
       cancel: "Storno gespeichert.",
+      redo: "Erneute Abgabe angefordert.",
     },
     filters: [
       { value: "pending", label: "Ausstehend" },
       { value: "approved", label: "Freigegeben" },
-      { value: "signed", label: "Signiert" },
-      { value: "confirmed", label: "Bestaetigt" },
+      { value: "signed", label: "Eingereicht" },
+      { value: "confirmed", label: "Bestätigt" },
+      { value: "expired", label: "Abgelaufen" },
       { value: "all", label: "Alle" },
     ],
     statuses: {
       pending: "Ausstehend",
       approved: "Freigegeben",
-      signed: "Signiert",
-      confirmed: "Bestaetigt",
+      signed: "Eingereicht",
+      confirmed: "Bestätigt",
       rejected: "Abgelehnt",
       cancelled: "Storniert",
       expired: "Abgelaufen",
@@ -73,7 +77,7 @@ const COPY = {
       name: "Name",
       contact: "Kontakt",
       rate: "Tarif",
-      guests: "Gaeste",
+      guests: "Gäste",
       status: "Status",
       contract: "Vertrag",
       payment: "Zahlung",
@@ -89,25 +93,28 @@ const COPY = {
       method: "Mietzahlung",
       cash: "Bar",
       online: "Online",
-      methodMissing: "Nicht gewaehlt",
+      methodMissing: "Nicht gewählt",
       paid: "bezahlt",
       open: "offen",
       proofUploaded: "Nachweis hochgeladen",
       proofAwaiting: "Nachweis fehlt",
-      proofNotNeeded: "Kein Nachweis noetig",
+      proofNotNeeded: "Kein Nachweis nötig",
       proofRequired:
         "Online-Zahlungsnachweis muss hochgeladen sein, bevor gegengezeichnet werden kann.",
       methodRequired:
-        "Zahlungsart fuer die Miete muss gewaehlt sein, bevor gegengezeichnet werden kann.",
-      markRent: "Miete bezahlt",
-      markDeposit: "Kaution bezahlt",
-      prompt: "Optionale Zahlungsnotiz fuer {label}",
-      saved: "{label} als bezahlt markiert.",
+        "Zahlungsart für die Miete muss gewählt sein, bevor gegengezeichnet werden kann.",
+      rentRequired: "Markiere die Miete als bezahlt, bevor du gegenzeichnest.",
+      markRent: "Miete bezahlt markieren",
+      unmarkRent: "Miete offen markieren",
+      markDeposit: "Kaution bezahlt markieren",
+      unmarkDeposit: "Kaution offen markieren",
+      prompt: "Optionale Zahlungsnotiz für {label}",
+      saved: "{label} aktualisiert.",
     },
     contractStates: {
       none: "Noch kein Vertrag",
       waiting: "Wartet auf Upload",
-      signed: "Signiert hochgeladen",
+      signed: "Unterschrieben hochgeladen",
       final: "Gegengezeichnet",
       closed: "Geschlossen",
     },
@@ -117,15 +124,16 @@ const COPY = {
       cancel: "Stornieren",
       edit: "Bearbeiten",
       details: "Details",
-      close: "Schliessen",
+      close: "Schließen",
       save: "Speichern",
       abort: "Abbrechen",
-      downloadSigned: "Signierte PDF",
+      requestRedo: "Neu anfordern",
+      downloadSigned: "Unterschriebene PDF",
       downloadFinal: "Finale PDF",
       downloadProof: "Zahlungsnachweis",
       countersign: "Gegenzeichnen",
-      countersigning: "Laedt hoch...",
-      chooseFinal: "Finale PDF auswaehlen",
+      countersigning: "Lädt hoch ...",
+      chooseFinal: "Finale PDF auswählen",
       remove: "Entfernen",
       block: "Sperren",
     },
@@ -137,26 +145,26 @@ const COPY = {
       accessToken: "Access Token",
       paymentNote: "Zahlungsnotiz",
       language: "E-Mail-Sprache",
-      reviewed: "Geprueft",
+      reviewed: "Geprüft",
       rentPaidAt: "Miete bezahlt am",
       depositPaidAt: "Kaution bezahlt am",
       signedAt: "Gegengezeichnet am",
       notProvided: "Nicht angegeben",
       noInternalNotes: "Keine internen Notizen",
       noPaymentNote: "Keine Notiz",
-      signedPath: "Signierte PDF gespeichert",
+      signedPath: "Unterschriebene PDF gespeichert",
       finalPath: "Finale PDF gespeichert",
       yes: "Ja",
       no: "Nein",
       contractWork: "Vertragsablauf",
-      uploadHint: "Nur PDF, maximal 4 MB. Beim Hochladen wird die Buchung bestaetigt.",
+      uploadHint: "Nur PDF, maximal 4 MB. Beim Hochladen wird die Buchung bestätigt.",
     },
     edit: {
       name: "Name",
       email: "E-Mail",
       phone: "Telefon",
       rate: "Tarif",
-      guests: "Gaestezahl",
+      guests: "Gästezahl",
       address: "Adresse",
       additionalInfo: "Weitere Infos",
       internalNotes: "Interne Notizen",
@@ -205,24 +213,27 @@ const COPY = {
     confirms: {
       reject: "Reject this request?",
       cancel: "Cancel this booking?",
+      redo: "Request a redo? Existing uploads will be removed.",
       unblock: "Release {date}?",
     },
     actionSaved: {
       approve: "Approval saved.",
       reject: "Rejection saved.",
       cancel: "Cancellation saved.",
+      redo: "Redo requested.",
     },
     filters: [
       { value: "pending", label: "Pending" },
       { value: "approved", label: "Approved" },
-      { value: "signed", label: "Signed" },
+      { value: "signed", label: "Submitted" },
       { value: "confirmed", label: "Confirmed" },
+      { value: "expired", label: "Expired" },
       { value: "all", label: "All" },
     ],
     statuses: {
       pending: "Pending",
       approved: "Approved",
-      signed: "Signed",
+      signed: "Submitted",
       confirmed: "Confirmed",
       rejected: "Rejected",
       cancelled: "Cancelled",
@@ -265,10 +276,13 @@ const COPY = {
         "Online payment proof must be uploaded before this booking can be counter-signed.",
       methodRequired:
         "Rent payment method must be selected before this booking can be counter-signed.",
-      markRent: "Rent paid",
-      markDeposit: "Deposit paid",
+      rentRequired: "Mark rent as paid before counter-signing.",
+      markRent: "Mark rent paid",
+      unmarkRent: "Mark rent open",
+      markDeposit: "Mark deposit paid",
+      unmarkDeposit: "Mark deposit open",
       prompt: "Optional payment note for {label}",
-      saved: "{label} marked as paid.",
+      saved: "{label} updated.",
     },
     contractStates: {
       none: "No contract yet",
@@ -286,6 +300,7 @@ const COPY = {
       close: "Close",
       save: "Save",
       abort: "Cancel",
+      requestRedo: "Request redo",
       downloadSigned: "Signed PDF",
       downloadFinal: "Final PDF",
       downloadProof: "Payment proof",
@@ -379,16 +394,31 @@ function clearStoredSession() {
   window.sessionStorage.removeItem(SESSION_KEY);
 }
 
+function clientLanguage() {
+  if (typeof window === "undefined") return "de";
+  return window.localStorage.getItem("roko-language") === "en" ? "en" : "de";
+}
+
 async function apiRequest(path, { token, method = "GET", body } = {}) {
-  const headers = { Accept: "application/json" };
+  const lang = clientLanguage();
+  const headers = {
+    Accept: "application/json",
+    "Accept-Language": lang,
+    "X-Roko-Lang": lang,
+  };
   const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
 
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined && !isFormData) headers["Content-Type"] = "application/json";
+  if (method === "GET") {
+    headers["Cache-Control"] = "no-cache, no-store, max-age=0";
+    headers.Pragma = "no-cache";
+  }
 
   const response = await fetch(path, {
     method,
     headers,
+    ...(method === "GET" ? { cache: "no-store" } : {}),
     body:
       body === undefined || isFormData
         ? body
@@ -397,7 +427,10 @@ async function apiRequest(path, { token, method = "GET", body } = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new ApiError(data.error || "Request failed.", response.status);
+    throw new ApiError(
+      data.error || (lang === "en" ? "The request failed." : "Die Anfrage ist fehlgeschlagen."),
+      response.status
+    );
   }
 
   return data;
@@ -492,6 +525,15 @@ function paymentProofText(booking, copy) {
     : copy.payment.proofAwaiting;
 }
 
+function bookingMatchesFilter(booking, filter) {
+  if (filter === "all") return true;
+  if (filter === "expired") return Boolean(booking.isExpired);
+  if (filter === "approved") {
+    return booking.status === "approved" && !booking.isExpired;
+  }
+  return booking.status === filter;
+}
+
 function statusText(booking, copy) {
   if (booking.isExpired) return copy.statuses.expired;
   return copy.statuses[booking.status] || booking.status;
@@ -580,14 +622,22 @@ function openSignedUrl(url) {
 }
 
 export default function Admin() {
-  const { lang, setLang } = useLanguage();
-  const copy = COPY[lang] || COPY.de;
+  const { lang, setLang, t } = useLanguage();
+  const copy = {
+    ...(COPY[lang] || COPY.de),
+    approvalEmail: t.admin.approvalEmail,
+    confirmations: t.admin.confirmations,
+    tutor: t.admin.tutor,
+  };
   const [storedSession] = useState(() => readStoredSession());
   const [session, setSession] = useState(storedSession.session);
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("idle");
   const [filter, setFilter] = useState("pending");
   const [bookings, setBookings] = useState([]);
+  const [failedApprovalEmailIds, setFailedApprovalEmailIds] = useState(
+    () => new Set()
+  );
   const [blockedDates, setBlockedDates] = useState([]);
   const [loadStatus, setLoadStatus] = useState("idle");
   const [notice, setNotice] = useState(() =>
@@ -598,17 +648,60 @@ export default function Admin() {
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState(null);
   const [blockForm, setBlockForm] = useState(EMPTY_BLOCK_FORM);
+  const [confirmation, setConfirmation] = useState(null);
+  const [tutorNames, setTutorNames] = useState([]);
+  const [tutorLoadError, setTutorLoadError] = useState(null);
+  const [selectedTutor, setSelectedTutor] = useState("");
   const token = session?.token;
+
+  const applyBookingResponse = useCallback(
+    (booking) => {
+      if (!booking?.id) return;
+
+      setBookings((current) => {
+        const matches = bookingMatchesFilter(booking, filter);
+        const exists = current.some((item) => item.id === booking.id);
+
+        if (!matches) return current.filter((item) => item.id !== booking.id);
+        if (!exists) return [booking, ...current];
+        return current.map((item) => (item.id === booking.id ? booking : item));
+      });
+    },
+    [filter],
+  );
+
+  const closeConfirmation = () => {
+    if (!busyKey) {
+      setConfirmation(null);
+      setSelectedTutor("");
+    }
+  };
+
+  const confirmAction = async () => {
+    if (!confirmation || busyKey) return;
+    if (confirmation.kind === "assignTutor") {
+      await assignTutor(confirmation.booking, selectedTutor);
+    } else {
+      await confirmation.onConfirm();
+    }
+    setConfirmation(null);
+    setSelectedTutor("");
+  };
 
   const logout = useCallback(() => {
     clearStoredSession();
     setSession(null);
     setPassword("");
     setBookings([]);
+    setFailedApprovalEmailIds(new Set());
     setBlockedDates([]);
     setExpandedId(null);
     setEditId(null);
     setEditForm(null);
+    setConfirmation(null);
+    setTutorNames([]);
+    setTutorLoadError(null);
+    setSelectedTutor("");
     setNotice(null);
   }, []);
 
@@ -660,6 +753,28 @@ export default function Admin() {
     }
   }, [refreshDashboard, token]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!token) return undefined;
+
+    setTutorLoadError(null);
+    apiRequest("/api/admin/tutors", { token })
+      .then((data) => {
+        if (cancelled) return;
+        setTutorNames(Array.isArray(data.tutors) ? data.tutors : []);
+      })
+      .catch((error) => {
+        if (cancelled || handleApiError(error)) return;
+        setTutorNames([]);
+        setTutorLoadError(error.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [handleApiError, token]);
+
   const handleLogin = async (event) => {
     event.preventDefault();
     setLoginStatus("loading");
@@ -687,19 +802,29 @@ export default function Admin() {
   };
 
   const runBookingAction = async (booking, action) => {
-    if (action === "reject" && !window.confirm(copy.confirms.reject)) return;
-    if (action === "cancel" && !window.confirm(copy.confirms.cancel)) return;
-
     setBusyKey(`${action}:${booking.id}`);
     setNotice(null);
 
     try {
-      await apiRequest(`/api/admin/bookings/${booking.id}/${action}`, {
+      const data = await apiRequest(`/api/admin/bookings/${booking.id}/${action}`, {
         token,
         method: "POST",
       });
-      setNotice({ type: "success", text: copy.actionSaved[action] });
-      await refreshDashboard({ silent: true });
+
+      if (action === "approve" && data.email?.sent === false) {
+        setFailedApprovalEmailIds((current) => {
+          const next = new Set(current);
+          next.add(booking.id);
+          return next;
+        });
+        setNotice({
+          type: "error",
+          text: copy.approvalEmail.approvedButFailed,
+        });
+      } else {
+        setNotice({ type: "success", text: copy.actionSaved[action] });
+      }
+      applyBookingResponse(data.booking);
     } catch (error) {
       if (!handleApiError(error)) {
         setNotice({ type: "error", text: error.message });
@@ -709,32 +834,51 @@ export default function Admin() {
     }
   };
 
-  const markPayment = async (booking, field) => {
-    const label = field === "rent_paid" ? copy.payment.rent : copy.payment.deposit;
-    const note = window.prompt(
-      copy.payment.prompt.replace("{label}", label),
-      booking.payment_note || ""
-    );
+  const requestBookingAction = (booking, action) => {
+    if (action === "approve") {
+      runBookingAction(booking, action);
+      return;
+    }
 
-    if (note === null) return;
+    const label =
+      action === "redo" ? copy.actions.requestRedo : copy.actions[action];
+    setConfirmation({
+      title: label,
+      message: copy.confirmations[action],
+      confirmLabel: label,
+      tone: "danger",
+      onConfirm: () => runBookingAction(booking, action),
+    });
+  };
 
-    setBusyKey(`${field}:${booking.id}`);
+  const resendApprovalEmail = async (booking) => {
+    setBusyKey(`resend-approval:${booking.id}`);
     setNotice(null);
 
     try {
-      await apiRequest(`/api/admin/bookings/${booking.id}/payment`, {
-        token,
-        method: "POST",
-        body: {
-          [field]: true,
-          payment_note: note,
-        },
-      });
-      setNotice({
-        type: "success",
-        text: copy.payment.saved.replace("{label}", label),
-      });
-      await refreshDashboard({ silent: true });
+      const data = await apiRequest(
+        `/api/admin/bookings/${booking.id}/resend-approval`,
+        {
+          token,
+          method: "POST",
+        }
+      );
+
+      if (data.email?.sent) {
+        setFailedApprovalEmailIds((current) => {
+          const next = new Set(current);
+          next.delete(booking.id);
+          return next;
+        });
+        setNotice({ type: "success", text: copy.approvalEmail.sent });
+      } else {
+        setFailedApprovalEmailIds((current) => {
+          const next = new Set(current);
+          next.add(booking.id);
+          return next;
+        });
+        setNotice({ type: "error", text: copy.approvalEmail.failed });
+      }
     } catch (error) {
       if (!handleApiError(error)) {
         setNotice({ type: "error", text: error.message });
@@ -742,6 +886,114 @@ export default function Admin() {
     } finally {
       setBusyKey(null);
     }
+  };
+
+  const assignTutor = async (booking, tutor) => {
+    setBusyKey(`assign:${booking.id}`);
+    setNotice(null);
+
+    try {
+      const data = await apiRequest(`/api/admin/bookings/${booking.id}/assign`, {
+        token,
+        method: "POST",
+        body: { tutor },
+      });
+
+      applyBookingResponse(data.booking);
+      setNotice({
+        type: data.email?.sent ? "success" : "error",
+        text: data.email?.sent ? copy.tutor.emailSent : copy.tutor.emailFailed,
+      });
+    } catch (error) {
+      if (!handleApiError(error)) {
+        setNotice({ type: "error", text: error.message });
+      }
+    } finally {
+      setBusyKey(null);
+    }
+  };
+
+  const requestTutorAssignment = (booking) => {
+    if (tutorNames.length === 0) {
+      setNotice({
+        type: "error",
+        text: tutorLoadError || copy.tutor.unavailable,
+      });
+      return;
+    }
+
+    setSelectedTutor(
+      tutorNames.includes(booking.assigned_tutor)
+        ? booking.assigned_tutor
+        : tutorNames[0],
+    );
+    setConfirmation({
+      kind: "assignTutor",
+      booking,
+      title: copy.tutor.modalTitle,
+      message: copy.tutor.modalMessage,
+      confirmLabel: copy.tutor.assignAction,
+      tone: "default",
+    });
+  };
+
+  const markPayment = async (booking, field, note) => {
+    const label = field === "rent_paid" ? copy.payment.rent : copy.payment.deposit;
+    const nextValue = !booking[field];
+
+    setBusyKey(`${field}:${booking.id}`);
+    setNotice(null);
+
+    try {
+      const data = await apiRequest(`/api/admin/bookings/${booking.id}/payment`, {
+        token,
+        method: "POST",
+        body: {
+          [field]: nextValue,
+          payment_note: note,
+        },
+      });
+      setNotice({
+        type: "success",
+        text: copy.payment.saved.replace("{label}", label),
+      });
+      applyBookingResponse(data.booking);
+    } catch (error) {
+      if (!handleApiError(error)) {
+        setNotice({ type: "error", text: error.message });
+      }
+    } finally {
+      setBusyKey(null);
+    }
+  };
+
+  const requestPaymentChange = (booking, field) => {
+    const isRent = field === "rent_paid";
+    const label = isRent ? copy.payment.rent : copy.payment.deposit;
+    const nextValue = !booking[field];
+    const note = window.prompt(
+      copy.payment.prompt.replace("{label}", label),
+      booking.payment_note || "",
+    );
+
+    if (note === null) return;
+
+    const confirmLabel = nextValue
+      ? isRent
+        ? copy.payment.markRent
+        : copy.payment.markDeposit
+      : isRent
+        ? copy.payment.unmarkRent
+        : copy.payment.unmarkDeposit;
+    const messageKey = `${isRent ? "rent" : "deposit"}${nextValue ? "Paid" : "Open"}`;
+
+    setConfirmation({
+      title: confirmLabel,
+      message: copy.confirmations[messageKey],
+      confirmLabel,
+      tone: "default",
+      onConfirm: () => markPayment(booking, field, note),
+    });
   };
 
   const downloadContractFile = async (booking, which) => {
@@ -785,6 +1037,29 @@ export default function Admin() {
   };
 
   const countersignBooking = async (booking, file) => {
+    const body = new FormData();
+    body.append("file", file);
+    setBusyKey(`countersign:${booking.id}`);
+    setNotice(null);
+
+    try {
+      const data = await apiRequest(`/api/admin/bookings/${booking.id}/countersign`, {
+        token,
+        method: "POST",
+        body,
+      });
+      setNotice({ type: "success", text: copy.countersignSaved });
+      applyBookingResponse(data.booking);
+    } catch (error) {
+      if (!handleApiError(error)) {
+        setNotice({ type: "error", text: error.message });
+      }
+    } finally {
+      setBusyKey(null);
+    }
+  };
+
+  const requestCountersign = (booking, file) => {
     if (!booking.payment_method) {
       setNotice({ type: "error", text: copy.payment.methodRequired });
       return;
@@ -792,6 +1067,11 @@ export default function Admin() {
 
     if (booking.payment_method === "online" && !booking.rent_proof_path) {
       setNotice({ type: "error", text: copy.payment.proofRequired });
+      return;
+    }
+
+    if (!booking.rent_paid) {
+      setNotice({ type: "error", text: copy.payment.rentRequired });
       return;
     }
 
@@ -810,26 +1090,13 @@ export default function Admin() {
       return;
     }
 
-    const body = new FormData();
-    body.append("file", file);
-    setBusyKey(`countersign:${booking.id}`);
-    setNotice(null);
-
-    try {
-      await apiRequest(`/api/admin/bookings/${booking.id}/countersign`, {
-        token,
-        method: "POST",
-        body,
-      });
-      setNotice({ type: "success", text: copy.countersignSaved });
-      await refreshDashboard({ silent: true });
-    } catch (error) {
-      if (!handleApiError(error)) {
-        setNotice({ type: "error", text: error.message });
-      }
-    } finally {
-      setBusyKey(null);
-    }
+    setConfirmation({
+      title: copy.actions.countersign,
+      message: copy.confirmations.countersign,
+      confirmLabel: copy.actions.countersign,
+      tone: "default",
+      onConfirm: () => countersignBooking(booking, file),
+    });
   };
 
   const startEdit = (booking) => {
@@ -856,15 +1123,15 @@ export default function Admin() {
     setNotice(null);
 
     try {
-      await apiRequest(`/api/admin/bookings/${editId}`, {
+      const data = await apiRequest(`/api/admin/bookings/${editId}`, {
         token,
         method: "PATCH",
         body: normalizeEditPayload(editForm),
       });
       setNotice({ type: "success", text: copy.editSaved });
+      applyBookingResponse(data.booking);
       setEditId(null);
       setEditForm(null);
-      await refreshDashboard({ silent: true });
     } catch (error) {
       if (!handleApiError(error)) {
         setNotice({ type: "error", text: error.message });
@@ -889,14 +1156,16 @@ export default function Admin() {
     setBusyKey("blocked:create");
 
     try {
-      await apiRequest("/api/admin/blocked", {
+      const data = await apiRequest("/api/admin/blocked", {
         token,
         method: "POST",
         body: blockForm,
       });
+      setBlockedDates((current) =>
+        [...current, data.blockedDate].sort((a, b) => a.night.localeCompare(b.night)),
+      );
       setBlockForm(EMPTY_BLOCK_FORM);
       setNotice({ type: "success", text: copy.blockedSaved });
-      await refreshDashboard({ silent: true });
     } catch (error) {
       if (!handleApiError(error)) {
         setNotice({ type: "error", text: error.message });
@@ -907,19 +1176,18 @@ export default function Admin() {
   };
 
   const removeBlockedDate = async (blockedDate) => {
-    const label = formatNight(blockedDate.night, lang);
-    if (!window.confirm(copy.confirms.unblock.replace("{date}", label))) return;
-
     setBusyKey(`blocked:${blockedDate.id}`);
     setNotice(null);
 
     try {
-      await apiRequest(`/api/admin/blocked/${blockedDate.id}`, {
+      const data = await apiRequest(`/api/admin/blocked/${blockedDate.id}`, {
         token,
         method: "DELETE",
       });
+      setBlockedDates((current) =>
+        current.filter((item) => item.id !== data.blockedDate.id),
+      );
       setNotice({ type: "success", text: copy.blockedRemoved });
-      await refreshDashboard({ silent: true });
     } catch (error) {
       if (!handleApiError(error)) {
         setNotice({ type: "error", text: error.message });
@@ -927,6 +1195,17 @@ export default function Admin() {
     } finally {
       setBusyKey(null);
     }
+  };
+
+  const requestRemoveBlockedDate = (blockedDate) => {
+    const label = formatNight(blockedDate.night, lang);
+    setConfirmation({
+      title: copy.actions.remove,
+      message: copy.confirmations.unblock.replace("{date}", label),
+      confirmLabel: copy.actions.remove,
+      tone: "danger",
+      onConfirm: () => removeBlockedDate(blockedDate),
+    });
   };
 
   if (!token) {
@@ -1054,17 +1333,21 @@ export default function Admin() {
             editForm={editForm}
             editId={editId}
             expandedId={expandedId}
+            failedApprovalEmailIds={failedApprovalEmailIds}
             lang={lang}
             loadStatus={loadStatus}
-            onApprove={(booking) => runBookingAction(booking, "approve")}
-            onCancel={(booking) => runBookingAction(booking, "cancel")}
+            onApprove={(booking) => requestBookingAction(booking, "approve")}
+            onAssignTutor={requestTutorAssignment}
+            onCancel={(booking) => requestBookingAction(booking, "cancel")}
             onCancelEdit={cancelEdit}
-            onCountersign={countersignBooking}
+            onCountersign={requestCountersign}
             onDownloadFile={downloadContractFile}
             onDownloadPaymentProof={downloadPaymentProof}
             onEditFieldChange={updateEditField}
-            onMarkPayment={markPayment}
-            onReject={(booking) => runBookingAction(booking, "reject")}
+            onMarkPayment={requestPaymentChange}
+            onReject={(booking) => requestBookingAction(booking, "reject")}
+            onRedo={(booking) => requestBookingAction(booking, "redo")}
+            onResendApproval={resendApprovalEmail}
             onStartEdit={startEdit}
             onSubmitEdit={submitEdit}
             onToggleDetails={(booking) => {
@@ -1084,11 +1367,40 @@ export default function Admin() {
               const { name, value } = event.target;
               setBlockForm((current) => ({ ...current, [name]: value }));
             }}
-            onRemove={removeBlockedDate}
+            onRemove={requestRemoveBlockedDate}
             onSubmit={submitBlockedDate}
           />
         </div>
       </section>
+      <ConfirmModal
+        busy={Boolean(busyKey)}
+        confirmLabel={confirmation?.confirmLabel}
+        message={confirmation?.message}
+        onCancel={closeConfirmation}
+        onConfirm={confirmAction}
+        open={Boolean(confirmation)}
+        title={confirmation?.title || ""}
+        tone={confirmation?.tone}
+      >
+        {confirmation?.kind === "assignTutor" ? (
+          <label className="mt-4 block space-y-2 text-ink">
+            <span className="text-xs font-semibold uppercase tracking-[0.1em] text-muted">
+              {copy.tutor.selectLabel}
+            </span>
+            <select
+              className="form-input w-full px-3 py-2.5"
+              onChange={(event) => setSelectedTutor(event.target.value)}
+              value={selectedTutor}
+            >
+              {tutorNames.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+      </ConfirmModal>
     </>
   );
 }
@@ -1143,9 +1455,11 @@ function BookingsTable({
   editForm,
   editId,
   expandedId,
+  failedApprovalEmailIds,
   lang,
   loadStatus,
   onApprove,
+  onAssignTutor,
   onCancel,
   onCancelEdit,
   onCountersign,
@@ -1154,6 +1468,8 @@ function BookingsTable({
   onEditFieldChange,
   onMarkPayment,
   onReject,
+  onRedo,
+  onResendApproval,
   onStartEdit,
   onSubmitEdit,
   onToggleDetails,
@@ -1221,6 +1537,9 @@ function BookingsTable({
                       {copy.table.guests}:{" "}
                       {booking.guest_count ?? copy.table.openGuests}
                     </div>
+                    {booking.assigned_tutor ? (
+                      <AssignedTutorLabel booking={booking} copy={copy} />
+                    ) : null}
                   </td>
                   <td className="px-4 py-4">
                     <div>{copy.residencies[booking.residency] || booking.residency}</div>
@@ -1237,6 +1556,9 @@ function BookingsTable({
                     >
                       {statusText(booking, copy)}
                     </span>
+                    {failedApprovalEmailIds.has(booking.id) ? (
+                      <ApprovalEmailWarning copy={copy} />
+                    ) : null}
                   </td>
                   <td className="px-4 py-4">
                     <PaymentSummary booking={booking} copy={copy} />
@@ -1248,7 +1570,9 @@ function BookingsTable({
                       copy={copy}
                       isExpanded={expandedId === booking.id}
                       onApprove={onApprove}
+                      onAssignTutor={onAssignTutor}
                       onReject={onReject}
+                      onResendApproval={onResendApproval}
                       onToggleDetails={onToggleDetails}
                     />
                   </td>
@@ -1263,15 +1587,16 @@ function BookingsTable({
                         editForm={editForm}
                         editId={editId}
                         lang={lang}
-                        onCancel={onCancel}
-                        onCancelEdit={onCancelEdit}
-                        onCountersign={onCountersign}
-                        onDownloadFile={onDownloadFile}
-                        onDownloadPaymentProof={onDownloadPaymentProof}
-                        onEditFieldChange={onEditFieldChange}
-                        onMarkPayment={onMarkPayment}
-                        onStartEdit={onStartEdit}
-                        onSubmitEdit={onSubmitEdit}
+                      onCancel={onCancel}
+                      onCancelEdit={onCancelEdit}
+                      onCountersign={onCountersign}
+                      onDownloadFile={onDownloadFile}
+                      onDownloadPaymentProof={onDownloadPaymentProof}
+                      onEditFieldChange={onEditFieldChange}
+                      onMarkPayment={onMarkPayment}
+                      onRedo={onRedo}
+                      onStartEdit={onStartEdit}
+                      onSubmitEdit={onSubmitEdit}
                       />
                     </td>
                   </tr>
@@ -1293,6 +1618,9 @@ function BookingsTable({
                 <div className="break-words text-sm font-semibold">
                   {booking.requester_name}
                 </div>
+                {booking.assigned_tutor ? (
+                  <AssignedTutorLabel booking={booking} copy={copy} />
+                ) : null}
                 {booking.confirm_deadline ? (
                   <div className="text-xs text-muted">
                     {copy.table.deadline}:{" "}
@@ -1310,6 +1638,10 @@ function BookingsTable({
                 {statusText(booking, copy)}
               </span>
             </div>
+
+            {failedApprovalEmailIds.has(booking.id) ? (
+              <ApprovalEmailWarning copy={copy} />
+            ) : null}
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div>
@@ -1338,7 +1670,9 @@ function BookingsTable({
                 copy={copy}
                 isExpanded={expandedId === booking.id}
                 onApprove={onApprove}
+                onAssignTutor={onAssignTutor}
                 onReject={onReject}
+                onResendApproval={onResendApproval}
                 onToggleDetails={onToggleDetails}
               />
             </div>
@@ -1359,6 +1693,7 @@ function BookingsTable({
                   onDownloadPaymentProof={onDownloadPaymentProof}
                   onEditFieldChange={onEditFieldChange}
                   onMarkPayment={onMarkPayment}
+                  onRedo={onRedo}
                   onStartEdit={onStartEdit}
                   onSubmitEdit={onSubmitEdit}
                 />
@@ -1385,6 +1720,7 @@ function ExpandedBookingContent({
   onDownloadPaymentProof,
   onEditFieldChange,
   onMarkPayment,
+  onRedo,
   onStartEdit,
   onSubmitEdit,
 }) {
@@ -1412,6 +1748,7 @@ function ExpandedBookingContent({
       onDownloadFile={onDownloadFile}
       onDownloadPaymentProof={onDownloadPaymentProof}
       onMarkPayment={onMarkPayment}
+      onRedo={onRedo}
       onStartEdit={onStartEdit}
     />
   );
@@ -1456,7 +1793,9 @@ function BookingActions({
   copy,
   isExpanded,
   onApprove,
+  onAssignTutor,
   onReject,
+  onResendApproval,
   onToggleDetails,
 }) {
   const busy = Boolean(busyKey);
@@ -1484,6 +1823,26 @@ function BookingActions({
         </>
       ) : null}
 
+      {booking.status === "approved" ? (
+        <button
+          className={compactButtonClass("secondary")}
+          disabled={busy}
+          onClick={() => onResendApproval(booking)}
+          type="button"
+        >
+          {copy.approvalEmail.resend}
+        </button>
+      ) : null}
+
+      <button
+        className={compactButtonClass("secondary")}
+        disabled={busy}
+        onClick={() => onAssignTutor(booking)}
+        type="button"
+      >
+        {copy.tutor.assignAction}
+      </button>
+
       <button
         className={compactButtonClass("ghost")}
         disabled={busy}
@@ -1492,6 +1851,25 @@ function BookingActions({
       >
         {isExpanded ? copy.actions.close : copy.actions.details}
       </button>
+    </div>
+  );
+}
+
+function AssignedTutorLabel({ booking, copy }) {
+  return (
+    <div className="mt-2 border-l-2 border-primary pl-2 text-xs font-semibold text-primary-dark">
+      {copy.tutor.assigned.replace("{name}", booking.assigned_tutor)}
+    </div>
+  );
+}
+
+function ApprovalEmailWarning({ copy }) {
+  return (
+    <div
+      className="mt-2 border border-danger bg-brick-tint px-2.5 py-2 text-xs font-semibold text-danger"
+      role="alert"
+    >
+      {copy.approvalEmail.approvedButFailed}
     </div>
   );
 }
@@ -1506,11 +1884,16 @@ function BookingDetails({
   onDownloadFile,
   onDownloadPaymentProof,
   onMarkPayment,
+  onRedo,
   onStartEdit,
 }) {
   return (
     <div className="grid gap-5 lg:grid-cols-3">
       <DetailBlock label={copy.table.contact} value={`${booking.email}\n${booking.phone || copy.table.noPhone}`} />
+      <DetailBlock
+        label={copy.tutor.detailLabel}
+        value={booking.assigned_tutor || copy.notSet}
+      />
       <DetailBlock label={copy.details.address} value={booking.address} />
       <DetailBlock
         label={copy.table.guests}
@@ -1552,12 +1935,13 @@ function BookingDetails({
         onMarkPayment={onMarkPayment}
       />
       <SecondaryBookingActions
-        booking={booking}
-        busyKey={busyKey}
-        copy={copy}
-        onCancel={onCancel}
-        onStartEdit={onStartEdit}
-      />
+      booking={booking}
+      busyKey={busyKey}
+      copy={copy}
+      onCancel={onCancel}
+      onRedo={onRedo}
+      onStartEdit={onStartEdit}
+    />
       <ContractPanel
         booking={booking}
         busyKey={busyKey}
@@ -1577,6 +1961,8 @@ function PaymentActions({
   onMarkPayment,
 }) {
   const busy = Boolean(busyKey);
+  const canManagePayment =
+    (booking.status === "signed" || booking.status === "confirmed") && !booking.isExpired;
 
   return (
     <div className="space-y-3">
@@ -1611,24 +1997,26 @@ function PaymentActions({
             {copy.actions.downloadProof}
           </button>
         ) : null}
-        {!booking.rent_paid ? (
+        {canManagePayment ? (
           <button
             className={compactButtonClass("secondary")}
             disabled={busy}
             onClick={() => onMarkPayment(booking, "rent_paid")}
             type="button"
           >
-            {copy.payment.markRent}
+            {booking.rent_paid ? copy.payment.unmarkRent : copy.payment.markRent}
           </button>
         ) : null}
-        {!booking.deposit_paid ? (
+        {canManagePayment ? (
           <button
             className={compactButtonClass("secondary")}
             disabled={busy}
             onClick={() => onMarkPayment(booking, "deposit_paid")}
             type="button"
           >
-            {copy.payment.markDeposit}
+            {booking.deposit_paid
+              ? copy.payment.unmarkDeposit
+              : copy.payment.markDeposit}
           </button>
         ) : null}
       </div>
@@ -1636,9 +2024,21 @@ function PaymentActions({
   );
 }
 
-function SecondaryBookingActions({ booking, busyKey, copy, onCancel, onStartEdit }) {
+function SecondaryBookingActions({
+  booking,
+  busyKey,
+  copy,
+  onCancel,
+  onRedo,
+  onStartEdit,
+}) {
   const busy = Boolean(busyKey);
-  const isClosed = booking.status === "rejected" || booking.status === "cancelled";
+  const isTerminal =
+    booking.status === "confirmed" ||
+    booking.status === "rejected" ||
+    booking.status === "cancelled";
+  const canRequestRedo =
+    booking.status === "approved" || booking.status === "signed" || booking.isExpired;
 
   return (
     <div className="space-y-3">
@@ -1654,7 +2054,17 @@ function SecondaryBookingActions({ booking, busyKey, copy, onCancel, onStartEdit
         >
           {copy.actions.edit}
         </button>
-        {!isClosed ? (
+        {canRequestRedo ? (
+          <button
+            className={compactButtonClass("secondary")}
+            disabled={busy}
+            onClick={() => onRedo(booking)}
+            type="button"
+          >
+            {copy.actions.requestRedo}
+          </button>
+        ) : null}
+        {!isTerminal ? (
           <button
             className={compactButtonClass("danger")}
             disabled={busy}
@@ -1672,7 +2082,24 @@ function SecondaryBookingActions({ booking, busyKey, copy, onCancel, onStartEdit
 function ContractPanel({ booking, busyKey, copy, onCountersign, onDownloadFile }) {
   const [file, setFile] = useState(null);
   const busy = Boolean(busyKey);
-  const canCountersign = booking.status === "signed" && Boolean(booking.signed_contract_path);
+  const hasRequiredPayment =
+    booking.payment_method === "cash" ||
+    (booking.payment_method === "online" && Boolean(booking.rent_proof_path));
+  const canCountersign =
+    booking.status === "signed" &&
+    Boolean(booking.signed_contract_path) &&
+    booking.rent_paid &&
+    hasRequiredPayment;
+  const countersignBlocker =
+    booking.status === "signed" && booking.signed_contract_path
+      ? !booking.payment_method
+        ? copy.payment.methodRequired
+        : booking.payment_method === "online" && !booking.rent_proof_path
+          ? copy.payment.proofRequired
+          : !booking.rent_paid
+            ? copy.payment.rentRequired
+            : ""
+      : "";
 
   const submit = (event) => {
     event.preventDefault();
@@ -1711,6 +2138,9 @@ function ContractPanel({ booking, busyKey, copy, onCountersign, onDownloadFile }
               </button>
             ) : null}
           </div>
+          {countersignBlocker ? (
+            <p className="text-sm font-semibold text-danger">{countersignBlocker}</p>
+          ) : null}
         </div>
 
         {canCountersign ? (
