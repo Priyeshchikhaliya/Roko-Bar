@@ -1,6 +1,7 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import ConfirmModal from "../components/ConfirmModal.jsx";
+import FilePreviewModal from "../components/FilePreviewModal.jsx";
 import { useLanguage } from "../context/useLanguage.js";
 
 const SESSION_KEY = "roko-admin-session";
@@ -621,12 +622,18 @@ function openSignedUrl(url) {
   link.remove();
 }
 
+function previewKind(storagePath) {
+  const path = String(storagePath || "").split(/[?#]/)[0].toLowerCase();
+  return path.endsWith(".pdf") ? "pdf" : "image";
+}
+
 export default function Admin() {
   const { lang, setLang, t } = useLanguage();
   const copy = {
     ...(COPY[lang] || COPY.de),
     approvalEmail: t.admin.approvalEmail,
     confirmations: t.admin.confirmations,
+    filePreview: t.admin.filePreview,
     tutor: t.admin.tutor,
   };
   const [storedSession] = useState(() => readStoredSession());
@@ -649,6 +656,7 @@ export default function Admin() {
   const [editForm, setEditForm] = useState(null);
   const [blockForm, setBlockForm] = useState(EMPTY_BLOCK_FORM);
   const [confirmation, setConfirmation] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
   const [tutorNames, setTutorNames] = useState([]);
   const [tutorLoadError, setTutorLoadError] = useState(null);
   const [selectedTutor, setSelectedTutor] = useState("");
@@ -699,6 +707,7 @@ export default function Admin() {
     setEditId(null);
     setEditForm(null);
     setConfirmation(null);
+    setFilePreview(null);
     setTutorNames([]);
     setTutorLoadError(null);
     setSelectedTutor("");
@@ -1036,6 +1045,54 @@ export default function Admin() {
     }
   };
 
+  const previewFile = async (booking, which) => {
+    const requestId = `${booking.id}:${which}:${Date.now()}`;
+    const isPaymentProof = which === "proof";
+    const storagePath = isPaymentProof
+      ? booking.rent_proof_path
+      : which === "signed"
+        ? booking.signed_contract_path
+        : booking.final_contract_path;
+    const title =
+      which === "signed"
+        ? copy.filePreview.signedTitle
+        : which === "final"
+          ? copy.filePreview.finalTitle
+          : copy.filePreview.proofTitle;
+    const endpoint = isPaymentProof
+      ? `/api/admin/bookings/${booking.id}/payment-proof?preview=1`
+      : `/api/admin/bookings/${booking.id}/file?which=${which}&preview=1`;
+
+    setFilePreview({
+      error: null,
+      kind: isPaymentProof ? previewKind(storagePath) : "pdf",
+      loading: true,
+      requestId,
+      title,
+      url: null,
+    });
+
+    try {
+      const data = await apiRequest(endpoint, { token });
+      setFilePreview((current) =>
+        current?.requestId === requestId
+          ? { ...current, loading: false, url: data.signedUrl }
+          : current
+      );
+    } catch (error) {
+      if (handleApiError(error)) return;
+      setFilePreview((current) =>
+        current?.requestId === requestId
+          ? {
+              ...current,
+              error: error.message || copy.filePreview.loadFailed,
+              loading: false,
+            }
+          : current
+      );
+    }
+  };
+
   const countersignBooking = async (booking, file) => {
     const body = new FormData();
     body.append("file", file);
@@ -1345,6 +1402,7 @@ export default function Admin() {
             onDownloadPaymentProof={downloadPaymentProof}
             onEditFieldChange={updateEditField}
             onMarkPayment={requestPaymentChange}
+            onPreviewFile={previewFile}
             onReject={(booking) => requestBookingAction(booking, "reject")}
             onRedo={(booking) => requestBookingAction(booking, "redo")}
             onResendApproval={resendApprovalEmail}
@@ -1401,6 +1459,16 @@ export default function Admin() {
           </label>
         ) : null}
       </ConfirmModal>
+      <FilePreviewModal
+        error={filePreview?.error}
+        kind={filePreview?.kind}
+        labels={copy.filePreview}
+        loading={Boolean(filePreview?.loading)}
+        onClose={() => setFilePreview(null)}
+        open={Boolean(filePreview)}
+        title={filePreview?.title || ""}
+        url={filePreview?.url}
+      />
     </>
   );
 }
@@ -1467,6 +1535,7 @@ function BookingsTable({
   onDownloadPaymentProof,
   onEditFieldChange,
   onMarkPayment,
+  onPreviewFile,
   onReject,
   onRedo,
   onResendApproval,
@@ -1594,6 +1663,7 @@ function BookingsTable({
                       onDownloadPaymentProof={onDownloadPaymentProof}
                       onEditFieldChange={onEditFieldChange}
                       onMarkPayment={onMarkPayment}
+                      onPreviewFile={onPreviewFile}
                       onRedo={onRedo}
                       onStartEdit={onStartEdit}
                       onSubmitEdit={onSubmitEdit}
@@ -1693,6 +1763,7 @@ function BookingsTable({
                   onDownloadPaymentProof={onDownloadPaymentProof}
                   onEditFieldChange={onEditFieldChange}
                   onMarkPayment={onMarkPayment}
+                  onPreviewFile={onPreviewFile}
                   onRedo={onRedo}
                   onStartEdit={onStartEdit}
                   onSubmitEdit={onSubmitEdit}
@@ -1720,6 +1791,7 @@ function ExpandedBookingContent({
   onDownloadPaymentProof,
   onEditFieldChange,
   onMarkPayment,
+  onPreviewFile,
   onRedo,
   onStartEdit,
   onSubmitEdit,
@@ -1748,6 +1820,7 @@ function ExpandedBookingContent({
       onDownloadFile={onDownloadFile}
       onDownloadPaymentProof={onDownloadPaymentProof}
       onMarkPayment={onMarkPayment}
+      onPreviewFile={onPreviewFile}
       onRedo={onRedo}
       onStartEdit={onStartEdit}
     />
@@ -1884,6 +1957,7 @@ function BookingDetails({
   onDownloadFile,
   onDownloadPaymentProof,
   onMarkPayment,
+  onPreviewFile,
   onRedo,
   onStartEdit,
 }) {
@@ -1933,6 +2007,7 @@ function BookingDetails({
         copy={copy}
         onDownloadPaymentProof={onDownloadPaymentProof}
         onMarkPayment={onMarkPayment}
+        onPreviewFile={onPreviewFile}
       />
       <SecondaryBookingActions
       booking={booking}
@@ -1948,6 +2023,7 @@ function BookingDetails({
         copy={copy}
         onCountersign={onCountersign}
         onDownloadFile={onDownloadFile}
+        onPreviewFile={onPreviewFile}
       />
     </div>
   );
@@ -1959,6 +2035,7 @@ function PaymentActions({
   copy,
   onDownloadPaymentProof,
   onMarkPayment,
+  onPreviewFile,
 }) {
   const busy = Boolean(busyKey);
   const canManagePayment =
@@ -1987,15 +2064,25 @@ function PaymentActions({
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        {booking.payment_method === "online" && booking.rent_proof_path ? (
-          <button
-            className={compactButtonClass("secondary")}
-            disabled={busy}
-            onClick={() => onDownloadPaymentProof(booking)}
-            type="button"
-          >
-            {copy.actions.downloadProof}
-          </button>
+        {booking.rent_proof_path ? (
+          <>
+            <button
+              className={compactButtonClass("secondary")}
+              disabled={busy}
+              onClick={() => onDownloadPaymentProof(booking)}
+              type="button"
+            >
+              {copy.actions.downloadProof}
+            </button>
+            <button
+              className={compactButtonClass("secondary")}
+              disabled={busy}
+              onClick={() => onPreviewFile(booking, "proof")}
+              type="button"
+            >
+              {copy.filePreview.action}
+            </button>
+          </>
         ) : null}
         {canManagePayment ? (
           <button
@@ -2079,7 +2166,14 @@ function SecondaryBookingActions({
   );
 }
 
-function ContractPanel({ booking, busyKey, copy, onCountersign, onDownloadFile }) {
+function ContractPanel({
+  booking,
+  busyKey,
+  copy,
+  onCountersign,
+  onDownloadFile,
+  onPreviewFile,
+}) {
   const [file, setFile] = useState(null);
   const busy = Boolean(busyKey);
   const hasRequiredPayment =
@@ -2118,24 +2212,44 @@ function ContractPanel({ booking, busyKey, copy, onCountersign, onDownloadFile }
           </div>
           <div className="flex flex-wrap gap-2">
             {booking.signed_contract_path ? (
-              <button
-                className={compactButtonClass("secondary")}
-                disabled={busy}
-                onClick={() => onDownloadFile(booking, "signed")}
-                type="button"
-              >
-                {copy.actions.downloadSigned}
-              </button>
+              <>
+                <button
+                  className={compactButtonClass("secondary")}
+                  disabled={busy}
+                  onClick={() => onDownloadFile(booking, "signed")}
+                  type="button"
+                >
+                  {copy.actions.downloadSigned}
+                </button>
+                <button
+                  className={compactButtonClass("secondary")}
+                  disabled={busy}
+                  onClick={() => onPreviewFile(booking, "signed")}
+                  type="button"
+                >
+                  {copy.filePreview.action}
+                </button>
+              </>
             ) : null}
             {booking.final_contract_path ? (
-              <button
-                className={compactButtonClass("secondary")}
-                disabled={busy}
-                onClick={() => onDownloadFile(booking, "final")}
-                type="button"
-              >
-                {copy.actions.downloadFinal}
-              </button>
+              <>
+                <button
+                  className={compactButtonClass("secondary")}
+                  disabled={busy}
+                  onClick={() => onDownloadFile(booking, "final")}
+                  type="button"
+                >
+                  {copy.actions.downloadFinal}
+                </button>
+                <button
+                  className={compactButtonClass("secondary")}
+                  disabled={busy}
+                  onClick={() => onPreviewFile(booking, "final")}
+                  type="button"
+                >
+                  {copy.filePreview.action}
+                </button>
+              </>
             ) : null}
           </div>
           {countersignBlocker ? (

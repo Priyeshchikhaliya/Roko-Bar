@@ -23,6 +23,7 @@ export default async function handler(req, res) {
   }
 
   const which = getQueryValue(req, "which");
+  const preview = getQueryValue(req, "preview") === "1";
 
   if (which !== "signed" && which !== "final") {
     return sendError(req, res, 400, "invalid_file_requested");
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
     const signedUrl = await signedContractBucketUrl(
       supabase,
       storagePath,
-      DOWNLOAD_NAMES[which]
+      preview ? undefined : DOWNLOAD_NAMES[which]
     );
 
     return sendJson(res, 200, { signedUrl, expiresIn: 300 });

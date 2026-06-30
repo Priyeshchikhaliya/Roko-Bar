@@ -606,11 +606,10 @@ function storageUploadError(error, bucket) {
 }
 
 export async function signedContractBucketUrl(supabase, storagePath, downloadName) {
+  const options = downloadName ? { download: downloadName } : undefined;
   const { data, error } = await supabase.storage
     .from(CONTRACT_BUCKET)
-    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, {
-      download: downloadName,
-    });
+    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, options);
 
   if (error) throw error;
 
@@ -622,11 +621,10 @@ export async function signedPaymentProofBucketUrl(
   storagePath,
   downloadName
 ) {
+  const options = downloadName ? { download: downloadName } : undefined;
   const { data, error } = await supabase.storage
     .from(PAYMENT_PROOF_BUCKET)
-    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, {
-      download: downloadName,
-    });
+    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, options);
 
   if (error) throw error;
 

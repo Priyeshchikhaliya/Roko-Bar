@@ -43,7 +43,9 @@ export default async function handler(req, res) {
     const signedUrl = await signedPaymentProofBucketUrl(
       supabase,
       booking.rent_proof_path,
-      downloadNameForPath(booking.rent_proof_path)
+      getQueryValue(req, "preview") === "1"
+        ? undefined
+        : downloadNameForPath(booking.rent_proof_path)
     );
 
     return sendJson(res, 200, { signedUrl, expiresIn: 300 });

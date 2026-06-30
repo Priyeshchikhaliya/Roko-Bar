@@ -538,6 +538,15 @@ export const de = {
     bookingLink: "Zur Buchungsseite",
   },
   admin: {
+    filePreview: {
+      action: "Vorschau",
+      close: "Vorschau schließen",
+      loading: "Datei wird geladen...",
+      loadFailed: "Die Vorschau konnte nicht geladen werden.",
+      signedTitle: "Unterschriebener Vertrag",
+      finalTitle: "Finaler Vertrag",
+      proofTitle: "Zahlungsnachweis",
+    },
     approvalEmail: {
       approvedButFailed: "Freigegeben, aber die E-Mail konnte nicht gesendet werden",
       resend: "Freigabe-E-Mail erneut senden",
@@ -1175,6 +1184,15 @@ export const en = {
     bookingLink: "Go to booking",
   },
   admin: {
+    filePreview: {
+      action: "Preview",
+      close: "Close preview",
+      loading: "Loading file...",
+      loadFailed: "The preview could not be loaded.",
+      signedTitle: "Signed contract",
+      finalTitle: "Final contract",
+      proofTitle: "Payment proof",
+    },
     approvalEmail: {
       approvedButFailed: "Approved, but the email failed to send",
       resend: "Resend approval email",
