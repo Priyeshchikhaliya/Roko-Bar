@@ -1,4 +1,5 @@
 import {
+  CONTRACT_BUCKET,
   readMultipartPdf,
   sanitizeBookingForGuest,
   sendUploadValidationError,
@@ -11,14 +12,9 @@ import {
   isNotFoundError,
 } from "../api/_adminUtils.js";
 import { requireAdmin } from "../api/_auth.js";
-import { SITE_URL } from "../api/_config.js";
-import {
-  escapeHtml,
-  formatNight,
-  normalizeEmailLanguage,
-  renderEmailLayout,
-  sendEmail,
-} from "../api/_email.js";
+import { confirmationEmail } from "../api/_email-content.js";
+import { formatNight, normalizeEmailLanguage, sendEmail } from "../api/_email.js";
+import { privateBookingUrl } from "../api/_links.js";
 import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
 import { getSupabase } from "../api/_supabase.js";
 
@@ -42,10 +38,6 @@ async function hasOtherConfirmedBooking(supabase, night, bookingId) {
   return data.length > 0;
 }
 
-function privateBookingLink(booking) {
-  return `${SITE_URL.replace(/\/$/, "")}/booking/${booking.access_token}`;
-}
-
 function rentPaymentReady(booking) {
   if (!booking.rent_paid) return false;
   if (booking.payment_method === "cash") return true;
@@ -53,48 +45,63 @@ function rentPaymentReady(booking) {
   return false;
 }
 
-function buildConfirmationEmailHtml(booking) {
-  const lang = normalizeEmailLanguage(booking.lang);
-  const nightLabel = formatNight(booking.night, lang);
-  const link = privateBookingLink(booking);
-  const copy =
-    lang === "en"
-      ? {
-          title: "Booking confirmed",
-          preheader: `The final contract for ${nightLabel} is available.`,
-          greeting: `Hi ${booking.requester_name},`,
-          body: `Your booking for the RoKo Bar on <strong>${escapeHtml(nightLabel)}</strong> is confirmed. The counter-signed contract is now available at your private link.`,
-          deposit:
-            "Please remember the 200 &euro; cash deposit at handover.",
-        }
-      : {
-          title: "Buchung bestaetigt",
-          preheader: `Finaler Vertrag fuer ${nightLabel} ist verfuegbar.`,
-          greeting: `Hallo ${booking.requester_name},`,
-          body: `deine Buchung fuer die RoKo Bar am <strong>${escapeHtml(nightLabel)}</strong> ist bestaetigt. Der gegengezeichnete Vertrag liegt jetzt in deinem privaten Link bereit.`,
-          deposit: "Bitte denke an die 200 &euro; Kaution bar bei der Uebergabe.",
-        };
+async function finalContractAttachment(supabase, booking) {
+  const storagePath = booking.final_contract_path || `final/${booking.id}.pdf`;
 
-  return renderEmailLayout({
-    title: copy.title,
-    preheader: copy.preheader,
-    children: `
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.greeting)}</p>
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.body}</p>
-      <p style="margin:0 0 18px 0;font-size:15px;line-height:1.55;color:#26211f;"><a href="${escapeHtml(link)}" style="color:#2F6FBF;font-weight:700;">${escapeHtml(link)}</a></p>
-      <p style="margin:0;font-size:15px;line-height:1.55;color:#26211f;">${copy.deposit}</p>
-    `,
-  });
+  try {
+    const { data, error } = await supabase.storage
+      .from(CONTRACT_BUCKET)
+      .download(storagePath);
+
+    if (error) {
+      console.warn("booking confirmation final contract attachment skipped", {
+        bookingId: booking.id,
+        storagePath,
+        error,
+      });
+      return null;
+    }
+
+    if (!data) {
+      console.warn(
+        "booking confirmation final contract attachment skipped: no download data",
+        {
+          bookingId: booking.id,
+          storagePath,
+        }
+      );
+      return null;
+    }
+
+    return {
+      filename: "roko-bar-mietvertrag-final.pdf",
+      content: Buffer.from(await data.arrayBuffer()),
+      content_type: "application/pdf",
+    };
+  } catch (error) {
+    console.warn("booking confirmation final contract attachment skipped", {
+      bookingId: booking.id,
+      storagePath,
+      error,
+    });
+    return null;
+  }
 }
 
-async function sendConfirmationEmail(booking) {
+async function sendConfirmationEmail(booking, supabase) {
+  const attachment = await finalContractAttachment(supabase, booking);
+  const lang = normalizeEmailLanguage(booking.lang);
+  const message = confirmationEmail(booking, {
+    nightLabel: formatNight(booking.night, lang),
+    price: booking.price,
+    bookingUrl: privateBookingUrl(booking.access_token),
+  });
+
   await sendEmail({
     to: booking.email,
-    subject:
-      normalizeEmailLanguage(booking.lang) === "en"
-        ? "RoKo Bar - Booking confirmed"
-        : "RoKo Bar - Buchung bestaetigt",
-    html: buildConfirmationEmailHtml(booking),
+    subject: message.subject,
+    html: message.html,
+    attachments: attachment ? [attachment] : undefined,
   });
 }
 
@@ -176,7 +183,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      await sendConfirmationEmail(data);
+      await sendConfirmationEmail(data, supabase);
     } catch (emailError) {
       console.error("booking confirmation email error", emailError);
     }

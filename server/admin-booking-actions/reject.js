@@ -5,8 +5,25 @@ import {
   isNotFoundError,
 } from "../api/_adminUtils.js";
 import { requireAdmin } from "../api/_auth.js";
+import { rejectionEmail } from "../api/_email-content.js";
+import { formatNight, normalizeEmailLanguage, sendEmail } from "../api/_email.js";
+import { bookingPageUrl } from "../api/_links.js";
 import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
 import { getSupabase } from "../api/_supabase.js";
+
+async function sendRejectionEmail(booking) {
+  const lang = normalizeEmailLanguage(booking.lang);
+  const message = rejectionEmail(booking, {
+    nightLabel: formatNight(booking.night, lang),
+    bookingUrl: bookingPageUrl(),
+  });
+
+  await sendEmail({
+    to: booking.email,
+    subject: message.subject,
+    html: message.html,
+  });
+}
 
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
@@ -52,6 +69,12 @@ export default async function handler(req, res) {
       }
 
       throw error;
+    }
+
+    try {
+      await sendRejectionEmail(data);
+    } catch (emailError) {
+      console.warn("booking rejection email error", emailError);
     }
 
     return sendJson(res, 200, { booking: addBookingDerivedFields(data) });

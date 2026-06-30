@@ -1,7 +1,9 @@
 import { Resend } from "resend";
 
 import { approvalEmailAttachments } from "./_contracts.js";
-import { EMAIL_FROM, SITE_URL } from "./_config.js";
+import { EMAIL_FROM } from "./_config.js";
+import { approvalEmail, tutorIntroEmail } from "./_email-content.js";
+import { privateBookingUrl } from "./_links.js";
 
 let resendClient;
 
@@ -101,10 +103,6 @@ export function renderEmailLayout({ title, preheader = "", children }) {
 </html>`;
 }
 
-function privateBookingLink(booking) {
-  return `${SITE_URL.replace(/\/$/, "")}/booking/${booking.access_token}`;
-}
-
 function formatDeadline(value, lang) {
   if (!value) return lang === "en" ? "not set" : "nicht gesetzt";
 
@@ -122,52 +120,6 @@ function formatDeadline(value, lang) {
     timeZone: "Europe/Berlin",
     timeZoneName: "short",
   }).format(date);
-}
-
-function buildApprovalEmailHtml(booking) {
-  const lang = normalizeEmailLanguage(booking.lang);
-  const nightLabel = formatNight(booking.night, lang);
-  const deadlineLabel = formatDeadline(booking.confirm_deadline, lang);
-  const link = privateBookingLink(booking);
-  const onlinePaymentNote =
-    booking.payment_method === "online"
-      ? lang === "en"
-        ? `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">Because you chose online rent payment, your private link will show the bank details and let you upload proof after the signed contract is uploaded.</p>`
-        : `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">Da du Online-Zahlung fuer die Miete gewaehlt hast, findest du die Bankdaten in deinem privaten Link und kannst dort nach dem Vertragsupload den Zahlungsnachweis hochladen.</p>`
-      : "";
-  const copy =
-    lang === "en"
-      ? {
-          title: "Booking approved",
-          preheader: `Your contract link for ${nightLabel} is ready.`,
-          greeting: `Hi ${booking.requester_name},`,
-          approved: `Your request for the RoKo Bar on <strong>${escapeHtml(nightLabel)}</strong> has been approved. The correct blank contract and the house rules are attached.`,
-          instructions: `Open your private link, sign the contract, and upload it there as a PDF. Deadline: <strong>${escapeHtml(deadlineLabel)}</strong>.`,
-          finalNote:
-            "Nothing is final yet: the booking becomes binding only after you sign and we counter-sign the contract.",
-        }
-      : {
-          title: "Buchung freigegeben",
-          preheader: `Dein Vertragslink fuer ${nightLabel} ist bereit.`,
-          greeting: `Hallo ${booking.requester_name},`,
-          approved: `deine Anfrage fuer die RoKo Bar am <strong>${escapeHtml(nightLabel)}</strong> wurde freigegeben. Im Anhang findest du den passenden Mietvertrag und die Hausordnung.`,
-          instructions: `Oeffne deinen privaten Link, unterschreibe den Vertrag und lade ihn dort als PDF hoch. Frist: <strong>${escapeHtml(deadlineLabel)}</strong>.`,
-          finalNote:
-            "Noch ist nichts final: verbindlich wird die Buchung erst, wenn du unterschrieben hast und wir den Vertrag gegengezeichnet haben.",
-        };
-
-  return renderEmailLayout({
-    title: copy.title,
-    preheader: copy.preheader,
-    children: `
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.greeting)}</p>
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.approved}</p>
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.instructions}</p>
-      ${onlinePaymentNote}
-      <p style="margin:0 0 18px 0;font-size:15px;line-height:1.55;color:#26211f;"><a href="${escapeHtml(link)}" style="color:#2F6FBF;font-weight:700;">${escapeHtml(link)}</a></p>
-      <p style="margin:0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.finalNote)}</p>
-    `,
-  });
 }
 
 export async function sendEmail({ to, subject, html, attachments }) {
@@ -192,14 +144,18 @@ export async function sendEmail({ to, subject, html, attachments }) {
 
 export async function sendApprovalEmail(booking) {
   const attachments = await approvalEmailAttachments(booking);
+  const lang = normalizeEmailLanguage(booking.lang);
+  const message = approvalEmail(booking, {
+    nightLabel: formatNight(booking.night, lang),
+    price: booking.price,
+    deadlineLabel: formatDeadline(booking.confirm_deadline, lang),
+    bookingUrl: privateBookingUrl(booking.access_token),
+  });
 
   return sendEmail({
     to: booking.email,
-    subject:
-      normalizeEmailLanguage(booking.lang) === "en"
-        ? "RoKo Bar - Booking approved"
-        : "RoKo Bar - Buchung freigegeben",
-    html: buildApprovalEmailHtml(booking),
+    subject: message.subject,
+    html: message.html,
     attachments,
   });
 }
@@ -217,54 +173,18 @@ export async function sendApprovalEmailWithStatus(booking, onError) {
   }
 }
 
-export function buildTutorIntroEmailHtml(booking, tutor) {
-  const lang = normalizeEmailLanguage(booking.lang);
-  const nightLabel = formatNight(booking.night, lang);
-  const whatsappUrl = `https://wa.me/${tutor.wa}`;
-  const copy =
-    lang === "en"
-      ? {
-          title: `Meet your RoKo Bar tutor: ${tutor.name}`,
-          preheader: `${tutor.name} is your contact for the booking on ${nightLabel}.`,
-          greeting: `Hi ${booking.requester_name},`,
-          introduction: `I’m ${escapeHtml(tutor.name)}, and I’ll be your contact for your RoKo Bar booking on <strong>${escapeHtml(nightLabel)}</strong>. I’m looking forward to helping you get everything sorted.`,
-          invitation:
-            "Message me on WhatsApp whenever you’re ready. We can arrange a visit, coordinate key pickup, or clear up any questions you have.",
-          whatsapp: `Message ${tutor.name} on WhatsApp`,
-          closing: `See you soon<br>${escapeHtml(tutor.name)} · RoKo Bar`,
-        }
-      : {
-          title: `Dein Kontakt für die RoKo Bar: ${tutor.name}`,
-          preheader: `${tutor.name} ist dein Kontakt für die Buchung am ${nightLabel}.`,
-          greeting: `Hallo ${booking.requester_name},`,
-          introduction: `ich bin ${escapeHtml(tutor.name)} und ab jetzt dein Kontakt für deine Buchung der RoKo Bar am <strong>${escapeHtml(nightLabel)}</strong>. Ich freue mich darauf, mit dir alles Weitere zu klären.`,
-          invitation:
-            "Schreib mir einfach per WhatsApp. Wir können einen Besichtigungstermin vereinbaren, die Schlüsselübergabe abstimmen oder alle offenen Fragen klären.",
-          whatsapp: `${tutor.name} per WhatsApp schreiben`,
-          closing: `Bis bald<br>${escapeHtml(tutor.name)} · RoKo Bar`,
-        };
-
-  return renderEmailLayout({
-    title: copy.title,
-    preheader: copy.preheader,
-    children: `
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.greeting)}</p>
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.introduction}</p>
-      <p style="margin:0 0 18px 0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.invitation)}</p>
-      <p style="margin:0 0 18px 0;"><a href="${escapeHtml(whatsappUrl)}" style="display:inline-block;padding:12px 16px;background:#A8392E;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;">${escapeHtml(copy.whatsapp)}</a></p>
-      <p style="margin:0;font-size:15px;line-height:1.55;color:#26211f;">${copy.closing}</p>
-    `,
-  });
-}
-
 export async function sendTutorIntroEmail(booking, tutor) {
+  const lang = normalizeEmailLanguage(booking.lang);
+  const message = tutorIntroEmail(booking, {
+    tutorName: tutor.name,
+    whatsappUrl: `https://wa.me/${tutor.wa}`,
+    nightLabel: formatNight(booking.night, lang),
+  });
+
   return sendEmail({
     to: booking.email,
-    subject:
-      normalizeEmailLanguage(booking.lang) === "en"
-        ? `RoKo Bar - Meet your tutor ${tutor.name}`
-        : `RoKo Bar - Dein Kontakt ${tutor.name}`,
-    html: buildTutorIntroEmailHtml(booking, tutor),
+    subject: message.subject,
+    html: message.html,
   });
 }
 

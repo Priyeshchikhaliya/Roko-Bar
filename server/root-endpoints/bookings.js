@@ -18,6 +18,7 @@ import {
   renderEmailLayout,
   sendEmail,
 } from "../api/_email.js";
+import { acknowledgementEmail } from "../api/_email-content.js";
 import { normalizePaymentMethod } from "../api/_payments.js";
 import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../api/_responses.js";
 import { getSupabase } from "../api/_supabase.js";
@@ -118,65 +119,13 @@ function buildTutorNotificationHtml(booking) {
   });
 }
 
-function buildGuestAcknowledgementHtml(booking) {
-  const lang = normalizeEmailLanguage(booking.lang);
-  const nightLabel = formatNight(booking.night, lang);
-  const copy =
-    lang === "en"
-      ? {
-          title: "Request received",
-          preheader: `We received your request for ${nightLabel}.`,
-          greeting: `Hi ${booking.requester_name},`,
-          body: `We received your request for the RoKo Bar on <strong>${escapeHtml(nightLabel)}</strong>. Nothing is booked or confirmed yet. A bar tutor will review it and email you next with the contract link.`,
-          closing: "Thanks and see you soon<br>RoKo Bar",
-          rows: {
-            date: "Date",
-            rent: "Rent",
-            deposit: "Deposit",
-            depositValue: `${DEPOSIT_AMOUNT} &euro; cash at handover`,
-            time: "Time",
-            timeValue: "whole-day Friday or Saturday",
-          },
-        }
-      : {
-          title: "Anfrage erhalten",
-          preheader: `Wir haben deine Anfrage fuer ${nightLabel} erhalten.`,
-          greeting: `Hallo ${booking.requester_name},`,
-          body: `wir haben deine Anfrage fuer die RoKo Bar am <strong>${escapeHtml(nightLabel)}</strong> erhalten. Noch ist nichts gebucht oder bestaetigt. Ein Bar-Tutor prueft die Anfrage und meldet sich als Naechstes per E-Mail mit dem Vertragslink.`,
-          closing: "Danke und bis bald<br>RoKo Bar",
-          rows: {
-            date: "Datum",
-            rent: "Miete",
-            deposit: "Kaution",
-            depositValue: `${DEPOSIT_AMOUNT} &euro; bar bei Uebergabe`,
-            time: "Zeitraum",
-            timeValue: "ganzer Freitag oder Samstag",
-          },
-        };
-  const rows = [
-    detailRow(copy.rows.date, nightLabel),
-    detailRow(copy.rows.rent, `${booking.price} &euro;`, { raw: true }),
-    detailRow(copy.rows.deposit, copy.rows.depositValue, { raw: true }),
-    detailRow(copy.rows.time, copy.rows.timeValue),
-  ].join("");
-
-  return renderEmailLayout({
-    title: copy.title,
-    preheader: copy.preheader,
-    children: `
-      <p style="margin:0 0 14px 0;font-size:15px;line-height:1.55;color:#26211f;">${escapeHtml(copy.greeting)}</p>
-      <p style="margin:0 0 18px 0;font-size:15px;line-height:1.55;color:#26211f;">${copy.body}</p>
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;margin:0 0 18px 0;">
-        ${rows}
-      </table>
-      <p style="margin:0;font-size:15px;line-height:1.55;color:#26211f;">${copy.closing}</p>
-    `,
-  });
-}
-
 async function sendBookingEmails(booking) {
   const nightLabel = formatNight(booking.night, "de");
   const guestLang = normalizeEmailLanguage(booking.lang);
+  const guestAcknowledgement = acknowledgementEmail(booking, {
+    nightLabel: formatNight(booking.night, guestLang),
+    price: booking.price,
+  });
   const messages = [
     {
       label: "tutor notification",
@@ -187,11 +136,8 @@ async function sendBookingEmails(booking) {
     {
       label: "guest acknowledgement",
       to: booking.email,
-      subject:
-        guestLang === "en"
-          ? "RoKo Bar - Request received"
-          : "RoKo Bar - Anfrage erhalten",
-      html: buildGuestAcknowledgementHtml(booking),
+      subject: guestAcknowledgement.subject,
+      html: guestAcknowledgement.html,
     },
   ];
 
