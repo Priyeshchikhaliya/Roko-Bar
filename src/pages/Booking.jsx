@@ -219,6 +219,20 @@ export default function Booking() {
     setSelectedNight(iso);
     setFieldErrors((current) => ({ ...current, night: undefined }));
     setSubmitMessage(null);
+
+    // On stacked (mobile/tablet) layouts the form is below the calendar, so a
+    // tap can feel like nothing happened. Bring the form into view. On the
+    // side-by-side desktop layout it is already visible, so leave scroll alone.
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 1023px)").matches
+    ) {
+      window.requestAnimationFrame(() => {
+        document
+          .getElementById("booking-request")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   };
 
   const updateField = (event) => {
@@ -227,6 +241,30 @@ export default function Booking() {
     setFormData((current) => ({ ...current, [name]: value }));
     setFieldErrors((current) => ({ ...current, [name]: undefined }));
     setSubmitMessage(null);
+  };
+
+  // Friendlier feedback: validate a single field once the user leaves it,
+  // instead of waiting for a full submit.
+  const handleFieldBlur = (event) => {
+    const { name } = event.target;
+    const value = event.target.value.trim();
+    let error;
+
+    if (name === "requester_name") {
+      if (!value) error = page.errors.nameRequired;
+    } else if (name === "email") {
+      if (!value) error = page.errors.emailRequired;
+      else if (!EMAIL_RE.test(value)) error = page.errors.emailInvalid;
+    } else if (name === "phone") {
+      if (!value) error = page.errors.phoneRequired;
+      else if (!isValidPhone(value)) error = page.errors.phoneInvalid;
+    } else if (name === "address") {
+      if (!value) error = page.errors.addressRequired;
+    }
+
+    if (error) {
+      setFieldErrors((current) => ({ ...current, [name]: error }));
+    }
   };
 
   const validateForm = () => {
@@ -326,6 +364,7 @@ export default function Booking() {
           price: data.price,
           deposit: data.deposit,
           night: selectedNight,
+          email: formData.email.trim(),
         });
         setSubmitStatus("success");
         await loadAvailability({ silent: true });
@@ -370,6 +409,33 @@ export default function Booking() {
     setSubmitMessage(null);
     setSuccessDetails(null);
   };
+
+  const selectedRent = RESIDENCY_PRICES[formData.residency];
+  const isFormComplete =
+    hasValidSelectedNight &&
+    acceptedTerms &&
+    submitStatus !== "sending" &&
+    Boolean(formData.requester_name.trim()) &&
+    EMAIL_RE.test(formData.email.trim()) &&
+    isValidPhone(formData.phone.trim()) &&
+    Boolean(formData.address.trim()) &&
+    Object.hasOwn(RESIDENCY_PRICES, formData.residency);
+
+  const scrollToForm = () => {
+    document
+      .getElementById("booking-request")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const submitFromStickyBar = () => {
+    if (isFormComplete) {
+      handleSubmit({ preventDefault: () => {} });
+    } else {
+      scrollToForm();
+    }
+  };
+
+  const showStickyBar = submitStatus !== "success" && Boolean(selectedNight);
 
   return (
     <>
@@ -451,6 +517,7 @@ export default function Booking() {
                 setFieldErrors((current) => ({ ...current, terms: undefined }));
                 setSubmitMessage(null);
               }}
+              onFieldBlur={handleFieldBlur}
               onFieldChange={updateField}
               onReset={resetForm}
               onSubmit={handleSubmit}
@@ -462,8 +529,42 @@ export default function Booking() {
               termsHref={t.common.links.terms}
             />
           </div>
+          {showStickyBar ? (
+            <div className="h-24 lg:hidden" aria-hidden="true" />
+          ) : null}
         </div>
       </section>
+
+      {showStickyBar ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur lg:hidden">
+          <div className="container-wide flex items-center justify-between gap-3 py-3">
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold text-ink">
+                {formatDateLabel(selectedNight, locale)}
+              </p>
+              <p className="truncate text-sm font-semibold text-primary">
+                {selectedRent
+                  ? `${formatMoney(selectedRent + DEPOSIT_AMOUNT, locale)} ${
+                      page.form.stickyTotal
+                    }`
+                  : page.form.stickyChoosePrompt}
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={submitStatus === "sending"}
+              className="btn-primary min-h-12 shrink-0 px-5 disabled:cursor-not-allowed disabled:opacity-70"
+              onClick={submitFromStickyBar}
+            >
+              {submitStatus === "sending"
+                ? page.form.sending
+                : isFormComplete
+                  ? page.form.submit
+                  : page.form.stickyContinue}
+            </button>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }
@@ -734,6 +835,8 @@ function CalendarCell({
   const isTaken = takenDates.has(cell.iso);
   const isPending = pendingDates.has(cell.iso);
   const isMuted = !isFutureBookableDate(cell.date, today) && !isTaken;
+  const isToday = cell.date.getTime() === today.getTime();
+  const todayClass = isToday ? "ring-1 ring-inset ring-ink/45" : "";
   const stateLabel = isTaken
     ? page.calendar.states.taken
     : isPending
@@ -745,7 +848,7 @@ function CalendarCell({
           : page.calendar.states.unavailable;
   const cellLabel = `${formatDateLabel(cell.iso, locale)}: ${stateLabel}`;
   const baseClass =
-    "aspect-square min-h-11 w-full p-1.5 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-h-14 sm:p-2";
+    "flex aspect-square min-h-11 w-full flex-col overflow-hidden p-1.5 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-h-14 sm:p-2";
   const stateClass = isSelected
     ? "bg-primary text-surface"
       : isTaken
@@ -761,14 +864,14 @@ function CalendarCell({
   if (!isSelectable) {
     return (
       <div
-        className={`${baseClass} ${stateClass}`}
+        className={`${baseClass} ${stateClass} ${todayClass}`}
         aria-disabled="true"
         aria-label={cellLabel}
         role="gridcell"
       >
-        <span className="block font-semibold">{cell.day}</span>
+        <span className="block font-semibold leading-none">{cell.day}</span>
         {isTaken ? (
-          <span className="mt-1 block text-[0.58rem] font-semibold uppercase leading-tight tracking-[0.08em] text-surface/85">
+          <span className="mt-1 hidden max-w-full truncate text-[0.58rem] font-semibold uppercase leading-tight tracking-[0.08em] text-surface/85 sm:block">
             {page.calendar.takenHint}
           </span>
         ) : null}
@@ -786,15 +889,23 @@ function CalendarCell({
       onClick={() => onSelect(cell.iso)}
       onKeyDown={(event) => onKeyDown(event, cell.iso)}
     >
-      <span className="block font-semibold">{cell.day}</span>
+      <span className="block font-semibold leading-none">{cell.day}</span>
       {isPending ? (
-        <span
-          className={`mt-1 block text-[0.58rem] font-semibold uppercase leading-tight tracking-[0.08em] ${
-            isSelected ? "text-surface/85" : "text-ink/75"
-          }`}
-        >
-          {page.calendar.requestedHint}
-        </span>
+        <>
+          <span
+            className={`mt-1 hidden max-w-full truncate text-[0.58rem] font-semibold uppercase leading-tight tracking-[0.08em] sm:block ${
+              isSelected ? "text-surface/85" : "text-ink/75"
+            }`}
+          >
+            {page.calendar.requestedHint}
+          </span>
+          <span
+            className={`mt-1 h-1.5 w-1.5 shrink-0 sm:hidden ${
+              isSelected ? "bg-surface/85" : "bg-ink/70"
+            }`}
+            aria-hidden="true"
+          />
+        </>
       ) : null}
     </button>
   );
@@ -807,6 +918,7 @@ function BookingRequestForm({
   hasValidSelectedNight,
   locale,
   onAcceptedTermsChange,
+  onFieldBlur,
   onFieldChange,
   onReset,
   onSubmit,
@@ -867,6 +979,25 @@ function BookingRequestForm({
           </div>
         </dl>
 
+        <div className="space-y-4 border-t border-line pt-6">
+          <h3 className="text-xl font-semibold">{page.success.nextTitle}</h3>
+          <ol className="grid gap-3">
+            {page.success.steps.map((step, index) => (
+              <li key={step} className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center bg-primary text-xs font-bold text-surface">
+                  {index + 1}
+                </span>
+                <span className="text-sm leading-relaxed text-muted">{step}</span>
+              </li>
+            ))}
+          </ol>
+          {successDetails.email ? (
+            <p className="text-sm leading-relaxed text-muted">
+              {page.success.emailNote.replace("{email}", successDetails.email)}
+            </p>
+          ) : null}
+        </div>
+
         <button type="button" className="btn-secondary w-fit" onClick={onReset}>
           {page.success.newRequest}
         </button>
@@ -876,7 +1007,8 @@ function BookingRequestForm({
 
   return (
     <form
-      className="flat-panel space-y-7 font-sans"
+      id="booking-request"
+      className="flat-panel space-y-7 font-sans scroll-mt-4"
       noValidate
       onSubmit={onSubmit}
       aria-labelledby="booking-form-title"
@@ -891,7 +1023,7 @@ function BookingRequestForm({
         </div>
       </div>
 
-      <div className="grid gap-5">
+      <div className="grid gap-6">
         <FormField error={fieldErrors.night} id="booking-night" label={page.form.nightLabel}>
           <input
             id="booking-night"
@@ -913,169 +1045,206 @@ function BookingRequestForm({
           ) : null}
         </FormField>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <FormField
-            error={fieldErrors.requester_name}
-            id="requester_name"
-            label={page.form.nameLabel}
-          >
-            <input
+        <fieldset className="m-0 space-y-5 border-0 p-0">
+          <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+            {page.form.sectionContact}
+          </legend>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <FormField
+              error={fieldErrors.requester_name}
               id="requester_name"
-              name="requester_name"
-              className="form-input w-full px-3 py-2.5"
-              value={formData.requester_name}
-              onChange={onFieldChange}
+              label={page.form.nameLabel}
               required
-              autoComplete="name"
-              aria-invalid={fieldErrors.requester_name ? "true" : undefined}
-              aria-describedby={
-                fieldErrors.requester_name
-                  ? "requester_name-error"
-                  : undefined
-              }
-            />
-          </FormField>
+            >
+              <input
+                id="requester_name"
+                name="requester_name"
+                className="form-input w-full px-3 py-2.5"
+                value={formData.requester_name}
+                onChange={onFieldChange}
+                onBlur={onFieldBlur}
+                required
+                autoComplete="name"
+                aria-invalid={fieldErrors.requester_name ? "true" : undefined}
+                aria-describedby={
+                  fieldErrors.requester_name
+                    ? "requester_name-error"
+                    : undefined
+                }
+              />
+            </FormField>
 
-          <FormField error={fieldErrors.email} id="email" label={page.form.emailLabel}>
-            <input
+            <FormField
+              error={fieldErrors.email}
               id="email"
-              name="email"
-              type="email"
-              className="form-input w-full px-3 py-2.5"
-              value={formData.email}
-              onChange={onFieldChange}
+              label={page.form.emailLabel}
               required
-              autoComplete="email"
-              aria-invalid={fieldErrors.email ? "true" : undefined}
-              aria-describedby={fieldErrors.email ? "email-error" : undefined}
-            />
-          </FormField>
-        </div>
+            >
+              <input
+                id="email"
+                name="email"
+                type="email"
+                className="form-input w-full px-3 py-2.5"
+                value={formData.email}
+                onChange={onFieldChange}
+                onBlur={onFieldBlur}
+                required
+                autoComplete="email"
+                aria-invalid={fieldErrors.email ? "true" : undefined}
+                aria-describedby={fieldErrors.email ? "email-error" : undefined}
+              />
+            </FormField>
+          </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <FormField error={fieldErrors.phone} id="phone" label={page.form.phoneLabel}>
-            <input
+          <div className="grid gap-5 md:grid-cols-2">
+            <FormField
+              error={fieldErrors.phone}
               id="phone"
-              name="phone"
-              type="tel"
-              className="form-input w-full px-3 py-2.5"
-              value={formData.phone}
-              onChange={onFieldChange}
+              label={page.form.phoneLabel}
               required
-              autoComplete="tel"
-              aria-invalid={fieldErrors.phone ? "true" : undefined}
-              aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
-            />
+            >
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                className="form-input w-full px-3 py-2.5"
+                value={formData.phone}
+                onChange={onFieldChange}
+                onBlur={onFieldBlur}
+                required
+                autoComplete="tel"
+                aria-invalid={fieldErrors.phone ? "true" : undefined}
+                aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+              />
+            </FormField>
+
+            <FormField
+              error={fieldErrors.address}
+              id="address"
+              label={page.form.addressLabel}
+              required
+            >
+              <input
+                id="address"
+                name="address"
+                className="form-input w-full px-3 py-2.5"
+                value={formData.address}
+                onChange={onFieldChange}
+                onBlur={onFieldBlur}
+                required
+                autoComplete="street-address"
+                aria-invalid={fieldErrors.address ? "true" : undefined}
+                aria-describedby={fieldErrors.address ? "address-error" : undefined}
+              />
+            </FormField>
+          </div>
+        </fieldset>
+
+        <fieldset className="m-0 space-y-5 border-0 p-0">
+          <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+            {page.form.sectionEvent}
+          </legend>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <FormField
+              error={fieldErrors.residency}
+              id="residency"
+              label={page.form.residencyLabel}
+              required
+            >
+              <select
+                id="residency"
+                name="residency"
+                className="form-select w-full px-3 py-2.5"
+                value={formData.residency}
+                onChange={onFieldChange}
+                required
+                aria-invalid={fieldErrors.residency ? "true" : undefined}
+                aria-describedby={
+                  fieldErrors.residency ? "residency-error" : undefined
+                }
+              >
+                <option value="">{page.form.residencyPlaceholder}</option>
+                {page.form.residencyOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {formData.residency === "rosenbachweg" ? (
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  {page.form.rosenbachwegNote}
+                </p>
+              ) : null}
+            </FormField>
+
+            <FormField
+              error={fieldErrors.guest_count}
+              id="guest_count"
+              label={page.form.guestCountLabel}
+            >
+              <input
+                id="guest_count"
+                name="guest_count"
+                type="number"
+                min="1"
+                step="1"
+                inputMode="numeric"
+                className="form-input w-full px-3 py-2.5"
+                value={formData.guest_count}
+                onChange={onFieldChange}
+                aria-invalid={fieldErrors.guest_count ? "true" : undefined}
+                aria-describedby={
+                  fieldErrors.guest_count ? "guest_count-error" : undefined
+                }
+              />
+            </FormField>
+          </div>
+
+          <PriceDisplay locale={locale} page={page} rent={selectedRent} />
+
+          <FormField
+            error={fieldErrors.payment_method}
+            id="payment_method"
+            label={page.form.paymentMethodLabel}
+          >
+            <select
+              id="payment_method"
+              name="payment_method"
+              className="form-select w-full px-3 py-2.5"
+              value={formData.payment_method}
+              onChange={onFieldChange}
+            >
+              <option value="">{page.form.paymentMethodPlaceholder}</option>
+              {page.form.paymentMethods.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              {page.form.paymentMethodHint}
+            </p>
           </FormField>
 
           <FormField
-            error={fieldErrors.guest_count}
-            id="guest_count"
-            label={page.form.guestCountLabel}
+            error={fieldErrors.additional_info}
+            id="additional_info"
+            label={page.form.additionalInfoLabel}
           >
-            <input
-              id="guest_count"
-              name="guest_count"
-              type="number"
-              min="1"
-              step="1"
-              inputMode="numeric"
-              className="form-input w-full px-3 py-2.5"
-              value={formData.guest_count}
+            <textarea
+              id="additional_info"
+              name="additional_info"
+              className="form-textarea min-h-32 w-full px-3 py-2.5"
+              value={formData.additional_info}
               onChange={onFieldChange}
-              aria-invalid={fieldErrors.guest_count ? "true" : undefined}
-              aria-describedby={
-                fieldErrors.guest_count ? "guest_count-error" : undefined
-              }
+              rows={5}
             />
           </FormField>
-        </div>
+        </fieldset>
 
-        <FormField error={fieldErrors.address} id="address" label={page.form.addressLabel}>
-          <input
-            id="address"
-            name="address"
-            className="form-input w-full px-3 py-2.5"
-            value={formData.address}
-            onChange={onFieldChange}
-            required
-            autoComplete="street-address"
-            aria-invalid={fieldErrors.address ? "true" : undefined}
-            aria-describedby={fieldErrors.address ? "address-error" : undefined}
-          />
-        </FormField>
-
-        <FormField
-          error={fieldErrors.residency}
-          id="residency"
-          label={page.form.residencyLabel}
-        >
-          <select
-            id="residency"
-            name="residency"
-            className="form-select w-full px-3 py-2.5"
-            value={formData.residency}
-            onChange={onFieldChange}
-            required
-            aria-invalid={fieldErrors.residency ? "true" : undefined}
-            aria-describedby={
-              fieldErrors.residency ? "residency-error" : undefined
-            }
-          >
-            <option value="">{page.form.residencyPlaceholder}</option>
-            {page.form.residencyOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {formData.residency === "rosenbachweg" ? (
-            <p className="mt-2 text-sm leading-relaxed text-muted">
-              {page.form.rosenbachwegNote}
-            </p>
-          ) : null}
-        </FormField>
-
-        <PriceDisplay locale={locale} page={page} rent={selectedRent} />
-
-        <FormField
-          error={fieldErrors.payment_method}
-          id="payment_method"
-          label={page.form.paymentMethodLabel}
-        >
-          <select
-            id="payment_method"
-            name="payment_method"
-            className="form-select w-full px-3 py-2.5"
-            value={formData.payment_method}
-            onChange={onFieldChange}
-          >
-            <option value="">{page.form.paymentMethodPlaceholder}</option>
-            {page.form.paymentMethods.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            {page.form.paymentMethodHint}
-          </p>
-        </FormField>
-
-        <FormField
-          error={fieldErrors.additional_info}
-          id="additional_info"
-          label={page.form.additionalInfoLabel}
-        >
-          <textarea
-            id="additional_info"
-            name="additional_info"
-            className="form-textarea min-h-32 w-full px-3 py-2.5"
-            value={formData.additional_info}
-            onChange={onFieldChange}
-            rows={5}
-          />
-        </FormField>
+        <p className="text-xs text-muted">{page.form.requiredHint}</p>
       </div>
 
       <section className="space-y-5 border-t border-line pt-7">
@@ -1156,11 +1325,16 @@ function BookingRequestForm({
   );
 }
 
-function FormField({ children, error, id, label }) {
+function FormField({ children, error, id, label, required = false }) {
   return (
     <div>
       <label htmlFor={id} className="mb-2 block text-sm font-semibold">
         {label}
+        {required ? (
+          <span className="text-danger" aria-hidden="true">
+            {" *"}
+          </span>
+        ) : null}
       </label>
       {children}
       {error ? (

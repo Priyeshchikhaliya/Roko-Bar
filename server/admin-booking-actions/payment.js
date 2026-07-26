@@ -48,6 +48,14 @@ function buildPaymentUpdate(body) {
     update.payment_note = optionalText(body.payment_note);
   }
 
+  if (hasOwn(body, "rent_note")) {
+    update.rent_note = optionalText(body.rent_note);
+  }
+
+  if (hasOwn(body, "deposit_note")) {
+    update.deposit_note = optionalText(body.deposit_note);
+  }
+
   if (Object.keys(update).length === 0) {
     return { code: "no_payment_fields" };
   }

@@ -15,10 +15,24 @@ This creates:
 - `blocked_dates`: manually blocked nights.
 - A unique database index that prevents two `confirmed` bookings on the same night.
 
-Create a private Supabase Storage bucket named `contracts`. Signed guest uploads
-are stored under `signed/{booking_id}.pdf`; tutor counter-signed PDFs are stored
-under `final/{booking_id}.pdf`. Keep the bucket private. The app serves downloads
-through server-side API routes only.
+Create **two private** Supabase Storage buckets (Storage → New bucket, leave
+"Public" off):
+
+- `contracts` — signed guest uploads under `signed/{booking_id}.pdf` and tutor
+  counter-signed PDFs under `final/{booking_id}.pdf`.
+- `payment-proofs` — rent payment proofs under `rent/{booking_id}.{pdf|png|jpg}`,
+  uploaded only for online bank transfers.
+
+Both must stay private. The app never exposes a Supabase key to the browser and
+serves every download through server-side API routes using short-lived signed
+URLs. If the `payment-proofs` bucket is missing, online-payment submissions fail.
+
+Running `schema.sql` also enables Row Level Security on the tables and installs a
+`rate_limits` table plus a `rate_limit_hit()` function used to throttle the
+public endpoints (booking creation, admin login, and status reads). On an
+**existing** project, run `supabase/migrations/20260721_rls_and_rate_limits.sql`
+once in the SQL Editor before deploying this version. Until it is run, rate
+limiting fails open (requests are allowed) and logs a one-time warning.
 
 ## 2. Find Supabase Environment Values
 

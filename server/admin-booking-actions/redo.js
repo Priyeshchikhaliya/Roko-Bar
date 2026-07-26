@@ -100,10 +100,18 @@ export default async function handler(req, res) {
         payment_note: null,
       })
       .eq("id", booking.id)
+      .in("status", ["approved", "signed"])
       .select(BOOKING_COLUMNS)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      // Lost a race: the booking already advanced or closed before this update.
+      if (isNotFoundError(error)) {
+        return sendError(req, res, 409, "cannot_request_redo");
+      }
+
+      throw error;
+    }
 
     await Promise.allSettled([
       removeIfPresent(supabase, CONTRACT_BUCKET, booking.signed_contract_path),

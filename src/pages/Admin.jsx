@@ -110,6 +110,12 @@ const COPY = {
       markDeposit: "Kaution bezahlt markieren",
       unmarkDeposit: "Kaution offen markieren",
       prompt: "Optionale Zahlungsnotiz für {label}",
+      rentNoteLabel: "Notiz zur Miete",
+      depositNoteLabel: "Notiz zur Kaution",
+      beforeCountersign: "Vor dem Gegenzeichnen",
+      checkMethod: "Zahlungsart gewählt",
+      checkProof: "Zahlungsnachweis hochgeladen",
+      checkRent: "Miete als bezahlt markiert",
       saved: "{label} aktualisiert.",
     },
     contractStates: {
@@ -159,6 +165,13 @@ const COPY = {
       no: "Nein",
       contractWork: "Vertragsablauf",
       uploadHint: "Nur PDF, maximal 4 MB. Beim Hochladen wird die Buchung bestätigt.",
+      groups: {
+        contact: "Kontakt & Veranstaltung",
+        timeline: "Verlauf",
+        system: "System & Notizen",
+      },
+      showTechnical: "Technische Details anzeigen",
+      hideTechnical: "Technische Details ausblenden",
     },
     edit: {
       name: "Name",
@@ -283,6 +296,12 @@ const COPY = {
       markDeposit: "Mark deposit paid",
       unmarkDeposit: "Mark deposit open",
       prompt: "Optional payment note for {label}",
+      rentNoteLabel: "Rent note",
+      depositNoteLabel: "Deposit note",
+      beforeCountersign: "Before counter-signing",
+      checkMethod: "Payment method selected",
+      checkProof: "Payment proof uploaded",
+      checkRent: "Rent marked as paid",
       saved: "{label} updated.",
     },
     contractStates: {
@@ -332,6 +351,13 @@ const COPY = {
       no: "No",
       contractWork: "Contract workflow",
       uploadHint: "PDF only, up to 4 MB. Uploading confirms the booking.",
+      groups: {
+        contact: "Contact & event",
+        timeline: "Timeline",
+        system: "System & notes",
+      },
+      showTechnical: "Show technical details",
+      hideTechnical: "Hide technical details",
     },
     edit: {
       name: "Name",
@@ -560,6 +586,19 @@ function statusClass(booking) {
   return "border-primary bg-brick-tint text-primary-dark";
 }
 
+// Left-edge accent so each row's status is scannable at a glance.
+function statusAccentClass(booking) {
+  if (booking.isExpired) return "border-l-danger";
+  if (booking.status === "confirmed" || booking.status === "signed") {
+    return "border-l-success";
+  }
+  if (booking.status === "approved") return "border-l-warning";
+  if (booking.status === "rejected" || booking.status === "cancelled") {
+    return "border-l-muted";
+  }
+  return "border-l-sky";
+}
+
 function compactButtonClass(variant = "secondary") {
   const base =
     "inline-flex min-h-11 items-center justify-center border px-3 py-2 text-xs font-semibold leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-55";
@@ -574,6 +613,10 @@ function compactButtonClass(variant = "secondary") {
 
   if (variant === "ghost") {
     return `${base} border-transparent bg-transparent text-primary hover:bg-brick-tint`;
+  }
+
+  if (variant === "sky") {
+    return `${base} border-sky bg-surface text-sky hover:bg-sky hover:text-surface`;
   }
 
   return `${base} border-line bg-surface text-ink hover:border-primary hover:text-primary`;
@@ -660,6 +703,7 @@ export default function Admin() {
   const [tutorNames, setTutorNames] = useState([]);
   const [tutorLoadError, setTutorLoadError] = useState(null);
   const [selectedTutor, setSelectedTutor] = useState("");
+  const [paymentNote, setPaymentNote] = useState("");
   const token = session?.token;
 
   const applyBookingResponse = useCallback(
@@ -682,6 +726,7 @@ export default function Admin() {
     if (!busyKey) {
       setConfirmation(null);
       setSelectedTutor("");
+      setPaymentNote("");
     }
   };
 
@@ -689,11 +734,14 @@ export default function Admin() {
     if (!confirmation || busyKey) return;
     if (confirmation.kind === "assignTutor") {
       await assignTutor(confirmation.booking, selectedTutor);
+    } else if (confirmation.kind === "payment") {
+      await markPayment(confirmation.booking, confirmation.field, paymentNote.trim());
     } else {
       await confirmation.onConfirm();
     }
     setConfirmation(null);
     setSelectedTutor("");
+    setPaymentNote("");
   };
 
   const logout = useCallback(() => {
@@ -845,15 +893,23 @@ export default function Admin() {
 
   const requestBookingAction = (booking, action) => {
     if (action === "approve") {
+      if (!booking.assigned_tutor) {
+        setNotice({ type: "error", text: copy.tutor.assignFirst });
+        return;
+      }
       runBookingAction(booking, action);
       return;
     }
 
     const label =
       action === "redo" ? copy.actions.requestRedo : copy.actions[action];
+    const message =
+      action === "cancel" && booking.status === "confirmed"
+        ? copy.confirmations.cancelConfirmed
+        : copy.confirmations[action];
     setConfirmation({
       title: label,
-      message: copy.confirmations[action],
+      message,
       confirmLabel: label,
       tone: "danger",
       onConfirm: () => runBookingAction(booking, action),
@@ -947,7 +1003,9 @@ export default function Admin() {
   };
 
   const markPayment = async (booking, field, note) => {
-    const label = field === "rent_paid" ? copy.payment.rent : copy.payment.deposit;
+    const isRent = field === "rent_paid";
+    const label = isRent ? copy.payment.rent : copy.payment.deposit;
+    const noteField = isRent ? "rent_note" : "deposit_note";
     const nextValue = !booking[field];
 
     setBusyKey(`${field}:${booking.id}`);
@@ -959,7 +1017,7 @@ export default function Admin() {
         method: "POST",
         body: {
           [field]: nextValue,
-          payment_note: note,
+          [noteField]: note,
         },
       });
       setNotice({
@@ -978,15 +1036,7 @@ export default function Admin() {
 
   const requestPaymentChange = (booking, field) => {
     const isRent = field === "rent_paid";
-    const label = isRent ? copy.payment.rent : copy.payment.deposit;
     const nextValue = !booking[field];
-    const note = window.prompt(
-      copy.payment.prompt.replace("{label}", label),
-      booking.payment_note || "",
-    );
-
-    if (note === null) return;
-
     const confirmLabel = nextValue
       ? isRent
         ? copy.payment.markRent
@@ -996,12 +1046,15 @@ export default function Admin() {
         : copy.payment.unmarkDeposit;
     const messageKey = `${isRent ? "rent" : "deposit"}${nextValue ? "Paid" : "Open"}`;
 
+    setPaymentNote((isRent ? booking.rent_note : booking.deposit_note) || "");
     setConfirmation({
+      kind: "payment",
+      booking,
+      field,
       title: confirmLabel,
       message: copy.confirmations[messageKey],
       confirmLabel,
       tone: "default",
-      onConfirm: () => markPayment(booking, field, note),
     });
   };
 
@@ -1458,6 +1511,20 @@ export default function Admin() {
             </select>
           </label>
         ) : null}
+        {confirmation?.kind === "payment" ? (
+          <label className="mt-4 block space-y-2 text-ink">
+            <span className="text-xs font-semibold uppercase tracking-[0.1em] text-muted">
+              {confirmation.field === "rent_paid"
+                ? copy.payment.rentNoteLabel
+                : copy.payment.depositNoteLabel}
+            </span>
+            <textarea
+              className="form-textarea min-h-20 w-full px-3 py-2.5"
+              onChange={(event) => setPaymentNote(event.target.value)}
+              value={paymentNote}
+            />
+          </label>
+        ) : null}
       </ConfirmModal>
       <FilePreviewModal
         error={filePreview?.error}
@@ -1589,7 +1656,7 @@ function BookingsTable({
             {bookings.map((booking) => (
               <Fragment key={booking.id}>
                 <tr className="border-b border-line align-top">
-                  <td className="px-4 py-4">
+                  <td className={`border-l-4 px-4 py-4 ${statusAccentClass(booking)}`}>
                     <div className="font-semibold text-ink">
                       {formatNight(booking.night, lang)}
                     </div>
@@ -1679,7 +1746,10 @@ function BookingsTable({
 
       <div className="grid gap-px bg-line lg:hidden">
         {bookings.map((booking) => (
-          <article className="bg-surface p-4 sm:p-5" key={booking.id}>
+          <article
+            className={`border-l-4 bg-surface p-4 sm:p-5 ${statusAccentClass(booking)}`}
+            key={booking.id}
+          >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0 space-y-1">
                 <div className="font-semibold leading-snug text-ink">
@@ -1962,61 +2032,77 @@ function BookingDetails({
   onStartEdit,
 }) {
   return (
-    <div className="grid gap-5 lg:grid-cols-3">
-      <DetailBlock label={copy.table.contact} value={`${booking.email}\n${booking.phone || copy.table.noPhone}`} />
-      <DetailBlock
-        label={copy.tutor.detailLabel}
-        value={booking.assigned_tutor || copy.notSet}
-      />
-      <DetailBlock label={copy.details.address} value={booking.address} />
-      <DetailBlock
-        label={copy.table.guests}
-        value={booking.guest_count ?? copy.table.openGuests}
-      />
-      <DetailBlock
-        label={copy.details.additionalInfo}
-        value={booking.additional_info || copy.details.notProvided}
-      />
-      <DetailBlock
-        label={copy.details.internalNotes}
-        value={booking.internal_notes || copy.details.noInternalNotes}
-      />
-      <DetailBlock label={copy.details.bookingId} value={booking.id} mono />
-      <DetailBlock label={copy.details.accessToken} value={booking.access_token || copy.notSet} mono />
-      <DetailBlock
-        label={copy.details.language}
-        value={(booking.lang === "en" ? "EN" : "DE")}
-      />
-      <DetailBlock label={copy.table.created} value={formatDateTime(booking.created_at, lang, copy.notSet)} />
-      <DetailBlock label={copy.details.paymentNote} value={booking.payment_note || copy.details.noPaymentNote} />
-      <DetailBlock label={copy.details.reviewed} value={formatDateTime(booking.reviewed_at, lang, copy.notSet)} />
-      <DetailBlock label={copy.details.rentPaidAt} value={formatDateTime(booking.rent_paid_at, lang, copy.notSet)} />
-      <DetailBlock label={copy.details.depositPaidAt} value={formatDateTime(booking.deposit_paid_at, lang, copy.notSet)} />
-      <DetailBlock label={copy.details.signedAt} value={formatDateTime(booking.countersigned_at, lang, copy.notSet)} />
-      <DetailBlock
-        label={copy.details.signedPath}
-        value={booking.signed_contract_path ? copy.details.yes : copy.details.no}
-      />
-      <DetailBlock
-        label={copy.details.finalPath}
-        value={booking.final_contract_path ? copy.details.yes : copy.details.no}
-      />
-      <PaymentActions
-        booking={booking}
-        busyKey={busyKey}
-        copy={copy}
-        onDownloadPaymentProof={onDownloadPaymentProof}
-        onMarkPayment={onMarkPayment}
-        onPreviewFile={onPreviewFile}
-      />
-      <SecondaryBookingActions
-      booking={booking}
-      busyKey={busyKey}
-      copy={copy}
-      onCancel={onCancel}
-      onRedo={onRedo}
-      onStartEdit={onStartEdit}
-    />
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <DetailCard title={copy.details.groups.contact}>
+          <DetailBlock
+            label={copy.table.contact}
+            value={`${booking.email}\n${booking.phone || copy.table.noPhone}`}
+          />
+          <DetailBlock label={copy.details.address} value={booking.address} />
+          <DetailBlock
+            label={copy.table.guests}
+            value={booking.guest_count ?? copy.table.openGuests}
+          />
+          <DetailBlock
+            label={copy.details.additionalInfo}
+            value={booking.additional_info || copy.details.notProvided}
+          />
+          <DetailBlock
+            label={copy.tutor.detailLabel}
+            value={booking.assigned_tutor || copy.notSet}
+          />
+          <DetailBlock
+            label={copy.details.language}
+            value={booking.lang === "en" ? "EN" : "DE"}
+          />
+        </DetailCard>
+
+        <DetailCard title={copy.details.groups.timeline}>
+          <DetailBlock
+            label={copy.table.created}
+            value={formatDateTime(booking.created_at, lang, copy.notSet)}
+          />
+          <DetailBlock
+            label={copy.details.reviewed}
+            value={formatDateTime(booking.reviewed_at, lang, copy.notSet)}
+          />
+          <DetailBlock
+            label={copy.details.rentPaidAt}
+            value={formatDateTime(booking.rent_paid_at, lang, copy.notSet)}
+          />
+          <DetailBlock
+            label={copy.details.depositPaidAt}
+            value={formatDateTime(booking.deposit_paid_at, lang, copy.notSet)}
+          />
+          <DetailBlock
+            label={copy.details.signedAt}
+            value={formatDateTime(booking.countersigned_at, lang, copy.notSet)}
+          />
+        </DetailCard>
+
+        <SystemNotesCard booking={booking} copy={copy} />
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-2">
+        <PaymentActions
+          booking={booking}
+          busyKey={busyKey}
+          copy={copy}
+          onDownloadPaymentProof={onDownloadPaymentProof}
+          onMarkPayment={onMarkPayment}
+          onPreviewFile={onPreviewFile}
+        />
+        <SecondaryBookingActions
+          booking={booking}
+          busyKey={busyKey}
+          copy={copy}
+          onCancel={onCancel}
+          onRedo={onRedo}
+          onStartEdit={onStartEdit}
+        />
+      </div>
+
       <ContractPanel
         booking={booking}
         busyKey={busyKey}
@@ -2025,6 +2111,68 @@ function BookingDetails({
         onDownloadFile={onDownloadFile}
         onPreviewFile={onPreviewFile}
       />
+    </div>
+  );
+}
+
+function SystemNotesCard({ booking, copy }) {
+  const [showTechnical, setShowTechnical] = useState(false);
+
+  return (
+    <DetailCard title={copy.details.groups.system}>
+      <DetailBlock
+        label={copy.details.internalNotes}
+        value={booking.internal_notes || copy.details.noInternalNotes}
+      />
+      <button
+        type="button"
+        className="text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:text-primary-dark"
+        onClick={() => setShowTechnical((current) => !current)}
+      >
+        {showTechnical ? copy.details.hideTechnical : copy.details.showTechnical}
+      </button>
+      {showTechnical ? (
+        <div className="space-y-3 border-t border-line pt-3">
+          <DetailBlock label={copy.details.bookingId} value={booking.id} mono />
+          <DetailBlock
+            label={copy.details.accessToken}
+            value={booking.access_token || copy.notSet}
+            mono
+          />
+          <DetailBlock
+            label={copy.details.signedPath}
+            value={booking.signed_contract_path ? copy.details.yes : copy.details.no}
+          />
+          <DetailBlock
+            label={copy.details.finalPath}
+            value={booking.final_contract_path ? copy.details.yes : copy.details.no}
+          />
+        </div>
+      ) : null}
+    </DetailCard>
+  );
+}
+
+function DetailCard({ children, title }) {
+  return (
+    <div className="border border-line bg-surface p-4">
+      <h4 className="mb-3 border-b border-line pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+        {title}
+      </h4>
+      <div className="space-y-3">{children}</div>
+    </div>
+  );
+}
+
+function PaymentNote({ label, value }) {
+  return (
+    <div className="border-l-2 border-primary pl-3">
+      <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+        {label}
+      </div>
+      <p className="mt-0.5 whitespace-pre-wrap break-words text-sm font-medium text-ink">
+        {value}
+      </p>
     </div>
   );
 }
@@ -2063,6 +2211,12 @@ function PaymentActions({
           {paymentProofText(booking, copy)}
         </div>
       </div>
+      {booking.rent_note ? (
+        <PaymentNote label={copy.payment.rentNoteLabel} value={booking.rent_note} />
+      ) : null}
+      {booking.deposit_note ? (
+        <PaymentNote label={copy.payment.depositNoteLabel} value={booking.deposit_note} />
+      ) : null}
       <div className="flex flex-wrap gap-2">
         {booking.rent_proof_path ? (
           <>
@@ -2075,7 +2229,7 @@ function PaymentActions({
               {copy.actions.downloadProof}
             </button>
             <button
-              className={compactButtonClass("secondary")}
+              className={compactButtonClass("sky")}
               disabled={busy}
               onClick={() => onPreviewFile(booking, "proof")}
               type="button"
@@ -2120,10 +2274,10 @@ function SecondaryBookingActions({
   onStartEdit,
 }) {
   const busy = Boolean(busyKey);
-  const isTerminal =
-    booking.status === "confirmed" ||
-    booking.status === "rejected" ||
-    booking.status === "cancelled";
+  // Cancel stays available for confirmed bookings so a tutor can release the
+  // night if a confirmed event falls through; only closed bookings hide it.
+  const canCancel =
+    booking.status !== "rejected" && booking.status !== "cancelled";
   const canRequestRedo =
     booking.status === "approved" || booking.status === "signed" || booking.isExpired;
 
@@ -2151,7 +2305,7 @@ function SecondaryBookingActions({
             {copy.actions.requestRedo}
           </button>
         ) : null}
-        {!isTerminal ? (
+        {canCancel ? (
           <button
             className={compactButtonClass("danger")}
             disabled={busy}
@@ -2163,6 +2317,23 @@ function SecondaryBookingActions({
         ) : null}
       </div>
     </div>
+  );
+}
+
+function ChecklistItem({ label, ok }) {
+  return (
+    <li className="flex items-center gap-2 text-sm">
+      <span
+        className={[
+          "flex h-4 w-4 shrink-0 items-center justify-center text-[0.6rem] font-bold leading-none",
+          ok ? "bg-success text-surface" : "border border-danger text-danger",
+        ].join(" ")}
+        aria-hidden="true"
+      >
+        {ok ? "✓" : "!"}
+      </span>
+      <span className={ok ? "text-ink" : "font-semibold text-danger"}>{label}</span>
+    </li>
   );
 }
 
@@ -2184,16 +2355,8 @@ function ContractPanel({
     Boolean(booking.signed_contract_path) &&
     booking.rent_paid &&
     hasRequiredPayment;
-  const countersignBlocker =
-    booking.status === "signed" && booking.signed_contract_path
-      ? !booking.payment_method
-        ? copy.payment.methodRequired
-        : booking.payment_method === "online" && !booking.rent_proof_path
-          ? copy.payment.proofRequired
-          : !booking.rent_paid
-            ? copy.payment.rentRequired
-            : ""
-      : "";
+  const showChecklist =
+    booking.status === "signed" && Boolean(booking.signed_contract_path);
 
   const submit = (event) => {
     event.preventDefault();
@@ -2222,7 +2385,7 @@ function ContractPanel({
                   {copy.actions.downloadSigned}
                 </button>
                 <button
-                  className={compactButtonClass("secondary")}
+                  className={compactButtonClass("sky")}
                   disabled={busy}
                   onClick={() => onPreviewFile(booking, "signed")}
                   type="button"
@@ -2242,7 +2405,7 @@ function ContractPanel({
                   {copy.actions.downloadFinal}
                 </button>
                 <button
-                  className={compactButtonClass("secondary")}
+                  className={compactButtonClass("sky")}
                   disabled={busy}
                   onClick={() => onPreviewFile(booking, "final")}
                   type="button"
@@ -2252,8 +2415,28 @@ function ContractPanel({
               </>
             ) : null}
           </div>
-          {countersignBlocker ? (
-            <p className="text-sm font-semibold text-danger">{countersignBlocker}</p>
+          {showChecklist ? (
+            <div className="space-y-2 border border-line bg-paper p-3">
+              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+                {copy.payment.beforeCountersign}
+              </div>
+              <ul className="space-y-1.5">
+                <ChecklistItem
+                  ok={Boolean(booking.payment_method)}
+                  label={copy.payment.checkMethod}
+                />
+                {booking.payment_method === "online" ? (
+                  <ChecklistItem
+                    ok={Boolean(booking.rent_proof_path)}
+                    label={copy.payment.checkProof}
+                  />
+                ) : null}
+                <ChecklistItem
+                  ok={Boolean(booking.rent_paid)}
+                  label={copy.payment.checkRent}
+                />
+              </ul>
+            </div>
           ) : null}
         </div>
 
@@ -2295,8 +2478,10 @@ function DetailBlock({ label, mono = false, value }) {
       </div>
       <div
         className={[
-          "whitespace-pre-wrap break-words text-sm text-ink",
-          mono ? "font-mono text-xs" : "",
+          "whitespace-pre-wrap break-words text-ink",
+          mono
+            ? "font-mono text-xs"
+            : "text-[0.95rem] font-semibold sm:text-base",
         ].join(" ")}
       >
         {value}

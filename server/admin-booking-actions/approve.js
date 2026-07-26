@@ -62,6 +62,10 @@ export default async function handler(req, res) {
       return sendError(req, res, 409, "not_pending_approve");
     }
 
+    if (!booking.assigned_tutor) {
+      return sendError(req, res, 409, "tutor_required_before_approve");
+    }
+
     if (await isNightTakenByOtherBooking(supabase, booking.night, id)) {
       return sendError(req, res, 409, "conflict_taken_or_blocked");
     }
@@ -84,10 +88,18 @@ export default async function handler(req, res) {
       .from("bookings")
       .update(update)
       .eq("id", id)
+      .eq("status", "pending")
       .select(BOOKING_COLUMNS)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      // Lost a race: the booking left "pending" between load and update.
+      if (isNotFoundError(error)) {
+        return sendError(req, res, 409, "not_pending_approve");
+      }
+
+      throw error;
+    }
 
     const email = await sendApprovalEmailWithStatus(data, (emailError) => {
       console.error("booking approval email error", emailError);

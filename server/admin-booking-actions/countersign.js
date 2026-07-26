@@ -171,12 +171,18 @@ export default async function handler(req, res) {
         status: "confirmed",
       })
       .eq("id", booking.id)
+      .eq("status", "signed")
       .select(BOOKING_COLUMNS)
       .single();
 
     if (error) {
       if (error.code === "23505") {
         return sendError(req, res, 409, "conflict_confirmed");
+      }
+
+      // Lost a race: the booking left "signed" (e.g. a redo) before this update.
+      if (isNotFoundError(error)) {
+        return sendError(req, res, 409, "cannot_counter_sign");
       }
 
       throw error;

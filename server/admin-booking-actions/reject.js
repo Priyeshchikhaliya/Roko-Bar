@@ -60,12 +60,14 @@ export default async function handler(req, res) {
         reviewed_at: new Date().toISOString(),
       })
       .eq("id", id)
+      .eq("status", "pending")
       .select(BOOKING_COLUMNS)
       .single();
 
     if (error) {
+      // Lost a race: no longer pending by the time the update ran.
       if (isNotFoundError(error)) {
-        return sendError(req, res, 404, "booking_not_found");
+        return sendError(req, res, 409, "cannot_reject_status");
       }
 
       throw error;

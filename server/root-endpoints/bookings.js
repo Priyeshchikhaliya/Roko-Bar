@@ -20,6 +20,7 @@ import {
 } from "../api/_email.js";
 import { acknowledgementEmail } from "../api/_email-content.js";
 import { normalizePaymentMethod } from "../api/_payments.js";
+import { enforceRateLimit } from "../api/_rateLimit.js";
 import { methodNotAllowed, readJsonBody, sendError, sendJson } from "../api/_responses.js";
 import { getSupabase } from "../api/_supabase.js";
 
@@ -219,6 +220,11 @@ function validateBookingBody(body) {
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return methodNotAllowed(req, res, "POST");
+  }
+
+  // Each request inserts a row and sends two emails; throttle to stop spam.
+  if (!(await enforceRateLimit(req, res, { scope: "booking-create", max: 10, windowSeconds: 300 }))) {
+    return;
   }
 
   let body;

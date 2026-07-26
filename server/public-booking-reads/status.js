@@ -1,11 +1,18 @@
 import { sanitizeBookingForGuest } from "../api/_contracts.js";
 import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../api/_adminUtils.js";
+import { enforceRateLimit } from "../api/_rateLimit.js";
 import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
 import { getSupabase } from "../api/_supabase.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return methodNotAllowed(req, res, "GET");
+  }
+
+  // Generous per-IP cap: real guests poll a handful of times, but this slows any
+  // attempt to brute-force access tokens. Dorm NAT keeps this well clear of use.
+  if (!(await enforceRateLimit(req, res, { scope: "booking-status", max: 120, windowSeconds: 60 }))) {
+    return;
   }
 
   const token = getQueryValue(req, "token");

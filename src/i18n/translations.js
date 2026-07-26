@@ -239,6 +239,12 @@ export const de = {
         "Der Termin ist ausgewählt und die Mietbedingungen sind bestätigt.",
       submit: "Anfrage senden",
       sending: "Wird gesendet...",
+      sectionContact: "Kontaktdaten",
+      sectionEvent: "Veranstaltung & Zahlung",
+      requiredHint: "* Pflichtfeld",
+      stickyTotal: "gesamt",
+      stickyChoosePrompt: "Tarif für Gesamtpreis wählen",
+      stickyContinue: "Weiter zum Formular",
     },
     agreement: {
       title: "Worauf du dich einlässt",
@@ -259,6 +265,13 @@ export const de = {
       notConfirmed:
         "Noch ist nichts bestätigt. Verbindlich wird es erst, wenn du die E-Mail mit dem Vertragslink bekommst.",
       dateLabel: "Termin",
+      emailNote: "Wir haben eine Eingangsbestätigung an {email} geschickt.",
+      nextTitle: "So geht es weiter",
+      steps: [
+        "Ein:e Bar-Tutor:in prüft deine Anfrage.",
+        "Bei Zusage bekommst du eine E-Mail mit Vertrag, Hausordnung und deinem privaten Link.",
+        "Über den Link unterschreibst du den Vertrag, wählst die Zahlung und schließt die Buchung ab.",
+      ],
       newRequest: "Weitere Anfrage starten",
     },
     errors: {
@@ -561,6 +574,7 @@ export const de = {
       countersign: "Der finale Vertrag wird hochgeladen, die Buchung verbindlich bestätigt und die buchende Person per E-Mail benachrichtigt.",
       reject: "Die Anfrage wird endgültig abgelehnt und kann danach nicht mehr freigegeben werden.",
       cancel: "Die Buchung wird storniert. Dieser Vorgang kann hier nicht rückgängig gemacht werden.",
+      cancelConfirmed: "Diese Buchung ist bereits bestätigt. Beim Stornieren wird der Termin wieder freigegeben und die buchende Person NICHT automatisch benachrichtigt. Bitte informiere sie separat.",
       redo: "Die vorhandenen Vertrags- und Zahlungsdateien werden entfernt. Die buchende Person erhält eine neue Frist zur Abgabe.",
       unblock: "Die Sperre für {date} wird entfernt und der Termin wieder buchbar.",
     },
@@ -576,6 +590,7 @@ export const de = {
       emailFailed:
         "Tutor zugewiesen, aber die Vorstellungs-E-Mail konnte nicht gesendet werden.",
       unavailable: "Die Tutor-Liste ist derzeit nicht verfügbar.",
+      assignFirst: "Bitte weise zuerst einen Tutor zu, bevor du die Buchung freigibst.",
       introEmail: {
         subject: "RoKo Bar - Dein Kontakt {tutor}",
         body:
@@ -885,6 +900,12 @@ export const en = {
       submitReady: "The date is selected and the rental terms are accepted.",
       submit: "Send request",
       sending: "Sending...",
+      sectionContact: "Contact details",
+      sectionEvent: "Event & payment",
+      requiredHint: "* Required field",
+      stickyTotal: "total",
+      stickyChoosePrompt: "Choose a rate for the total",
+      stickyContinue: "Continue to form",
     },
     agreement: {
       title: "What you are agreeing to",
@@ -905,6 +926,13 @@ export const en = {
       notConfirmed:
         "Nothing is confirmed yet. It only becomes binding once you receive the email with the contract link.",
       dateLabel: "Date",
+      emailNote: "We sent a confirmation to {email}.",
+      nextTitle: "What happens next",
+      steps: [
+        "A bar tutor reviews your request.",
+        "If approved, you get an email with the contract, house rules, and your private link.",
+        "On that link you sign the contract, choose payment, and finish the booking.",
+      ],
       newRequest: "Start another request",
     },
     errors: {
@@ -1207,6 +1235,7 @@ export const en = {
       countersign: "The final contract will be uploaded, the booking will be confirmed, and the requester will be notified by email.",
       reject: "The request will be rejected permanently and cannot be approved afterward.",
       cancel: "The booking will be cancelled. This cannot be undone here.",
+      cancelConfirmed: "This booking is already confirmed. Cancelling releases the night again and does NOT notify the requester automatically — please let them know separately.",
       redo: "Existing contract and payment files will be removed. The requester will receive a new submission deadline.",
       unblock: "The block for {date} will be removed and the date will become bookable again.",
     },
@@ -1222,6 +1251,7 @@ export const en = {
       emailFailed:
         "Tutor assigned, but the introduction email could not be sent.",
       unavailable: "The tutor list is currently unavailable.",
+      assignFirst: "Please assign a tutor before approving this booking.",
       introEmail: {
         subject: "RoKo Bar - Meet your tutor {tutor}",
         body:

@@ -11,6 +11,7 @@ import {
 } from "../../server/api/_contracts.js";
 import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../../server/api/_adminUtils.js";
 import { normalizePaymentMethod } from "../../server/api/_payments.js";
+import { enforceRateLimit } from "../../server/api/_rateLimit.js";
 import { methodNotAllowed, sendError, sendJson } from "../../server/api/_responses.js";
 import { getSupabase } from "../../server/api/_supabase.js";
 
@@ -39,6 +40,11 @@ export default async function handler(req, res) {
 
   if (typeof token !== "string" || token.trim() === "") {
     return sendError(req, res, 400, "missing_booking_token");
+  }
+
+  // Throttle before reading the (up to ~9 MB) multipart body.
+  if (!(await enforceRateLimit(req, res, { scope: "booking-submit", max: 20, windowSeconds: 300 }))) {
+    return;
   }
 
   const form = await readMultipartForm(req, {

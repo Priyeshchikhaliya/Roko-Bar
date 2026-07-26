@@ -8,7 +8,10 @@ import { requireAdmin } from "../api/_auth.js";
 import { methodNotAllowed, sendError, sendJson } from "../api/_responses.js";
 import { getSupabase } from "../api/_supabase.js";
 
-const TERMINAL_STATUSES = new Set(["confirmed", "rejected", "cancelled"]);
+// Cancellable at any live stage, including "confirmed" — a tutor must be able to
+// release a night if a confirmed event falls through. Only already-closed
+// bookings (rejected/cancelled) cannot be cancelled again.
+const CANCELLABLE_STATUSES = ["pending", "approved", "signed", "confirmed"];
 
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
@@ -34,7 +37,7 @@ export default async function handler(req, res) {
       throw loadError;
     }
 
-    if (TERMINAL_STATUSES.has(booking.status)) {
+    if (!CANCELLABLE_STATUSES.includes(booking.status)) {
       return sendError(req, res, 409, "cannot_cancel_terminal");
     }
 
@@ -42,12 +45,14 @@ export default async function handler(req, res) {
       .from("bookings")
       .update({ status: "cancelled" })
       .eq("id", id)
+      .in("status", CANCELLABLE_STATUSES)
       .select(BOOKING_COLUMNS)
       .single();
 
     if (error) {
+      // Lost a race: already closed by the time the update ran.
       if (isNotFoundError(error)) {
-        return sendError(req, res, 404, "booking_not_found");
+        return sendError(req, res, 409, "cannot_cancel_terminal");
       }
 
       throw error;
