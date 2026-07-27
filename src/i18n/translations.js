@@ -456,15 +456,12 @@ export const de = {
       "Die Heimkneipe ist ein separater Raum im Keller des RoKo mit Tresen, Zapfanlage, Kühlschränken und Sitzmöglichkeiten.",
       "Damit alle etwas davon haben, gibt es klare Mieten, eine Kaution zur Absicherung und Hausregeln, die Rücksicht auf alle Bewohner:innen nehmen.",
     ],
-    contactTitle: "Kontakt & Anfahrt",
-    addressLabel: "Adresse",
-    emailLabel: "E-Mail",
-    directionsText:
-      "Für die Routenplanung kannst du die eingeblendete Karte oder Google Maps verwenden:",
-    gmapsLabel: "Google Maps (Routenplanung)",
-    mapHint:
-      "Die Heimkneipe befindet sich im Keller des RoKo. Bitte nutze nicht den Notausgang als Eingang.",
-    mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
+    closingKicker: "Weiter",
+    closingTitle: "Vorbeikommen?",
+    closingText:
+      "Den Weg von der Haltestelle bis zur Bartür zeigen wir dir Schritt für Schritt auf der Anfahrtsseite. Wenn du schon weißt, wann du feiern willst, geht es direkt zur Anfrage.",
+    closingDirections: "Zur Anfahrt",
+    closingBooking: "Termin anfragen",
   },
   team: {
     pageTitle: "Team – RoKo Bar Göttingen",
@@ -549,6 +546,8 @@ export const de = {
         photos: ["club-bar-sign"],
       },
     ],
+    gmapsLabel: "Google Maps (Routenplanung)",
+    mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
     helpTitle: "Etwas unklar?",
     helpText:
       "Wenn ihr den Eingang nicht findet oder etwas an der Beschreibung nicht stimmt, schreibt uns kurz – wir bessern es nach.",
@@ -1296,15 +1295,12 @@ export const en = {
       "The student bar is a separate room in RoKo's basement with a counter, tap system, fridges, and seating.",
       "To keep it fair for everyone, there are clear rental fees, a deposit for security, and house rules that respect all residents.",
     ],
-    contactTitle: "Contact & directions",
-    addressLabel: "Address",
-    emailLabel: "Email",
-    directionsText:
-      "For directions, you can use the embedded map or Google Maps:",
-    gmapsLabel: "Google Maps (route planner)",
-    mapHint:
-      "The bar is located in the basement of RoKo. Please do not use the emergency exit as an entrance.",
-    mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
+    closingKicker: "Next",
+    closingTitle: "Want to see it?",
+    closingText:
+      "The getting-here page walks you from the bus stop to the bar door, step by step with photos. And if you already know when you want to celebrate, head straight to the request form.",
+    closingDirections: "How to find us",
+    closingBooking: "Request a date",
   },
   team: {
     pageTitle: "Team – RoKo Bar Göttingen",
@@ -1389,6 +1385,8 @@ export const en = {
         photos: ["club-bar-sign"],
       },
     ],
+    gmapsLabel: "Google Maps (route planner)",
+    mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
     helpTitle: "Something unclear?",
     helpText:
       "If you cannot find the entrance, or something in this description is wrong, drop us a line and we will fix it.",

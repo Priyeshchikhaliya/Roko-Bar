@@ -165,13 +165,13 @@ export default function Directions() {
               rel="noreferrer"
               className="btn-secondary w-fit text-xs md:text-sm"
             >
-              {t.about.gmapsLabel}
+              {page.gmapsLabel}
             </a>
           </div>
 
           <div className="border border-line min-h-[26rem]">
             <iframe
-              title={t.about.mapTitle}
+              title={page.mapTitle}
               src={osmEmbedUrl}
               className="h-full min-h-[26rem] w-full border-0"
               loading="lazy"
