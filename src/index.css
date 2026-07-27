@@ -402,6 +402,25 @@
     background: var(--color-surface);
   }
 
+  /* Team portraits ------------------------------------------------------- */
+
+  /* Supplied portraits arrive from wherever people happen to have a good photo
+     of themselves -- different light, different backdrops, different decades.
+     Holding them at partial saturation lets them read as one set, and returning
+     full colour on hover keeps the person, not the treatment, as the point. */
+  .portrait-img {
+    filter: saturate(0.5) contrast(1.05);
+    transition:
+      filter 700ms ease,
+      transform 700ms ease;
+  }
+
+  .group:hover .portrait-img,
+  .group:focus-visible .portrait-img {
+    filter: saturate(1) contrast(1);
+    transform: scale(1.035);
+  }
+
   /* Scroll reveal -------------------------------------------------------- */
 
   /* Scoped to the flag useReveal.js sets at import time: without JS the
@@ -437,6 +456,13 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .portrait-img,
+  .group:hover .portrait-img,
+  .group:focus-visible .portrait-img {
+    transform: none;
+    transition: filter 200ms ease;
   }
 
   html {

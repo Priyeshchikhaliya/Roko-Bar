@@ -495,9 +495,28 @@ export const de = {
       { photo: "sandhya", name: "Sandhya", role: "", funLine: "" },
       { photo: "saphal", name: "Saphal", role: "", funLine: "" },
     ],
+    tasksKicker: "Was wir machen",
+    tasksTitle: "Anfragen, Schlüssel, Technik.",
+    tasksIntro:
+      "Zwischen deiner Anfrage und dem Abend im Keller steht immer eine:r von uns.",
+    tasks: [
+      {
+        title: "Anfragen prüfen",
+        text: "Jede Anfrage landet bei einer:m Tutor:in. Wir schauen sie an, melden uns zurück und begleiten dich bis zum unterschriebenen Vertrag.",
+      },
+      {
+        title: "Schlüssel übergeben",
+        text: "Wir treffen dich vor Ort, nehmen die Kaution entgegen und geben dir die Schlüssel für den Tag.",
+      },
+      {
+        title: "Den Keller in Schuss halten",
+        text: "Bar, Technik und Hausregeln – damit der Raum für die Nächsten genauso bereitsteht, wie du ihn vorgefunden hast.",
+      },
+    ],
     contactTitle: "Fragen zur Bar?",
     contactText:
       "Anfragen laufen über die Buchungsseite. Für alles andere erreichst du uns per Mail.",
+    contactCTA: "Zur Buchungsseite",
   },
   alumni: {
     pageTitle: "Alumni – RoKo Bar Göttingen",
@@ -1350,9 +1369,28 @@ export const en = {
       { photo: "sandhya", name: "Sandhya", role: "", funLine: "" },
       { photo: "saphal", name: "Saphal", role: "", funLine: "" },
     ],
+    tasksKicker: "What we do",
+    tasksTitle: "Requests, keys, kit.",
+    tasksIntro:
+      "Between your request and the night itself, there is always one of us.",
+    tasks: [
+      {
+        title: "Review requests",
+        text: "Every request reaches a tutor. We look it over, get back to you, and stay with it until the contract is signed.",
+      },
+      {
+        title: "Hand over the keys",
+        text: "We meet you on site, take the deposit, and give you the keys for the day.",
+      },
+      {
+        title: "Keep the basement running",
+        text: "Bar, equipment and house rules — so the room is as ready for the next people as it was for you.",
+      },
+    ],
     contactTitle: "Questions about the bar?",
     contactText:
       "Requests go through the booking page. For anything else, reach us by email.",
+    contactCTA: "Go to booking",
   },
   alumni: {
     pageTitle: "Alumni – RoKo Bar Göttingen",
