@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/useLanguage.js";
+import { portrait } from "../lib/photos.js";
 
 export default function Team() {
   const { t } = useLanguage();
@@ -31,31 +32,63 @@ export default function Team() {
 
       <section className="editorial-section section-surface section-pad">
         <div className="container-wide space-y-10">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-3">
-              <span className="accent-rule" />
-              <p className="eyebrow">{page.placeholdersTitle}</p>
-            </div>
+          <div className="space-y-3">
+            <span className="accent-rule" />
+            <p className="eyebrow">{page.membersKicker}</p>
           </div>
 
-          <div className="grid gap-px border border-line bg-line md:grid-cols-2">
-            {page.placeholders.map((person, index) => (
-              <article
-                key={`${person.name}-${index}`}
-                className="bg-surface p-5 md:p-7"
-              >
-                <div className="aspect-square border border-line bg-paper flex items-center justify-center text-xs uppercase tracking-[0.16em] text-muted">
-                  {page.placeholdersTitle}
-                </div>
-                <div className="mt-6 space-y-2">
-                  <p className="text-2xl font-display font-semibold leading-none">
-                    {person.name}
-                  </p>
-                  <p className="eyebrow">{person.role}</p>
-                  <p className="lead text-base">{person.funLine}</p>
-                </div>
-              </article>
-            ))}
+          <ul className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+            {page.members.map((person) => {
+              const image = portrait(person.photo);
+              return (
+                <li key={person.photo} className="bg-surface p-5 md:p-6">
+                  {image ? (
+                    <img
+                      alt={page.photoAltTemplate.replace("{name}", person.name)}
+                      className="aspect-square w-full border border-line object-cover"
+                      decoding="async"
+                      height={640}
+                      loading="lazy"
+                      sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+                      src={image.src}
+                      srcSet={image.srcSet}
+                      width={640}
+                    />
+                  ) : (
+                    <div className="aspect-square w-full border border-line bg-paper" />
+                  )}
+
+                  <div className="mt-5 space-y-2">
+                    <p className="font-display text-2xl font-semibold leading-none">
+                      {person.name}
+                    </p>
+                    {person.role ? (
+                      <p className="eyebrow">{person.role}</p>
+                    ) : null}
+                    {person.funLine ? (
+                      <p className="lead text-base">{person.funLine}</p>
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      <section className="editorial-section section-paper section-pad">
+        <div className="container-wide">
+          <div className="flat-panel flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-3 max-w-2xl">
+              <h2 className="text-3xl font-semibold">{page.contactTitle}</h2>
+              <p className="lead">{page.contactText}</p>
+            </div>
+            <a
+              href={`mailto:${t.common.email}`}
+              className="btn-secondary w-fit text-xs md:text-sm"
+            >
+              {t.common.email}
+            </a>
           </div>
         </div>
       </section>

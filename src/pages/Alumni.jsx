@@ -31,22 +31,18 @@ export default function Alumni() {
 
       <section className="editorial-section section-surface section-pad">
         <div className="container-wide">
-          <div className="placeholder-panel flex flex-col justify-between gap-12">
+          <div className="flat-panel flex flex-col gap-8 border-l-2 border-l-primary md:flex-row md:items-end md:justify-between">
             <div className="space-y-4 max-w-2xl">
-              <span className="accent-rule" />
-              <p className="eyebrow">{page.placeholdersTitle}</p>
-              <p className="lead">{page.placeholderText}</p>
+              <p className="eyebrow">{page.callKicker}</p>
+              <h2 className="section-title">{page.callTitle}</h2>
+              <p className="lead">{page.callText}</p>
             </div>
-            <div className="grid gap-px border border-line bg-line md:grid-cols-3">
-              {[0, 1, 2].map((item) => (
-                <div
-                  key={item}
-                  className="aspect-[4/3] bg-surface flex items-center justify-center px-5 text-center text-xs uppercase tracking-[0.16em] text-muted"
-                >
-                  {page.placeholdersTitle}
-                </div>
-              ))}
-            </div>
+            <a
+              href={`mailto:${t.common.email}`}
+              className="btn-primary w-fit shrink-0 text-xs md:text-sm"
+            >
+              {page.callCTA}
+            </a>
           </div>
         </div>
       </section>

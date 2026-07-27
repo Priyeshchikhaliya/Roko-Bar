@@ -6,7 +6,10 @@ import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
 import App from "./App.jsx";
-import "@fontsource-variable/fraunces";
+// The opsz cut carries Fraunces' optical-size axis alongside weight (+30 kB on
+// latin). Display sizes get the finer, higher-contrast letterforms the family
+// was drawn for; see the .display-* rules in index.css.
+import "@fontsource-variable/fraunces/opsz.css";
 import "@fontsource-variable/inter";
 import "./index.css";
 

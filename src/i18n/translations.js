@@ -19,8 +19,82 @@ export const de = {
       booking: "Buchung",
       simpleClear: "Einfach & klar",
     },
-    ui: {
-      placeholderImage: "[PLACEHOLDER] Bild ergänzen",
+    gallery: {
+      close: "Schließen",
+      next: "Nächstes Bild",
+      previous: "Vorheriges Bild",
+      enlarge: "Bild vergrößern",
+      goTo: "Bild {n} anzeigen",
+    },
+    photos: {
+      "stop-city": {
+        alt: "Haltestelle Robert-Koch-Str. mit Fahrplanmast und Wartehäuschen",
+        caption:
+          "Haltestelle Robert-Koch-Str. – hier halten die Linien 21, 22, 23, 41, 42, 170 sowie die Nachtlinien N3 und N4.",
+      },
+      "stop-klinikum": {
+        alt: "Haltestellenmast Robert-Koch-Str. neben dem Wegweiser zum Klinikum Osteingang",
+        caption:
+          "Die Haltestelle auf der Gegenseite, direkt am Wegweiser Richtung Klinikum Osteingang.",
+      },
+      "arrival-sign": {
+        alt: "Gelbes Schild „Wohnhaus Robert-Koch-Str. 38“ des Studentenwerks, dahinter das RoKo-Hochhaus",
+        caption:
+          "Das gelbe Schild „Wohnhaus Robert-Koch-Str. 38“. Dahinter steht das Hochhaus mit dem RoKo-Schriftzug.",
+      },
+      "stairs-outside": {
+        alt: "Verzinkte Außentreppe an der Hauswand, die zu einer grauen Tür führt",
+        caption: "Die verzinkte Außentreppe an der Gebäudeseite.",
+      },
+      "basement-door": {
+        alt: "Blick von oben in einen Treppenschacht hinunter zur grauen Kellertür",
+        caption: "Der Treppenschacht hinunter zur Kellertür.",
+      },
+      "entrance-corridor": {
+        alt: "Geöffnete Eingangstür mit Blick in den Vorraum mit Tresen und Fußmatte",
+        caption: "Durch die Tür geht es in den Vorraum.",
+      },
+      "club-bar-sign": {
+        alt: "Treppe nach unten, an der Wand das gemalte Schild „RoKo Club Bar“ und die Hausregeln",
+        caption:
+          "Angekommen: die Treppe hinunter, das Schild „RoKo Club Bar“ und die Hausregeln an der Wand.",
+      },
+      "room-wide": {
+        alt: "Der Barraum bei eingeschaltetem Hauslicht mit Stehtischen, Stühlen und Boxen",
+        caption: "Der Raum bei Hauslicht – Stehtische, Stühle, PA an der Wand.",
+      },
+      "room-from-bar": {
+        alt: "Blick von der Theke in den Raum mit Sitzecke und Stellflächen an der Wand",
+        caption: "Von der Theke aus in den Raum geschaut.",
+      },
+      "bar-counter": {
+        alt: "Die Theke von innen mit Arbeitsfläche, Technik und Preistafel an der Wand",
+        caption: "Die Theke von innen, mit Preistafel und Technikplatz.",
+      },
+      backbar: {
+        alt: "Rückbar mit beleuchteten Glasschränken, Gläsern, Flaschen und Kühlschrank",
+        caption: "Die Rückbar: Gläser, Flaschen, Kühlschrank, Spüle.",
+      },
+      "dancefloor-night": {
+        alt: "Leere Tanzfläche im violett-blauen Licht der Bar-Beleuchtung",
+        caption: "Die Tanzfläche, wenn die Beleuchtung läuft.",
+      },
+      "room-night": {
+        alt: "Der Barraum in grünem und rotem Licht, Tische und Stühle im Hintergrund",
+        caption: "Derselbe Raum in Grün und Rot.",
+      },
+      "bar-night": {
+        alt: "Theke und Raum im violetten Licht, beleuchtete Bilder an der Rückwand",
+        caption: "Theke und Rückwand im violetten Licht.",
+      },
+      "counter-night": {
+        alt: "Die geschwungene Theke im Abendlicht, dahinter der beleuchtete Raum",
+        caption: "Die geschwungene Theke am Abend.",
+      },
+      tower: {
+        alt: "Das Studentenwohnheim RoKo 38 mit rot-weißer Fassade und RoKo-Schriftzug",
+        caption: "RoKo 38 – die Bar liegt im Keller dieses Hauses.",
+      },
     },
     confirmModal: {
       confirm: "Bestätigen",
@@ -90,53 +164,92 @@ export const de = {
       "Die RoKo-Bar ist die Kellerbar im Wohnheim Robert-Koch-Str. 38: Theke, Musik, kurze Wege und genug Platz für Geburtstage, WG-Partys und Fachschaftsabende.",
     heroCTA: "Buchung anfragen",
     heroSecondaryCTA: "So läuft's",
+    heroImageLabel:
+      "Die RoKo-Bar: Barraum, Theke und Tanzfläche bei Hauslicht und im Abendlicht.",
     whyKicker: "Warum RoKo",
     whyTitle: "Kellerbar statt Küchenparty.",
     whyIntro:
-      "Hier wird aus einer Idee schnell ein Abend: zentral im Wohnheim, unkompliziert organisiert und mit einer Bar, die schon mehr Geschichten gehört hat als manche Hausarbeit.",
+      "Aus einer Idee wird hier schnell ein Abend: ein eigener Raum im Wohnheim, unkompliziert organisiert, mit einer Bar, die schon mehr Geschichten gehört hat als manche Hausarbeit.",
     whyPoints: [
-      "Gemütliche Bar direkt im Keller von RoKo 38.",
-      "Theke, Zapfanlage, Kühlschränke, Tische und Hocker sind vor Ort.",
-      "Gut für Geburtstage, WG-Partys, Fachschaftsabende und private Feiern.",
-      "Die Einnahmen unterstützen das Wohnheim und gemeinsame Projekte.",
+      {
+        title: "Im Keller von RoKo 38",
+        text: "Eine gemütliche Bar direkt im Wohnheim. Kurze Wege für alle, die hier wohnen.",
+      },
+      {
+        title: "Eingerichtet",
+        text: "Theke, Zapfanlage, Kühlschränke, Tische und Hocker sind vor Ort.",
+      },
+      {
+        title: "Für deinen Anlass",
+        text: "Gut für Geburtstage, WG-Partys, Fachschaftsabende und private Feiern.",
+      },
+      {
+        title: "Bleibt im Haus",
+        text: "Die Einnahmen unterstützen das Wohnheim und gemeinsame Projekte.",
+      },
     ],
     pricesKicker: "Preise",
     pricesTitle: "Zwei Mieten, eine klare Kaution.",
     pricesIntro:
-      "Die RoKo-Bar wird immer für einen ganzen Tag vermietet, ausschließlich freitags oder samstags. Miete und Kaution werden getrennt bezahlt.",
+      "Die Bar wird immer für einen ganzen Tag vermietet, ausschließlich freitags oder samstags. Miete und Kaution werden getrennt bezahlt.",
     priceCards: [
       {
-        title: "75 € Bewohner:innen-Tarif",
+        title: "Bewohner:innen-Tarif",
         amount: "75 €",
+        meta: "Miete pro Tag",
         note: "Nur für langfristige Bewohner:innen von RoKo 38 (Robert-Koch-Str. 38), Christophorusweg oder Rosenbachweg. Kurzzeitaufenthalte wie Erasmus zählen nicht für diesen Tarif.",
       },
       {
-        title: "100 € externer Tarif",
+        title: "Externer Tarif",
         amount: "100 €",
+        meta: "Miete pro Tag",
         note: "Für alle, die nicht unter den Bewohner:innen-Tarif fallen.",
       },
       {
-        title: "200 € Kaution",
+        title: "Kaution",
         amount: "200 €",
-        note: "Bar bei der Schlüsselübergabe. Nicht mit der Miete überweisen. Bei sauberer, ordentlicher Rückgabe bekommt ihr sie vollständig zurück.",
+        meta: "Bar bei der Schlüsselübergabe",
+        note: "Nicht zusammen mit der Miete überweisen. Bei sauberer, ordentlicher Rückgabe bekommt ihr sie vollständig zurück.",
       },
     ],
     processTitle: "So läuft die Buchung",
     processIntro:
-      "Der neue Ablauf bleibt übersichtlich: Anfrage stellen, Vertrag hochladen, Zahlung bestätigen lassen, dann Schlüssel abholen.",
+      "Von der Anfrage bis zum Schlüssel, ein Schritt davon freiwillig. Nach jedem Schritt hörst du von uns – du musst nichts nachhalten.",
     processSteps: [
-      "Freien Freitag oder Samstag im Live-Kalender auswählen und Anfrage senden.",
-      "Ein:e Bar-Tutor:in prüft die Anfrage. Bei Zusage bekommst du eine E-Mail mit deinem privaten Link.",
-      "Über den Link lädst du den passenden Vertrag herunter, unterschreibst ihn und lädst ihn wieder hoch.",
-      "Du zahlst die Miete per Überweisung oder bar; ein:e Tutor:in bestätigt den Zahlungseingang.",
-      "Wir unterschreiben gegen. Danach kannst du den vollständig unterschriebenen Vertrag über deinen Link herunterladen.",
-      "Bei der Schlüsselübergabe zahlst du die 200 € Kaution bar und bekommst die Schlüssel.",
+      {
+        title: "Termin wählen",
+        text: "Freien Freitag oder Samstag im Live-Kalender auswählen und Anfrage senden.",
+      },
+      {
+        title: "Prüfung",
+        text: "Ein:e Bar-Tutor:in prüft die Anfrage. Bei Zusage bekommst du eine E-Mail mit deinem privaten Link.",
+      },
+      {
+        tag: "Optional",
+        title: "Vorher ansehen",
+        text: "Die Fotos zeigen den Raum – ein Besuch geht trotzdem. Sobald ein:e Tutor:in deine Anfrage übernimmt, bekommst du die Kontaktdaten und ihr macht einen Termin vor Ort aus. Alles noch vor Vertrag und Zahlung.",
+      },
+      {
+        title: "Vertrag",
+        text: "Über den Link lädst du den passenden Vertrag herunter, unterschreibst ihn und lädst ihn wieder hoch.",
+      },
+      {
+        title: "Zahlung",
+        text: "Du zahlst die Miete per Überweisung oder bar; ein:e Tutor:in bestätigt den Zahlungseingang.",
+      },
+      {
+        title: "Gegenzeichnung",
+        text: "Wir unterschreiben gegen. Danach kannst du den vollständig unterschriebenen Vertrag über deinen Link herunterladen.",
+      },
+      {
+        title: "Schlüssel",
+        text: "Bei der Schlüsselübergabe zahlst du die 200 € Kaution bar und bekommst die Schlüssel.",
+      },
     ],
     closingTitle: "Bereit für Kellerlicht und Lieblingsplaylist?",
     closingText:
       "Auf der Buchungsseite findest du die kurze Zusammenfassung, den Live-Kalender und das Formular für deine Anfrage.",
     closingCTA: "Zur Buchungsseite",
-    imageAlt: "Barbereich der RoKo-Bar mit Theke und Kühlschrank",
   },
   booking: {
     pageTitle: "Buchungsanfrage RoKo-Bar – RoKo Bar Göttingen",
@@ -329,7 +442,6 @@ export const de = {
     gmapsLabel: "Google Maps (Routenplanung)",
     mapHint:
       "Die Heimkneipe befindet sich im Keller des RoKo. Bitte nutze nicht den Notausgang als Eingang.",
-    imageAlt: "Studentenwohnheim RoKo 38 in Göttingen",
     mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
   },
   team: {
@@ -339,19 +451,18 @@ export const de = {
     title: "Die Bar-Tutor:innen",
     intro:
       "Wir sind das studentische Team hinter der RoKo-Bar: wir prüfen Anfragen, halten den Schlüsselbund zusammen und sorgen dafür, dass der Keller partybereit bleibt.",
-    placeholdersTitle: "[PLACEHOLDER] Tutor:innen eintragen",
-    placeholders: [
-      {
-        name: "[PLACEHOLDER] Name",
-        role: "[PLACEHOLDER] Rolle im Bar-Team",
-        funLine: "[PLACEHOLDER] Fun Fact oder Lieblings-Bar-Moment",
-      },
-      {
-        name: "[PLACEHOLDER] Name",
-        role: "[PLACEHOLDER] Rolle im Bar-Team",
-        funLine: "[PLACEHOLDER] Fun Fact oder Lieblings-Bar-Moment",
-      },
+    membersKicker: "Das aktuelle Team",
+    photoAltTemplate: "{name}, Bar-Tutor:in der RoKo-Bar",
+    // role und funLine bleiben leer, bis die Tutor:innen sie selbst angeben.
+    members: [
+      { photo: "aditya", name: "Aditya", role: "", funLine: "" },
+      { photo: "priyesh", name: "Priyesh", role: "", funLine: "" },
+      { photo: "sandhya", name: "Sandhya", role: "", funLine: "" },
+      { photo: "saphal", name: "Saphal", role: "", funLine: "" },
     ],
+    contactTitle: "Fragen zur Bar?",
+    contactText:
+      "Anfragen laufen über die Buchungsseite. Für alles andere erreichst du uns per Mail.",
   },
   alumni: {
     pageTitle: "Alumni – RoKo Bar Göttingen",
@@ -360,9 +471,11 @@ export const de = {
     title: "Ehemalige, Legenden, Kellergeschichten",
     intro:
       "Viele Hände haben diese Bar am Laufen gehalten. Hier soll später Platz sein für frühere Tutor:innen, alte Fotos und die Partys, über die man beim Aufräumen noch spricht.",
-    placeholdersTitle: "[PLACEHOLDER] Galerie & Notizen",
-    placeholderText:
-      "[PLACEHOLDER] Fotos, Namen, Jahre und kurze Erinnerungen ehemaliger Bar-Tutor:innen ergänzen.",
+    callKicker: "Mitmachen",
+    callTitle: "Du hast hinter dieser Theke gestanden?",
+    callText:
+      "Diese Seite entsteht gerade. Wir sammeln Fotos, Namen, Jahrgänge und die Geschichten, über die man beim Aufräumen noch redet. Wenn du etwas beisteuern möchtest, schreib uns – wir bauen die Galerie nach und nach auf.",
+    callCTA: "Erinnerungen schicken",
   },
   directions: {
     pageTitle: "Anfahrt – RoKo Bar Göttingen",
@@ -370,10 +483,53 @@ export const de = {
       "Anfahrt zur RoKo-Bar im Studentenwohnheim Robert-Koch-Str. 38 in Göttingen.",
     title: "So findest du zur RoKo-Bar",
     intro:
-      "Die RoKo-Bar liegt im Keller des Studentenwohnheims Robert-Koch-Str. 38. Genaue Wege und ÖPNV-Hinweise tragen wir vor dem Launch sauber nach.",
-    placeholderTitle: "[PLACEHOLDER — echte Anfahrt ergänzen]",
-    placeholderText:
-      "[PLACEHOLDER — real transit route to be added] Keine Busnummern, Haltestellen oder Laufwege eintragen, bis sie geprüft sind.",
+      "Die RoKo-Bar liegt im Keller des Studentenwohnheims Robert-Koch-Str. 38. Unten siehst du den Weg in Bildern – von der Haltestelle bis zur Bartür.",
+    transitKicker: "Mit Bus & Bahn",
+    transitTitle: "Haltestelle Robert-Koch-Str.",
+    stopLabel: "Haltestelle",
+    stopName: "Robert-Koch-Str.",
+    linesLabel: "Linien",
+    lines: "21 · 22 · 23 · 41 · 42 · 170",
+    nightLinesLabel: "Nachtlinien",
+    nightLines: "N3 · N4",
+    transitNote:
+      "Die Linien stehen so auf dem Haltestellenmast. Fahrpläne und Abfahrtszeiten prüfst du am besten kurz vorher bei der GöVB.",
+    routeKicker: "Der Weg",
+    routeTitle: "Von der Haltestelle bis zur Bartür",
+    routeIntro:
+      "Fünf Schritte, jeweils mit Foto. Tippe auf ein Bild, um es größer zu sehen.",
+    accessNote:
+      "Der Zugang zur Bar führt über Treppen. Wenn ihr Gäste erwartet, für die das ein Problem ist, meldet euch vorher bei uns.",
+    steps: [
+      {
+        heading: "Haltestelle Robert-Koch-Str.",
+        text: "Die Haltestelle heißt Robert-Koch-Str. und liegt auf beiden Straßenseiten. Auf der einen Seite steht der Wegweiser Richtung Klinikum Osteingang.",
+        photos: ["stop-city", "stop-klinikum"],
+      },
+      {
+        heading: "Wohnhaus Robert-Koch-Str. 38",
+        text: "Am gelben Schild des Studentenwerks erkennst du das richtige Haus. Dahinter steht das Hochhaus mit dem RoKo-Schriftzug an der Fassade.",
+        photos: ["arrival-sign"],
+      },
+      {
+        heading: "Treppe auf Kellerhöhe",
+        text: "Die Bar liegt im Untergeschoss. Von außen führen Treppen auf Kellerhöhe hinunter.",
+        photos: ["stairs-outside", "basement-door"],
+      },
+      {
+        heading: "Durch die Eingangstür",
+        text: "Hinter der Tür liegt der Vorraum mit Fußmatte und Tresen.",
+        photos: ["entrance-corridor"],
+      },
+      {
+        heading: "RoKo Club Bar",
+        text: "Die letzte Treppe hinunter: Am Schild „RoKo Club Bar“ und den Hausregeln an der Wand bist du angekommen.",
+        photos: ["club-bar-sign"],
+      },
+    ],
+    helpTitle: "Etwas unklar?",
+    helpText:
+      "Wenn ihr den Eingang nicht findet oder etwas an der Beschreibung nicht stimmt, schreibt uns kurz – wir bessern es nach.",
   },
   houseRules: {
     pageTitle: "Hausregeln RoKo-Bar – RoKo Bar Göttingen",
@@ -681,8 +837,83 @@ export const en = {
       booking: "Booking",
       simpleClear: "Simple & clear",
     },
-    ui: {
-      placeholderImage: "[PLACEHOLDER] Add image",
+    gallery: {
+      close: "Close",
+      next: "Next image",
+      previous: "Previous image",
+      enlarge: "Enlarge image",
+      goTo: "Show image {n}",
+    },
+    photos: {
+      "stop-city": {
+        alt: "Robert-Koch-Str. bus stop with timetable pole and shelter",
+        caption:
+          "Robert-Koch-Str. stop — served by lines 21, 22, 23, 41, 42, 170 and the night lines N3 and N4.",
+      },
+      "stop-klinikum": {
+        alt: "Robert-Koch-Str. stop pole next to the road sign for the Klinikum east entrance",
+        caption:
+          "The stop on the opposite side, right by the sign for the Klinikum east entrance.",
+      },
+      "arrival-sign": {
+        alt: "Yellow Studentenwerk sign reading Wohnhaus Robert-Koch-Str. 38, with the RoKo tower behind it",
+        caption:
+          "The yellow “Wohnhaus Robert-Koch-Str. 38” sign. The tower behind it carries the RoKo lettering.",
+      },
+      "stairs-outside": {
+        alt: "Galvanised steel staircase along the building wall leading up to a grey door",
+        caption: "The galvanised outdoor staircase on the side of the building.",
+      },
+      "basement-door": {
+        alt: "Looking down a stairwell towards the grey basement door",
+        caption: "The stairwell down to the basement door.",
+      },
+      "entrance-corridor": {
+        alt: "Open entrance door showing the anteroom with a counter and floor mat",
+        caption: "Through the door and into the anteroom.",
+      },
+      "club-bar-sign": {
+        alt: "Stairs leading down, with the painted “RoKo Club Bar” sign and the house rules on the wall",
+        caption:
+          "You made it: down the stairs, the “RoKo Club Bar” sign and the house rules on the wall.",
+      },
+      "room-wide": {
+        alt: "The bar room under house lights with standing tables, chairs and speakers",
+        caption:
+          "The room under house lights — standing tables, chairs, PA against the wall.",
+      },
+      "room-from-bar": {
+        alt: "View from the counter into the room with a seating corner and side tables",
+        caption: "Looking into the room from behind the counter.",
+      },
+      "bar-counter": {
+        alt: "The counter from the inside with worktop, equipment and a price board on the wall",
+        caption: "The counter from the inside, price board and tech spot.",
+      },
+      backbar: {
+        alt: "Back bar with lit glass cabinets, glassware, bottles and a fridge",
+        caption: "The back bar: glassware, bottles, fridge, sink.",
+      },
+      "dancefloor-night": {
+        alt: "Empty dance floor washed in purple and blue from the bar lighting rig",
+        caption: "The dance floor once the lighting rig is running.",
+      },
+      "room-night": {
+        alt: "The bar room in green and red light with tables and chairs in the background",
+        caption: "The same room in green and red.",
+      },
+      "bar-night": {
+        alt: "Counter and room in purple light, with lit artwork on the back wall",
+        caption: "Counter and back wall under purple light.",
+      },
+      "counter-night": {
+        alt: "The curved counter in evening light with the lit room behind it",
+        caption: "The curved counter in the evening.",
+      },
+      tower: {
+        alt: "The RoKo 38 student dormitory with its red and white facade and RoKo lettering",
+        caption: "RoKo 38 — the bar sits in the basement of this building.",
+      },
     },
     confirmModal: {
       confirm: "Confirm",
@@ -752,53 +983,92 @@ export const en = {
       "RoKo Bar is the basement bar at Robert-Koch-Str. 38: counter, music, short ways home, and enough room for birthdays, flat parties, and student society nights.",
     heroCTA: "Request a booking",
     heroSecondaryCTA: "How it works",
+    heroImageLabel:
+      "RoKo Bar: the room, the counter and the dance floor under house lights and in the evening.",
     whyKicker: "Why RoKo",
     whyTitle: "Basement bar beats kitchen party.",
     whyIntro:
-      "An idea can turn into a night here fast: right inside the dorm, easy to organize, and with a bar that has heard more stories than some term papers.",
+      "An idea turns into a night here fast: a room of your own inside the dorm, easy to organise, with a bar that has heard more stories than some term papers.",
     whyPoints: [
-      "Cozy bar in the basement of RoKo 38.",
-      "Counter, tap system, fridges, tables, and stools are already there.",
-      "Good for birthdays, flat parties, student society nights, and private events.",
-      "Rental income supports the dorm community and shared projects.",
+      {
+        title: "In the basement of RoKo 38",
+        text: "A cosy bar right inside the dorm. Short ways home for everyone who lives here.",
+      },
+      {
+        title: "Already equipped",
+        text: "Counter, tap system, fridges, tables and stools are all on site.",
+      },
+      {
+        title: "For your occasion",
+        text: "Good for birthdays, flat parties, student society nights and private events.",
+      },
+      {
+        title: "Stays in the house",
+        text: "Rental income supports the dorm community and shared projects.",
+      },
     ],
     pricesKicker: "Prices",
     pricesTitle: "Two rental fees, one clear deposit.",
     pricesIntro:
-      "RoKo Bar is rented for one full day only, on Fridays or Saturdays. Rent and deposit are paid separately.",
+      "The bar is rented for one full day only, on Fridays or Saturdays. Rent and deposit are paid separately.",
     priceCards: [
       {
-        title: "€75 resident rate",
+        title: "Resident rate",
         amount: "€75",
+        meta: "Rent per day",
         note: "Only for long-term residents of RoKo 38 (Robert-Koch-Str. 38), Christophorusweg, or Rosenbachweg. Short-term stays such as Erasmus do not qualify for this rate.",
       },
       {
-        title: "€100 external rate",
+        title: "External rate",
         amount: "€100",
+        meta: "Rent per day",
         note: "For everyone who does not qualify for the resident rate.",
       },
       {
-        title: "€200 deposit",
+        title: "Deposit",
         amount: "€200",
-        note: "Paid in cash at key handover. Do not transfer it with the rent. It is fully refunded after a clean and proper return.",
+        meta: "Cash at key handover",
+        note: "Do not transfer it together with the rent. It is fully refunded after a clean and proper return.",
       },
     ],
     processTitle: "How booking works",
     processIntro:
-      "The new flow stays clear: send a request, upload the contract, get payment confirmed, then pick up the keys.",
+      "From request to keys, with one step along the way that is entirely up to you. You hear from us after each one — there is nothing for you to chase.",
     processSteps: [
-      "Pick a free Friday or Saturday in the live calendar and send a request.",
-      "A bar tutor reviews it. If approved, you receive an email with your private link.",
-      "At that link, download the correct contract, sign it, and upload it again.",
-      "Pay the rent by bank transfer or cash; a tutor confirms the payment.",
-      "We countersign. You can then download the fully signed contract from your link.",
-      "At key handover, pay the €200 deposit in cash and collect the keys.",
+      {
+        title: "Pick a date",
+        text: "Choose a free Friday or Saturday in the live calendar and send a request.",
+      },
+      {
+        title: "Review",
+        text: "A bar tutor reviews it. If approved, you receive an email with your private link.",
+      },
+      {
+        tag: "Optional",
+        title: "See it first",
+        text: "The photos show the room — you are still welcome to visit. Once a tutor takes on your request, you get their contact details and arrange a time on site. All of this before any contract or payment.",
+      },
+      {
+        title: "Contract",
+        text: "At that link, download the correct contract, sign it, and upload it again.",
+      },
+      {
+        title: "Payment",
+        text: "Pay the rent by bank transfer or cash; a tutor confirms the payment.",
+      },
+      {
+        title: "Countersign",
+        text: "We countersign. You can then download the fully signed contract from your link.",
+      },
+      {
+        title: "Keys",
+        text: "At key handover, pay the €200 deposit in cash and collect the keys.",
+      },
     ],
     closingTitle: "Ready for basement lights and your favourite playlist?",
     closingText:
       "The booking page has the short recap, live calendar, and request form for your date.",
     closingCTA: "Go to booking",
-    imageAlt: "Bar area of the RoKo Bar with counter and fridges",
   },
   booking: {
     pageTitle: "RoKo Bar booking request – RoKo Bar Göttingen",
@@ -990,7 +1260,6 @@ export const en = {
     gmapsLabel: "Google Maps (route planner)",
     mapHint:
       "The bar is located in the basement of RoKo. Please do not use the emergency exit as an entrance.",
-    imageAlt: "RoKo 38 student dormitory in Göttingen",
     mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
   },
   team: {
@@ -1000,19 +1269,18 @@ export const en = {
     title: "The bar tutors",
     intro:
       "We are the student team behind RoKo Bar: we review requests, keep the key bundle under control, and make sure the basement stays party-ready.",
-    placeholdersTitle: "[PLACEHOLDER] Add tutor entries",
-    placeholders: [
-      {
-        name: "[PLACEHOLDER] Name",
-        role: "[PLACEHOLDER] Role in the bar team",
-        funLine: "[PLACEHOLDER] Fun fact or favourite bar moment",
-      },
-      {
-        name: "[PLACEHOLDER] Name",
-        role: "[PLACEHOLDER] Role in the bar team",
-        funLine: "[PLACEHOLDER] Fun fact or favourite bar moment",
-      },
+    membersKicker: "The current team",
+    photoAltTemplate: "{name}, bar tutor at RoKo Bar",
+    // role and funLine stay empty until the tutors supply their own.
+    members: [
+      { photo: "aditya", name: "Aditya", role: "", funLine: "" },
+      { photo: "priyesh", name: "Priyesh", role: "", funLine: "" },
+      { photo: "sandhya", name: "Sandhya", role: "", funLine: "" },
+      { photo: "saphal", name: "Saphal", role: "", funLine: "" },
     ],
+    contactTitle: "Questions about the bar?",
+    contactText:
+      "Requests go through the booking page. For anything else, reach us by email.",
   },
   alumni: {
     pageTitle: "Alumni – RoKo Bar Göttingen",
@@ -1021,9 +1289,11 @@ export const en = {
     title: "Alumni, legends, basement stories",
     intro:
       "Many hands have kept this bar running. Later, this page should hold former tutors, old photos, and the parties people still mention while cleaning up.",
-    placeholdersTitle: "[PLACEHOLDER] Gallery & notes",
-    placeholderText:
-      "[PLACEHOLDER] Add photos, names, years, and short memories from former bar tutors.",
+    callKicker: "Get involved",
+    callTitle: "Did you work behind this bar?",
+    callText:
+      "This page is still taking shape. We are collecting photos, names, years and the stories people still tell while cleaning up. If you have something to contribute, drop us a line — we are building the gallery piece by piece.",
+    callCTA: "Send us your memories",
   },
   directions: {
     pageTitle: "Getting here – RoKo Bar Göttingen",
@@ -1031,10 +1301,53 @@ export const en = {
       "How to get to RoKo Bar at the Robert-Koch-Str. 38 student dormitory in Göttingen.",
     title: "Getting to RoKo Bar",
     intro:
-      "RoKo Bar is in the basement of the student dormitory at Robert-Koch-Str. 38. Exact routes and transit notes will be added carefully before launch.",
-    placeholderTitle: "[PLACEHOLDER — add real directions]",
-    placeholderText:
-      "[PLACEHOLDER — real transit route to be added] Do not add bus numbers, stop names, or walking directions until they have been checked.",
+      "RoKo Bar is in the basement of the student dormitory at Robert-Koch-Str. 38. Below is the way there in pictures — from the bus stop to the bar door.",
+    transitKicker: "By bus",
+    transitTitle: "Robert-Koch-Str. stop",
+    stopLabel: "Stop",
+    stopName: "Robert-Koch-Str.",
+    linesLabel: "Lines",
+    lines: "21 · 22 · 23 · 41 · 42 · 170",
+    nightLinesLabel: "Night lines",
+    nightLines: "N3 · N4",
+    transitNote:
+      "These are the lines listed on the stop pole. Check GöVB for timetables and departures shortly before you travel.",
+    routeKicker: "The route",
+    routeTitle: "From the stop to the bar door",
+    routeIntro:
+      "Five steps, each with a photo. Tap any image to see it larger.",
+    accessNote:
+      "Access to the bar is via stairs. If you are expecting guests for whom that is a problem, get in touch with us beforehand.",
+    steps: [
+      {
+        heading: "Robert-Koch-Str. stop",
+        text: "The stop is called Robert-Koch-Str. and serves both sides of the road. One side sits next to the sign for the Klinikum east entrance.",
+        photos: ["stop-city", "stop-klinikum"],
+      },
+      {
+        heading: "Wohnhaus Robert-Koch-Str. 38",
+        text: "The yellow Studentenwerk sign marks the right building. The tower behind it carries the RoKo lettering on its facade.",
+        photos: ["arrival-sign"],
+      },
+      {
+        heading: "Stairs down to basement level",
+        text: "The bar is on the lower floor. From outside, stairs lead down to basement level.",
+        photos: ["stairs-outside", "basement-door"],
+      },
+      {
+        heading: "Through the entrance door",
+        text: "Behind the door is the anteroom with a floor mat and a counter.",
+        photos: ["entrance-corridor"],
+      },
+      {
+        heading: "RoKo Club Bar",
+        text: "Down the last flight of stairs: the “RoKo Club Bar” sign and the house rules on the wall mean you have arrived.",
+        photos: ["club-bar-sign"],
+      },
+    ],
+    helpTitle: "Something unclear?",
+    helpText:
+      "If you cannot find the entrance, or something in this description is wrong, drop us a line and we will fix it.",
   },
   houseRules: {
     pageTitle: "House rules RoKo Bar – RoKo Bar Göttingen",

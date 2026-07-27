@@ -64,6 +64,15 @@
     font-family: var(--font-display);
     font-weight: 600;
     line-height: 0.98;
+    /* Fraunces is drawn per optical size; without this every heading renders
+       at the 14pt default and large type looks blunt. */
+    font-variation-settings: "opsz" 48;
+    letter-spacing: -0.015em;
+  }
+
+  /* Numerals in prices and step counters should line up in a column. */
+  :where(.tabular) {
+    font-variant-numeric: tabular-nums lining-nums;
   }
 
   a {
@@ -195,9 +204,11 @@
     padding-inline: clamp(1.25rem, 4vw, 3rem);
   }
 
+  /* Every use of this sits directly under <main>, which is already full width,
+     so plain 100% is enough. 100vw would count the scrollbar gutter and push
+     each section a few px left of centre, clipped by main's overflow-hidden. */
   .editorial-section {
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
+    width: 100%;
     border-top: 1px solid var(--color-line);
   }
 
@@ -220,15 +231,32 @@
   }
 
   .hero-title {
-    font-size: clamp(2.75rem, 7vw, 6rem);
-    letter-spacing: 0;
+    /* The vh term keeps the display size honest on short laptop screens,
+       where 7vw alone pushes the hero CTA below the fold. */
+    font-size: clamp(2.5rem, min(7vw, 8.5vh), 6rem);
+    font-variation-settings: "opsz" 144;
+    letter-spacing: -0.025em;
     line-height: 0.92;
+    text-wrap: balance;
   }
 
   .section-title {
     font-size: clamp(2.25rem, 5vw, 4.5rem);
-    letter-spacing: 0;
+    font-variation-settings: "opsz" 120;
+    letter-spacing: -0.022em;
     line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  /* Oversized figures (prices, step counters). Optical size is pushed high so
+     the numerals thin out and read as display type rather than UI text. */
+  .display-figure {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144;
+    font-variant-numeric: tabular-nums lining-nums;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.85;
   }
 
   .eyebrow {
@@ -278,11 +306,140 @@
     background: var(--color-primary);
   }
 
+  /* Understated inline link: keeps a visible affordance at rest and firms up
+     on hover, without the layout shift a text-decoration swap causes. */
+  .link-quiet {
+    border-bottom: 1px solid color-mix(in srgb, currentColor 55%, transparent);
+    padding-bottom: 0.35rem;
+    text-decoration-line: none;
+    transition:
+      border-color 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .link-quiet:hover {
+    border-bottom-color: currentColor;
+    opacity: 0.85;
+    text-decoration-line: none;
+  }
+
   .square-bullet {
     margin-top: 0.62rem;
     width: 0.42rem;
     height: 0.42rem;
     background: var(--color-primary);
     flex-shrink: 0;
+  }
+
+  /* Hero carousel -------------------------------------------------------- */
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.045);
+    /* Deepens the blacks and lifts the colour the lighting rig is throwing,
+       which is what carries these frames once the scrim is over them. */
+    filter: saturate(1.12) contrast(1.06) brightness(0.94);
+    transition:
+      opacity 1400ms ease-in-out,
+      transform 9000ms linear;
+    will-change: opacity, transform;
+  }
+
+  .hero-slide[data-active="true"] {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Three layers: a vignette that pulls the eye inward and drops the corners,
+     a directional wash that deepens behind the headline, and a flat base so no
+     frame can wash the text out. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        125% 95% at 55% 40%,
+        rgba(0, 0, 0, 0) 32%,
+        rgba(0, 0, 0, 0.35) 72%,
+        rgba(0, 0, 0, 0.68) 100%
+      ),
+      linear-gradient(
+        to top right,
+        rgba(0, 0, 0, 0.84) 0%,
+        rgba(0, 0, 0, 0.7) 34%,
+        rgba(0, 0, 0, 0.4) 66%,
+        rgba(0, 0, 0, 0.2) 100%
+      ),
+      /* Flat ink base. Kept neutral rather than brand-tinted so it does not
+         fight the magenta and green the lighting rig throws. */
+      color-mix(in srgb, var(--color-ink) 38%, transparent);
+  }
+
+  /* Fine film grain. Phone sensors produce blotchy luminance noise in a dark
+     room; a consistent grain reads as intentional and hides it. */
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.055;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  .hero-tick {
+    height: 2px;
+    width: 2.25rem;
+    background: color-mix(in srgb, var(--color-surface) 35%, transparent);
+    transition: background-color 400ms ease;
+  }
+
+  .hero-tick[data-active="true"] {
+    background: var(--color-surface);
+  }
+
+  /* Scroll reveal -------------------------------------------------------- */
+
+  /* Scoped to the flag useReveal.js sets at import time: without JS the
+     starting state never applies and content stays visible. */
+  [data-reveal="on"] .reveal {
+    opacity: 0;
+    transform: translateY(1.75rem);
+    /* Decelerating curve: moves off quickly, settles slowly. --reveal-delay
+       lets a section stagger its own blocks (header first, then the grid). */
+    transition:
+      opacity 800ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+      transform 800ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal="on"] .reveal[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide {
+    transition-duration: 1ms;
+    transform: none;
+  }
+
+  .hero-slide[data-active="true"] {
+    transform: none;
+  }
+
+  [data-reveal="on"] .reveal,
+  [data-reveal="on"] .reveal[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }

@@ -1,9 +1,23 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/useLanguage.js";
-import rokoImage from "../assets/roko_image.jpeg";
-import section1 from "../assets/section1.png";
-import section2 from "../assets/section2.png";
+import Photo from "../components/Photo.jsx";
+import PhotoGrid from "../components/PhotoGrid.jsx";
+import { toItems } from "../lib/photos.js";
+
+// The tower is a 2.4:1 panorama and is handled separately as a full-bleed
+// band; cropping it square for the mosaic threw away the framing that makes it
+// the best shot in the set.
+const ABOUT_PHOTOS = [
+  "club-bar-sign",
+  "room-night",
+  "backbar",
+  "room-wide",
+  "counter-night",
+  "bar-counter",
+  "room-from-bar",
+  "dancefloor-night",
+];
 
 const LAT = 51.549126;
 const LON = 9.939261;
@@ -20,6 +34,7 @@ const geoLink = `geo:${LAT},${LON}?z=19`;
 export default function About() {
   const { t } = useLanguage();
   const page = t.about;
+  const mosaic = toItems(ABOUT_PHOTOS, t.common.photos);
 
   useEffect(() => {
     document.title = page.pageTitle;
@@ -52,26 +67,37 @@ export default function About() {
       </section>
 
       <section className="editorial-section section-surface">
-        <div className="grid grid-cols-2 border-b border-line md:grid-cols-4">
-          <img
-            src={rokoImage}
-            alt={page.imageAlt}
-            className="aspect-square w-full border-r border-line object-cover"
+        <figure className="relative">
+          <Photo
+            alt={t.common.photos.tower.alt}
+            className="h-[34vh] min-h-[15rem] w-full object-cover md:h-[52vh]"
+            name="tower"
+            sizes="100vw"
           />
-          <img
-            src={section1}
-            alt={page.imageAlt}
-            className="aspect-square w-full border-r border-line object-cover"
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-0 h-28"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0))",
+            }}
           />
-          <img
-            src={section2}
-            alt={page.imageAlt}
-            className="aspect-square w-full border-r border-line object-cover"
-          />
-          <div className="aspect-square bg-paper p-5 flex items-end text-xs uppercase tracking-[0.16em] text-muted">
-            {t.common.ui.placeholderImage}
-          </div>
-        </div>
+          <figcaption className="absolute inset-x-0 bottom-0">
+            <div className="container-wide py-5 md:py-7">
+              <p className="eyebrow text-surface/90">{t.common.dormName}</p>
+            </div>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section className="editorial-section section-surface">
+        <PhotoGrid
+          aspect="aspect-square"
+          columns="grid-cols-2 md:grid-cols-4"
+          items={mosaic}
+          labels={t.common.gallery}
+          sizes="(min-width: 768px) 25vw, 50vw"
+        />
       </section>
 
       <section className="editorial-section section-paper section-pad">
