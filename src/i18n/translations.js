@@ -30,34 +30,37 @@ export const de = {
       "stop-city": {
         alt: "Haltestelle Robert-Koch-Str. mit Fahrplanmast und Wartehäuschen",
         caption:
-          "Haltestelle Robert-Koch-Str. – hier halten die Linien 21, 22, 23, 41, 42, 170 sowie die Nachtlinien N3 und N4.",
+          "Der Mast mit den vielen Zahlen. Hier bist du richtig.",
       },
       "stop-klinikum": {
         alt: "Haltestellenmast Robert-Koch-Str. neben dem Wegweiser zum Klinikum Osteingang",
         caption:
-          "Die Haltestelle auf der Gegenseite, direkt am Wegweiser Richtung Klinikum Osteingang.",
+          "Gegenüber ist auch richtig – die Haltestelle gibt es zweimal.",
       },
       "arrival-sign": {
         alt: "Gelbes Schild „Wohnhaus Robert-Koch-Str. 38“ des Studentenwerks, dahinter das RoKo-Hochhaus",
         caption:
-          "Das gelbe Schild „Wohnhaus Robert-Koch-Str. 38“. Dahinter steht das Hochhaus mit dem RoKo-Schriftzug.",
+          "Gelb, quadratisch, unübersehbar.",
       },
       "stairs-outside": {
         alt: "Verzinkte Außentreppe an der Hauswand, die zu einer grauen Tür führt",
-        caption: "Die verzinkte Außentreppe an der Gebäudeseite.",
+        caption:
+          "Metall, außen, an der Hauswand entlang.",
       },
       "basement-door": {
         alt: "Blick von oben in einen Treppenschacht hinunter zur grauen Kellertür",
-        caption: "Der Treppenschacht hinunter zur Kellertür.",
+        caption:
+          "Runter geht es. Die Bar liegt tiefer als die Straße.",
       },
       "entrance-corridor": {
         alt: "Geöffnete Eingangstür mit Blick in den Vorraum mit Tresen und Fußmatte",
-        caption: "Durch die Tür geht es in den Vorraum.",
+        caption:
+          "Fußmatte, Vorraum, Tresen. Fast da.",
       },
       "club-bar-sign": {
         alt: "Treppe nach unten, an der Wand das gemalte Schild „RoKo Club Bar“ und die Hausregeln",
         caption:
-          "Angekommen: die Treppe hinunter, das Schild „RoKo Club Bar“ und die Hausregeln an der Wand.",
+          "Handgemalt an der Wand. Daneben: die Hausregeln.",
       },
       "room-wide": {
         alt: "Der Barraum bei eingeschaltetem Hauslicht mit Stehtischen, Stühlen und Boxen",
@@ -543,46 +546,44 @@ export const de = {
     stopLabel: "Haltestelle",
     stopName: "Robert-Koch-Str.",
     linesLabel: "Linien",
-    lines: "21 · 22 · 23 · 41 · 42 · 170",
-    nightLinesLabel: "Nachtlinien",
-    nightLines: "N3 · N4",
+    lines: ["21", "22", "23", "41", "42", "170"],
+    nightLinesLabel: "Nachts",
+    nightLines: ["N3", "N4"],
     transitNote:
-      "Die Linien stehen so auf dem Haltestellenmast. Fahrpläne und Abfahrtszeiten prüfst du am besten kurz vorher bei der GöVB.",
+      "So stehen die Linien auf dem Haltestellenmast. Fahrplan und Abfahrtszeiten prüfst du am besten kurz vorher bei der GöVB.",
     routeKicker: "Der Weg",
     routeTitle: "Von der Haltestelle bis zur Bartür",
     routeIntro:
-      "Fünf Schritte, jeweils mit Foto. Tippe auf ein Bild, um es größer zu sehen.",
+      "Fünf Schritte. Wer schon mal da war, braucht drei. Tippe auf ein Bild, um es größer zu sehen.",
     accessNote:
-      "Der Zugang zur Bar führt über Treppen. Wenn ihr Gäste erwartet, für die das ein Problem ist, meldet euch vorher bei uns.",
+      "Der Zugang führt über Treppen. Wenn ihr Gäste erwartet, für die das ein Problem ist, meldet euch vorher – dann finden wir eine Lösung.",
     steps: [
       {
-        heading: "Haltestelle Robert-Koch-Str.",
-        text: "Die Haltestelle heißt Robert-Koch-Str. und liegt auf beiden Straßenseiten. Auf der einen Seite steht der Wegweiser Richtung Klinikum Osteingang.",
+        heading: "Raus aus dem Bus",
+        text: "Die Haltestelle heißt Robert-Koch-Str. und liegt auf beiden Straßenseiten – egal, aus welcher Richtung du kommst. Auf der einen Seite steht der Wegweiser Richtung Klinikum Osteingang.",
         photos: ["stop-city", "stop-klinikum"],
       },
       {
-        heading: "Wohnhaus Robert-Koch-Str. 38",
-        text: "Am gelben Schild des Studentenwerks erkennst du das richtige Haus. Dahinter steht das Hochhaus mit dem RoKo-Schriftzug an der Fassade.",
+        heading: "Dem gelben Schild folgen",
+        text: "Studentenwerk-Gelb, kaum zu übersehen: „Wohnhaus Robert-Koch-Str. 38“. Dahinter steht das Hochhaus, das seinen Namen quer über die Fassade trägt.",
         photos: ["arrival-sign"],
       },
       {
-        heading: "Treppe auf Kellerhöhe",
+        heading: "Runter, nicht rauf",
         text: "Die Bar liegt im Untergeschoss. Von außen führen Treppen auf Kellerhöhe hinunter.",
         photos: ["stairs-outside", "basement-door"],
       },
       {
-        heading: "Durch die Eingangstür",
-        text: "Hinter der Tür liegt der Vorraum mit Fußmatte und Tresen.",
+        heading: "Tür auf",
+        text: "Dahinter liegt der Vorraum mit Fußmatte und Tresen. Ab hier ist es nicht mehr weit.",
         photos: ["entrance-corridor"],
       },
       {
-        heading: "RoKo Club Bar",
-        text: "Die letzte Treppe hinunter: Am Schild „RoKo Club Bar“ und den Hausregeln an der Wand bist du angekommen.",
+        heading: "Angekommen",
+        text: "Die letzte Treppe hinunter. Wenn du das handgemalte „RoKo Club Bar“ siehst und daneben die Hausregeln – genau da wolltest du hin.",
         photos: ["club-bar-sign"],
       },
     ],
-    gmapsLabel: "Google Maps (Routenplanung)",
-    mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
     helpTitle: "Etwas unklar?",
     helpText:
       "Wenn ihr den Eingang nicht findet oder etwas an der Beschreibung nicht stimmt, schreibt uns kurz – wir bessern es nach.",
@@ -904,34 +905,37 @@ export const en = {
       "stop-city": {
         alt: "Robert-Koch-Str. bus stop with timetable pole and shelter",
         caption:
-          "Robert-Koch-Str. stop — served by lines 21, 22, 23, 41, 42, 170 and the night lines N3 and N4.",
+          "The pole with all the numbers. This is the one.",
       },
       "stop-klinikum": {
         alt: "Robert-Koch-Str. stop pole next to the road sign for the Klinikum east entrance",
         caption:
-          "The stop on the opposite side, right by the sign for the Klinikum east entrance.",
+          "The other side works too — there are two of them.",
       },
       "arrival-sign": {
         alt: "Yellow Studentenwerk sign reading Wohnhaus Robert-Koch-Str. 38, with the RoKo tower behind it",
         caption:
-          "The yellow “Wohnhaus Robert-Koch-Str. 38” sign. The tower behind it carries the RoKo lettering.",
+          "Yellow, square, hard to miss.",
       },
       "stairs-outside": {
         alt: "Galvanised steel staircase along the building wall leading up to a grey door",
-        caption: "The galvanised outdoor staircase on the side of the building.",
+        caption:
+          "Metal, outside, running along the wall.",
       },
       "basement-door": {
         alt: "Looking down a stairwell towards the grey basement door",
-        caption: "The stairwell down to the basement door.",
+        caption:
+          "Down you go. The bar sits lower than the street.",
       },
       "entrance-corridor": {
         alt: "Open entrance door showing the anteroom with a counter and floor mat",
-        caption: "Through the door and into the anteroom.",
+        caption:
+          "Mat, anteroom, counter. Nearly there.",
       },
       "club-bar-sign": {
         alt: "Stairs leading down, with the painted “RoKo Club Bar” sign and the house rules on the wall",
         caption:
-          "You made it: down the stairs, the “RoKo Club Bar” sign and the house rules on the wall.",
+          "Hand-painted on the wall. House rules right beside it.",
       },
       "room-wide": {
         alt: "The bar room under house lights with standing tables, chairs and speakers",
@@ -1417,46 +1421,44 @@ export const en = {
     stopLabel: "Stop",
     stopName: "Robert-Koch-Str.",
     linesLabel: "Lines",
-    lines: "21 · 22 · 23 · 41 · 42 · 170",
-    nightLinesLabel: "Night lines",
-    nightLines: "N3 · N4",
+    lines: ["21", "22", "23", "41", "42", "170"],
+    nightLinesLabel: "At night",
+    nightLines: ["N3", "N4"],
     transitNote:
-      "These are the lines listed on the stop pole. Check GöVB for timetables and departures shortly before you travel.",
+      "That is how the lines are listed on the stop pole. Check GoeVB for timetables and departures shortly before you travel.",
     routeKicker: "The route",
     routeTitle: "From the stop to the bar door",
     routeIntro:
-      "Five steps, each with a photo. Tap any image to see it larger.",
+      "Five steps. Three, once you have done it before. Tap any image to see it larger.",
     accessNote:
-      "Access to the bar is via stairs. If you are expecting guests for whom that is a problem, get in touch with us beforehand.",
+      "Access is via stairs. If you are expecting guests for whom that is a problem, get in touch beforehand and we will work something out.",
     steps: [
       {
-        heading: "Robert-Koch-Str. stop",
-        text: "The stop is called Robert-Koch-Str. and serves both sides of the road. One side sits next to the sign for the Klinikum east entrance.",
+        heading: "Off the bus",
+        text: "The stop is called Robert-Koch-Str. and serves both sides of the road, so either direction works. One side sits next to the sign for the Klinikum east entrance.",
         photos: ["stop-city", "stop-klinikum"],
       },
       {
-        heading: "Wohnhaus Robert-Koch-Str. 38",
-        text: "The yellow Studentenwerk sign marks the right building. The tower behind it carries the RoKo lettering on its facade.",
+        heading: "Follow the yellow sign",
+        text: "Studentenwerk yellow, hard to miss: \u201cWohnhaus Robert-Koch-Str. 38\u201d. Behind it stands the tower wearing its name across the facade.",
         photos: ["arrival-sign"],
       },
       {
-        heading: "Stairs down to basement level",
+        heading: "Down, not up",
         text: "The bar is on the lower floor. From outside, stairs lead down to basement level.",
         photos: ["stairs-outside", "basement-door"],
       },
       {
-        heading: "Through the entrance door",
-        text: "Behind the door is the anteroom with a floor mat and a counter.",
+        heading: "Through the door",
+        text: "Behind it, the anteroom with a mat and a counter. Not far now.",
         photos: ["entrance-corridor"],
       },
       {
-        heading: "RoKo Club Bar",
-        text: "Down the last flight of stairs: the “RoKo Club Bar” sign and the house rules on the wall mean you have arrived.",
+        heading: "You made it",
+        text: "Down the last flight. When you see the hand-painted \u201cRoKo Club Bar\u201d with the house rules beside it, that is the place.",
         photos: ["club-bar-sign"],
       },
     ],
-    gmapsLabel: "Google Maps (route planner)",
-    mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
     helpTitle: "Something unclear?",
     helpText:
       "If you cannot find the entrance, or something in this description is wrong, drop us a line and we will fix it.",
