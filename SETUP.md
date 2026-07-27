@@ -47,7 +47,7 @@ Keep the service role key secret. It bypasses normal row-level restrictions and 
 
 ## 3. Local Environment Variables
 
-Create a local `.env.local` file in the repo root:
+Create a local **`.env`** file in the repo root:
 
 ```bash
 SUPABASE_URL=https://your-project-ref.supabase.co
@@ -55,13 +55,44 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ADMIN_PASSWORD=choose-a-long-random-admin-password
 SITE_URL=http://localhost:3000
 RESEND_API_KEY=your-resend-api-key
+BANK_IBAN=DE00000000000000000000
+BANK_HOLDER=Account holder name
+BANK_NAME=Bank name
+TUTORS=[{"name":"...","email":"..."}]
+EMAIL_FROM=RoKo-Bar <noreply@your-domain.de>
 ```
+
+> **It must be `.env`, not `.env.local`.** `vercel dev` only loads `.env` into
+> the serverless function runtime. `.env.local` is what `vercel env pull`
+> writes, and framework dev servers such as Vite read it for `VITE_`-prefixed
+> client variables — but this app has no client-side environment variables at
+> all, so anything placed only in `.env.local` never reaches the API. The
+> symptom is every endpoint failing with
+> `Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variable`,
+> which shows up in the browser as an empty booking calendar.
+>
+> If you already ran `vercel env pull`, copy it across and drop the
+> short-lived OIDC token, which is not needed locally:
+>
+> ```bash
+> grep -v '^VERCEL_OIDC_TOKEN=' .env.local > .env
+> ```
 
 `.env` and `.env.local` are gitignored. Do not put real secrets in `.env.example`.
 `ADMIN_PASSWORD` is used only by serverless functions. Do not prefix it with
 `VITE_`, because that would expose it to the browser bundle.
 `SITE_URL` is used in approval and confirmation emails; locally it defaults to
 `http://localhost:3000` if omitted.
+
+To confirm the variables are reaching the functions, start `vercel dev` and
+request an endpoint that needs Supabase:
+
+```bash
+curl "http://localhost:3000/api/availability?from=2026-08-01&to=2026-08-31"
+```
+
+A JSON body with `taken` and `pending` arrays means the wiring is correct; a
+500 with `Could not load availability.` means the variables are not loading.
 
 ## 4. Vercel Production Environment Variables
 
