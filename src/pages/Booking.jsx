@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/useLanguage.js";
+import useReveal from "../hooks/useReveal.js";
 
 const MAX_MONTH_OFFSET = 12;
 const DEPOSIT_AMOUNT = 200;
@@ -19,6 +20,15 @@ function isValidPhone(value) {
   const digits = value.replace(/\D/g, "");
   return PHONE_RE.test(value) && digits.length >= 7 && digits.length <= 15;
 }
+
+// Which fields each step owns. "Continue" only validates the current step, so
+// someone on step 1 is never shown errors for questions they have not reached.
+const STEP_FIELDS = [
+  ["requester_name", "email", "phone", "address"],
+  ["residency", "guest_count"],
+  ["night", "terms"],
+];
+const STEP_COUNT = STEP_FIELDS.length;
 
 const emptyForm = {
   requester_name: "",
@@ -158,6 +168,8 @@ export default function Booking() {
   const [submitStatus, setSubmitStatus] = useState("idle");
   const [submitMessage, setSubmitMessage] = useState(null);
   const [successDetails, setSuccessDetails] = useState(null);
+  const [currentStep, setCurrentStep] = useState(0);
+  const reveal = useReveal();
 
   const takenDates = useMemo(
     () => new Set(availability.taken),
@@ -225,7 +237,7 @@ export default function Booking() {
     // side-by-side desktop layout it is already visible, so leave scroll alone.
     if (
       typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 1023px)").matches
+      window.matchMedia("(max-width: 1279px)").matches
     ) {
       window.requestAnimationFrame(() => {
         document
@@ -267,7 +279,7 @@ export default function Booking() {
     }
   };
 
-  const validateForm = () => {
+  const computeErrors = () => {
     const nextErrors = {};
     const selectedDateForValidation = selectedNight
       ? parseIsoDate(selectedNight)
@@ -319,9 +331,76 @@ export default function Booking() {
       nextErrors.terms = page.errors.termsRequired;
     }
 
-    setFieldErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
+    return nextErrors;
   };
+
+  // Moves focus to the first thing that needs attention, so keyboard and screen
+  // reader users are not left guessing where the complaint came from.
+  const focusFirstError = (errors) => {
+    const first = Object.keys(errors)[0];
+    if (!first) return;
+    window.requestAnimationFrame(() => {
+      const target =
+        document.getElementById(first) ??
+        document.querySelector(`[data-error-anchor="${first}"]`);
+      target?.focus?.({ preventScroll: false });
+      target?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    });
+  };
+
+  const validateStep = (step) => {
+    const all = computeErrors();
+    const owned = STEP_FIELDS[step];
+    const scoped = Object.fromEntries(
+      owned.filter((field) => all[field]).map((field) => [field, all[field]]),
+    );
+
+    setFieldErrors((current) => {
+      const next = { ...current };
+      owned.forEach((field) => delete next[field]);
+      return { ...next, ...scoped };
+    });
+
+    if (Object.keys(scoped).length > 0) {
+      focusFirstError(scoped);
+      return false;
+    }
+    return true;
+  };
+
+  const validateForm = () => {
+    const all = computeErrors();
+    setFieldErrors(all);
+    if (Object.keys(all).length > 0) {
+      // Jump to the earliest step that still has a problem.
+      const stepWithError = STEP_FIELDS.findIndex((fields) =>
+        fields.some((field) => all[field]),
+      );
+      if (stepWithError >= 0 && stepWithError !== currentStep) {
+        setCurrentStep(stepWithError);
+      }
+      focusFirstError(all);
+      return false;
+    }
+    return true;
+  };
+
+  const goToStep = (step) => {
+    setCurrentStep(step);
+    setSubmitMessage(null);
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById("booking-request")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const handleNextStep = () => {
+    if (!validateStep(currentStep)) return;
+    goToStep(Math.min(currentStep + 1, STEP_COUNT - 1));
+  };
+
+  const handlePreviousStep = () => goToStep(Math.max(currentStep - 1, 0));
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -408,18 +487,10 @@ export default function Booking() {
     setSubmitStatus("idle");
     setSubmitMessage(null);
     setSuccessDetails(null);
+    setCurrentStep(0);
   };
 
   const selectedRent = RESIDENCY_PRICES[formData.residency];
-  const isFormComplete =
-    hasValidSelectedNight &&
-    acceptedTerms &&
-    submitStatus !== "sending" &&
-    Boolean(formData.requester_name.trim()) &&
-    EMAIL_RE.test(formData.email.trim()) &&
-    isValidPhone(formData.phone.trim()) &&
-    Boolean(formData.address.trim()) &&
-    Object.hasOwn(RESIDENCY_PRICES, formData.residency);
 
   const scrollToForm = () => {
     document
@@ -427,12 +498,16 @@ export default function Booking() {
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const isFinalStep = currentStep === STEP_COUNT - 1;
+
   const submitFromStickyBar = () => {
-    if (isFormComplete) {
+    if (isFinalStep) {
       handleSubmit({ preventDefault: () => {} });
-    } else {
-      scrollToForm();
+      return;
     }
+    // Mirror the in-form Continue button rather than skipping validation.
+    handleNextStep();
+    scrollToForm();
   };
 
   const showStickyBar = submitStatus !== "success" && Boolean(selectedNight);
@@ -447,7 +522,10 @@ export default function Booking() {
       </Helmet>
 
       <section className="editorial-section section-paper section-pad border-t-0">
-        <div className="container-wide grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end">
+        <div
+          className="container-wide reveal grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end"
+          ref={reveal}
+        >
           <div className="space-y-5">
             <p className="eyebrow">{t.common.badges.booking}</p>
             <h1 className="hero-title max-w-4xl">{page.title}</h1>
@@ -457,7 +535,10 @@ export default function Booking() {
       </section>
 
       <section className="editorial-section section-surface section-pad">
-        <div className="container-wide grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+        <div
+          className="container-wide reveal grid gap-10 lg:grid-cols-[0.85fr_1.15fr]"
+          ref={reveal}
+        >
           <div className="space-y-5">
             <span className="accent-rule" />
             <h2 className="section-title max-w-3xl">{page.recapTitle}</h2>
@@ -487,7 +568,7 @@ export default function Booking() {
 
       <section className="editorial-section section-paper section-pad">
         <div className="container-wide">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.04fr)] lg:items-start">
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] xl:items-start">
             <AvailabilityCalendar
               canGoNext={canGoNext}
               canGoPrevious={canGoPrevious}
@@ -508,10 +589,14 @@ export default function Booking() {
 
             <BookingRequestForm
               acceptedTerms={acceptedTerms}
+              currentStep={currentStep}
               fieldErrors={fieldErrors}
               formData={formData}
               hasValidSelectedNight={hasValidSelectedNight}
               locale={locale}
+              onBack={handlePreviousStep}
+              onNext={handleNextStep}
+              onStepSelect={goToStep}
               onAcceptedTermsChange={(event) => {
                 setAcceptedTerms(event.target.checked);
                 setFieldErrors((current) => ({ ...current, terms: undefined }));
@@ -530,13 +615,13 @@ export default function Booking() {
             />
           </div>
           {showStickyBar ? (
-            <div className="h-24 lg:hidden" aria-hidden="true" />
+            <div className="h-24 xl:hidden" aria-hidden="true" />
           ) : null}
         </div>
       </section>
 
       {showStickyBar ? (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur xl:hidden">
           <div className="container-wide flex items-center justify-between gap-3 py-3">
             <div className="min-w-0">
               <p className="truncate text-xs font-semibold text-ink">
@@ -558,9 +643,9 @@ export default function Booking() {
             >
               {submitStatus === "sending"
                 ? page.form.sending
-                : isFormComplete
+                : isFinalStep
                   ? page.form.submit
-                  : page.form.stickyContinue}
+                  : page.form.next}
             </button>
           </div>
         </div>
@@ -847,8 +932,11 @@ function CalendarCell({
           ? page.calendar.states.past
           : page.calendar.states.unavailable;
   const cellLabel = `${formatDateLabel(cell.iso, locale)}: ${stateLabel}`;
+  // No horizontal padding on the cell itself: the status caption needs the full
+  // column width. With p-2 the usable width was 41px, which fits "belegt" but
+  // clips "angefragt"/"requested". Padding lives on the day number instead.
   const baseClass =
-    "flex aspect-square min-h-11 w-full flex-col overflow-hidden p-1.5 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-h-14 sm:p-2";
+    "@container flex aspect-square min-h-11 w-full flex-col justify-between overflow-hidden pt-1.5 pb-1 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-h-14 sm:pt-2";
   const stateClass = isSelected
     ? "bg-primary text-surface"
       : isTaken
@@ -869,11 +957,11 @@ function CalendarCell({
         aria-label={cellLabel}
         role="gridcell"
       >
-        <span className="block font-semibold leading-none">{cell.day}</span>
+        <span className="block px-1.5 font-semibold leading-none sm:px-2">
+          {cell.day}
+        </span>
         {isTaken ? (
-          <span className="mt-1 hidden max-w-full truncate text-[0.58rem] font-semibold uppercase leading-tight tracking-[0.08em] text-surface/85 sm:block">
-            {page.calendar.takenHint}
-          </span>
+          <StatusCaption tone="onDark">{page.calendar.takenHint}</StatusCaption>
         ) : null}
       </div>
     );
@@ -889,18 +977,16 @@ function CalendarCell({
       onClick={() => onSelect(cell.iso)}
       onKeyDown={(event) => onKeyDown(event, cell.iso)}
     >
-      <span className="block font-semibold leading-none">{cell.day}</span>
+      <span className="block px-1.5 font-semibold leading-none sm:px-2">
+        {cell.day}
+      </span>
       {isPending ? (
         <>
-          <span
-            className={`mt-1 hidden max-w-full truncate text-[0.58rem] font-semibold uppercase leading-tight tracking-[0.08em] sm:block ${
-              isSelected ? "text-surface/85" : "text-ink/75"
-            }`}
-          >
+          <StatusCaption tone={isSelected ? "onDark" : "onLight"}>
             {page.calendar.requestedHint}
-          </span>
+          </StatusCaption>
           <span
-            className={`mt-1 h-1.5 w-1.5 shrink-0 sm:hidden ${
+            className={`mx-1.5 h-1.5 w-1.5 shrink-0 @[3.4rem]:hidden ${
               isSelected ? "bg-surface/85" : "bg-ink/70"
             }`}
             aria-hidden="true"
@@ -911,16 +997,38 @@ function CalendarCell({
   );
 }
 
+// Full-width caption along the bottom of a day cell.
+//
+// The width is a container query on the cell rather than a viewport breakpoint,
+// because what matters is how wide this particular cell ended up — that varies
+// with the surrounding grid, not just the screen. Below the threshold the dot
+// takes over. Either way the full state is in the cell's aria-label.
+function StatusCaption({ children, tone }) {
+  return (
+    <span
+      className={`hidden w-full px-0.5 text-center text-[0.5rem] font-semibold uppercase leading-none tracking-[0.01em] @[3.4rem]:block ${
+        tone === "onDark" ? "text-surface/90" : "text-ink/70"
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
 function BookingRequestForm({
   acceptedTerms,
+  currentStep,
   fieldErrors,
   formData,
   hasValidSelectedNight,
   locale,
   onAcceptedTermsChange,
+  onBack,
   onFieldBlur,
   onFieldChange,
+  onNext,
   onReset,
+  onStepSelect,
   onSubmit,
   page,
   selectedNight,
@@ -935,7 +1043,13 @@ function BookingRequestForm({
   const selectedRent = RESIDENCY_PRICES[formData.residency];
   const isSending = submitStatus === "sending";
   const isSuccess = submitStatus === "success";
+  const isFinalStep = currentStep === STEP_COUNT - 1;
   const submitDisabled = isSending || !acceptedTerms || !hasValidSelectedNight;
+
+  // Only complain about fields belonging to the step in view.
+  const visibleErrors = STEP_FIELDS[currentStep]
+    .filter((field) => fieldErrors[field])
+    .map((field) => ({ field, message: fieldErrors[field] }));
 
   if (isSuccess && successDetails) {
     return (
@@ -965,7 +1079,7 @@ function BookingRequestForm({
             <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
               {page.form.rentLabel}
             </dt>
-            <dd className="mt-2 font-display text-3xl font-semibold text-primary">
+            <dd className="display-figure mt-2 text-3xl text-primary">
               {formatMoney(successDetails.price, locale)}
             </dd>
           </div>
@@ -973,7 +1087,7 @@ function BookingRequestForm({
             <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
               {page.form.depositLabel}
             </dt>
-            <dd className="mt-2 font-display text-3xl font-semibold text-primary">
+            <dd className="display-figure mt-2 text-3xl text-primary">
               {formatMoney(successDetails.deposit, locale)}
             </dd>
           </div>
@@ -1013,200 +1127,206 @@ function BookingRequestForm({
       onSubmit={onSubmit}
       aria-labelledby="booking-form-title"
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         <span className="accent-rule" />
         <div className="space-y-2">
           <p className="eyebrow">{page.form.eyebrow}</p>
-          <h2 id="booking-form-title" className="font-display text-4xl font-semibold">
+          <h2
+            id="booking-form-title"
+            className="font-display text-4xl font-semibold"
+          >
             {page.form.title}
           </h2>
         </div>
+
+        <StepIndicator
+          currentStep={currentStep}
+          onStepSelect={onStepSelect}
+          page={page}
+        />
+
+        <SelectedDateChip
+          label={selectedDateLabel}
+          page={page}
+          selected={Boolean(selectedNight)}
+        />
       </div>
 
-      <div className="grid gap-6">
-        <FormField error={fieldErrors.night} id="booking-night" label={page.form.nightLabel}>
-          <input
-            id="booking-night"
-            className="form-input w-full px-3 py-2.5"
-            readOnly
-            value={selectedDateLabel}
-            aria-describedby={
-              fieldErrors.night
-                ? "booking-night-error"
-                : !selectedNight
-                  ? "booking-night-hint"
-                  : undefined
-            }
-          />
-          {!selectedNight ? (
-            <p id="booking-night-hint" className="mt-2 text-sm text-muted">
-              {page.form.noNightHint}
-            </p>
-          ) : null}
-        </FormField>
+      {visibleErrors.length > 0 ? (
+        <div className="border border-danger bg-surface p-4" role="alert">
+          <p className="text-sm font-semibold text-danger">
+            {page.form.errorSummaryTitle}
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-muted">
+            {page.form.errorSummaryIntro}
+          </p>
+          <ul className="mt-3 grid gap-1.5">
+            {visibleErrors.map((item) => (
+              <li key={item.field} className="flex gap-3 text-sm">
+                <span className="square-bullet" />
+                <span className="leading-relaxed">{item.message}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
-        <fieldset className="m-0 space-y-5 border-0 p-0">
-          <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-            {page.form.sectionContact}
-          </legend>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            <FormField
-              error={fieldErrors.requester_name}
+      {currentStep === 0 ? (
+        <div className="grid gap-5">
+          <FormField
+            error={fieldErrors.requester_name}
+            id="requester_name"
+            label={page.form.nameLabel}
+            required
+          >
+            <input
               id="requester_name"
-              label={page.form.nameLabel}
+              name="requester_name"
+              className="form-input w-full px-3 py-2.5"
+              value={formData.requester_name}
+              onChange={onFieldChange}
+              onBlur={onFieldBlur}
               required
-            >
-              <input
-                id="requester_name"
-                name="requester_name"
-                className="form-input w-full px-3 py-2.5"
-                value={formData.requester_name}
-                onChange={onFieldChange}
-                onBlur={onFieldBlur}
-                required
-                autoComplete="name"
-                aria-invalid={fieldErrors.requester_name ? "true" : undefined}
-                aria-describedby={
-                  fieldErrors.requester_name
-                    ? "requester_name-error"
-                    : undefined
-                }
-              />
-            </FormField>
+              autoComplete="name"
+              aria-invalid={fieldErrors.requester_name ? "true" : undefined}
+              aria-describedby={
+                fieldErrors.requester_name ? "requester_name-error" : undefined
+              }
+            />
+          </FormField>
 
-            <FormField
-              error={fieldErrors.email}
+          <FormField
+            error={fieldErrors.email}
+            id="email"
+            label={page.form.emailLabel}
+            required
+          >
+            <input
               id="email"
-              label={page.form.emailLabel}
+              name="email"
+              type="email"
+              className="form-input w-full px-3 py-2.5"
+              value={formData.email}
+              onChange={onFieldChange}
+              onBlur={onFieldBlur}
               required
-            >
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="form-input w-full px-3 py-2.5"
-                value={formData.email}
-                onChange={onFieldChange}
-                onBlur={onFieldBlur}
-                required
-                autoComplete="email"
-                aria-invalid={fieldErrors.email ? "true" : undefined}
-                aria-describedby={fieldErrors.email ? "email-error" : undefined}
-              />
-            </FormField>
-          </div>
+              autoComplete="email"
+              inputMode="email"
+              aria-invalid={fieldErrors.email ? "true" : undefined}
+              aria-describedby={fieldErrors.email ? "email-error" : undefined}
+            />
+          </FormField>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <FormField
-              error={fieldErrors.phone}
+          <FormField
+            error={fieldErrors.phone}
+            id="phone"
+            label={page.form.phoneLabel}
+            required
+          >
+            <input
               id="phone"
-              label={page.form.phoneLabel}
+              name="phone"
+              type="tel"
+              className="form-input w-full px-3 py-2.5"
+              value={formData.phone}
+              onChange={onFieldChange}
+              onBlur={onFieldBlur}
               required
-            >
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                className="form-input w-full px-3 py-2.5"
-                value={formData.phone}
-                onChange={onFieldChange}
-                onBlur={onFieldBlur}
-                required
-                autoComplete="tel"
-                aria-invalid={fieldErrors.phone ? "true" : undefined}
-                aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
-              />
-            </FormField>
+              autoComplete="tel"
+              inputMode="tel"
+              aria-invalid={fieldErrors.phone ? "true" : undefined}
+              aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+            />
+          </FormField>
 
-            <FormField
-              error={fieldErrors.address}
+          <FormField
+            error={fieldErrors.address}
+            id="address"
+            label={page.form.addressLabel}
+            required
+          >
+            <input
               id="address"
-              label={page.form.addressLabel}
+              name="address"
+              className="form-input w-full px-3 py-2.5"
+              value={formData.address}
+              onChange={onFieldChange}
+              onBlur={onFieldBlur}
               required
-            >
-              <input
-                id="address"
-                name="address"
-                className="form-input w-full px-3 py-2.5"
-                value={formData.address}
-                onChange={onFieldChange}
-                onBlur={onFieldBlur}
-                required
-                autoComplete="street-address"
-                aria-invalid={fieldErrors.address ? "true" : undefined}
-                aria-describedby={fieldErrors.address ? "address-error" : undefined}
-              />
-            </FormField>
-          </div>
-        </fieldset>
+              autoComplete="street-address"
+              aria-invalid={fieldErrors.address ? "true" : undefined}
+              aria-describedby={fieldErrors.address ? "address-error" : undefined}
+            />
+          </FormField>
 
-        <fieldset className="m-0 space-y-5 border-0 p-0">
-          <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-            {page.form.sectionEvent}
-          </legend>
+          <p className="text-xs text-muted">{page.form.requiredHint}</p>
+        </div>
+      ) : null}
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <FormField
-              error={fieldErrors.residency}
+      {currentStep === 1 ? (
+        <div className="grid gap-5">
+          <FormField
+            error={fieldErrors.residency}
+            id="residency"
+            label={page.form.residencyLabel}
+            required
+          >
+            <select
               id="residency"
-              label={page.form.residencyLabel}
+              name="residency"
+              className="form-select w-full px-3 py-2.5"
+              value={formData.residency}
+              onChange={onFieldChange}
               required
+              aria-invalid={fieldErrors.residency ? "true" : undefined}
+              aria-describedby={
+                fieldErrors.residency ? "residency-error" : undefined
+              }
             >
-              <select
-                id="residency"
-                name="residency"
-                className="form-select w-full px-3 py-2.5"
-                value={formData.residency}
-                onChange={onFieldChange}
-                required
-                aria-invalid={fieldErrors.residency ? "true" : undefined}
-                aria-describedby={
-                  fieldErrors.residency ? "residency-error" : undefined
-                }
-              >
-                <option value="">{page.form.residencyPlaceholder}</option>
-                {page.form.residencyOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {formData.residency === "rosenbachweg" ? (
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {page.form.rosenbachwegNote}
-                </p>
-              ) : null}
-            </FormField>
-
-            <FormField
-              error={fieldErrors.guest_count}
-              id="guest_count"
-              label={page.form.guestCountLabel}
-            >
-              <input
-                id="guest_count"
-                name="guest_count"
-                type="number"
-                min="1"
-                step="1"
-                inputMode="numeric"
-                className="form-input w-full px-3 py-2.5"
-                value={formData.guest_count}
-                onChange={onFieldChange}
-                aria-invalid={fieldErrors.guest_count ? "true" : undefined}
-                aria-describedby={
-                  fieldErrors.guest_count ? "guest_count-error" : undefined
-                }
-              />
-            </FormField>
-          </div>
+              <option value="">{page.form.residencyPlaceholder}</option>
+              {page.form.residencyOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {formData.residency === "rosenbachweg" ? (
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                {page.form.rosenbachwegNote}
+              </p>
+            ) : null}
+          </FormField>
 
           <PriceDisplay locale={locale} page={page} rent={selectedRent} />
 
           <FormField
+            error={fieldErrors.guest_count}
+            id="guest_count"
+            hint={page.form.optionalLabel}
+            label={page.form.guestCountLabel}
+          >
+            <input
+              id="guest_count"
+              name="guest_count"
+              type="number"
+              min="1"
+              step="1"
+              inputMode="numeric"
+              className="form-input w-full px-3 py-2.5"
+              value={formData.guest_count}
+              onChange={onFieldChange}
+              onBlur={onFieldBlur}
+              aria-invalid={fieldErrors.guest_count ? "true" : undefined}
+              aria-describedby={
+                fieldErrors.guest_count ? "guest_count-error" : undefined
+              }
+            />
+          </FormField>
+
+          <FormField
             error={fieldErrors.payment_method}
             id="payment_method"
+            hint={page.form.optionalLabel}
             label={page.form.paymentMethodLabel}
           >
             <select
@@ -1231,6 +1351,7 @@ function BookingRequestForm({
           <FormField
             error={fieldErrors.additional_info}
             id="additional_info"
+            hint={page.form.optionalLabel}
             label={page.form.additionalInfoLabel}
           >
             <textarea
@@ -1242,55 +1363,97 @@ function BookingRequestForm({
               rows={5}
             />
           </FormField>
-        </fieldset>
-
-        <p className="text-xs text-muted">{page.form.requiredHint}</p>
-      </div>
-
-      <section className="space-y-5 border-t border-line pt-7">
-        <div className="space-y-3">
-          <h3 className="text-xl font-semibold">{page.agreement.title}</h3>
-          <ul className="grid gap-3 text-sm text-muted">
-            {page.agreement.points.map((point) => (
-              <li key={point} className="flex gap-3">
-                <span className="square-bullet" />
-                <span className="leading-relaxed">{point}</span>
-              </li>
-            ))}
-          </ul>
         </div>
+      ) : null}
 
-        <div className="space-y-2">
-          <label className="flex items-start gap-3 text-sm leading-relaxed">
-            <input
-              className="mt-1 h-4 w-4 accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              type="checkbox"
-              checked={acceptedTerms}
-              onChange={onAcceptedTermsChange}
-              required
-              aria-invalid={fieldErrors.terms ? "true" : undefined}
-              aria-describedby={fieldErrors.terms ? "terms-error" : undefined}
-            />
-            <span>
-              {page.form.termsPrefix}{" "}
-              <a
-                href={termsHref}
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold underline underline-offset-4"
-              >
-                {page.form.termsLink}
-              </a>
-              {page.form.termsSuffix}
-            </span>
-          </label>
-          {fieldErrors.terms ? (
-            <p id="terms-error" className="text-sm text-danger">
-              {fieldErrors.terms}
-            </p>
+      {currentStep === 2 ? (
+        <div className="grid gap-6">
+          {!hasValidSelectedNight ? (
+            <div
+              className="border border-warning bg-surface p-4"
+              data-error-anchor="night"
+              role="alert"
+              tabIndex={-1}
+            >
+              <p className="text-sm font-semibold">
+                {page.form.dateMissingTitle}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-muted">
+                {page.form.dateMissingText}
+              </p>
+            </div>
           ) : null}
+
+          <div className="space-y-3">
+            <h3 className="text-xl font-semibold">{page.form.reviewTitle}</h3>
+            <p className="text-sm leading-relaxed text-muted">
+              {page.form.reviewIntro}
+            </p>
+          </div>
+
+          <ReviewList
+            formData={formData}
+            locale={locale}
+            onStepSelect={onStepSelect}
+            page={page}
+            rent={selectedRent}
+            selectedDateLabel={selectedDateLabel}
+            selectedNight={selectedNight}
+          />
+
+          <section className="space-y-5 border-t border-line pt-6">
+            <div className="space-y-3">
+              <h3 className="text-xl font-semibold">{page.agreement.title}</h3>
+              <ul className="grid gap-3 text-sm text-muted">
+                {page.agreement.points.map((point) => (
+                  <li key={point} className="flex gap-3">
+                    <span className="square-bullet" />
+                    <span className="leading-relaxed">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                className={`flex items-start gap-3 border p-4 text-sm leading-relaxed transition-colors ${
+                  fieldErrors.terms
+                    ? "border-danger bg-surface"
+                    : "border-line bg-paper"
+                }`}
+              >
+                <input
+                  className="mt-1 h-4 w-4 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  data-error-anchor="terms"
+                  onChange={onAcceptedTermsChange}
+                  required
+                  aria-invalid={fieldErrors.terms ? "true" : undefined}
+                  aria-describedby={fieldErrors.terms ? "terms-error" : undefined}
+                />
+                <span>
+                  {page.form.termsPrefix}{" "}
+                  <a
+                    href={termsHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold underline underline-offset-4"
+                  >
+                    {page.form.termsLink}
+                  </a>
+                  {page.form.termsSuffix}
+                </span>
+              </label>
+              {fieldErrors.terms ? (
+                <p id="terms-error" className="text-sm text-danger">
+                  {fieldErrors.terms}
+                </p>
+              ) : null}
+            </div>
+          </section>
         </div>
-      </section>
+      ) : null}
 
       {submitMessage ? (
         <div
@@ -1305,34 +1468,226 @@ function BookingRequestForm({
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-3 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm leading-relaxed text-muted">
-          {!hasValidSelectedNight
-            ? page.form.submitNeedsDate
-            : !acceptedTerms
-              ? page.form.submitNeedsTerms
-              : page.form.submitReady}
-        </p>
-        <button
-          type="submit"
-          className="btn-primary w-full disabled:cursor-not-allowed disabled:border-muted disabled:bg-muted sm:w-fit"
-          disabled={submitDisabled}
-        >
-          {isSending ? page.form.sending : page.form.submit}
-        </button>
+      <div className="space-y-4 border-t border-line pt-7">
+        {isFinalStep ? (
+          <p className="text-sm leading-relaxed text-muted">
+            {!hasValidSelectedNight
+              ? page.form.submitNeedsDate
+              : !acceptedTerms
+                ? page.form.submitNeedsTerms
+                : page.form.submitReady}
+          </p>
+        ) : null}
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          {currentStep > 0 ? (
+            <button
+              type="button"
+              className="btn-secondary w-full sm:w-fit"
+              onClick={onBack}
+            >
+              {page.form.back}
+            </button>
+          ) : (
+            <span className="hidden sm:block" />
+          )}
+
+          {isFinalStep ? (
+            <button
+              type="submit"
+              className="btn-primary w-full disabled:cursor-not-allowed disabled:border-muted disabled:bg-muted sm:w-fit"
+              disabled={submitDisabled}
+            >
+              {isSending ? page.form.sending : page.form.submit}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn-primary w-full sm:w-fit"
+              onClick={onNext}
+            >
+              {page.form.next}
+            </button>
+          )}
+        </div>
       </div>
     </form>
   );
 }
 
-function FormField({ children, error, id, label, required = false }) {
+// Compact progress rail. Completed steps stay clickable so people can jump back
+// to fix something without walking the whole form again.
+function StepIndicator({ currentStep, onStepSelect, page }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-semibold">
-        {label}
-        {required ? (
-          <span className="text-danger" aria-hidden="true">
-            {" *"}
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+        {page.form.stepCounter
+          .replace("{current}", String(currentStep + 1))
+          .replace("{total}", String(STEP_COUNT))}
+      </p>
+      <ol className="mt-3 grid grid-cols-3 gap-px border border-line bg-line">
+        {page.form.steps.map((step, index) => {
+          const isCurrent = index === currentStep;
+          const isDone = index < currentStep;
+          const clickable = isDone && typeof onStepSelect === "function";
+
+          const content = (
+            <>
+              <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.12em] opacity-70">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span className="mt-1 block text-sm font-semibold leading-tight">
+                {step.label}
+              </span>
+              <span className="mt-0.5 hidden text-xs leading-tight opacity-70 sm:block">
+                {step.hint}
+              </span>
+            </>
+          );
+
+          const tone = isCurrent
+            ? "bg-ink text-surface"
+            : isDone
+              ? "bg-surface text-ink"
+              : "bg-paper text-muted";
+
+          return (
+            <li key={step.label}>
+              {clickable ? (
+                <button
+                  type="button"
+                  aria-current={isCurrent ? "step" : undefined}
+                  className={`block h-full w-full p-3 text-left transition-colors hover:bg-brick-tint focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary ${tone}`}
+                  onClick={() => onStepSelect(index)}
+                >
+                  {content}
+                </button>
+              ) : (
+                <div
+                  aria-current={isCurrent ? "step" : undefined}
+                  className={`h-full w-full p-3 ${tone}`}
+                >
+                  {content}
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
+
+function SelectedDateChip({ label, page, selected }) {
+  return (
+    <div
+      className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-2 px-4 py-3 ${
+        selected ? "border-l-primary bg-paper" : "border-l-warning bg-paper"
+      }`}
+    >
+      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+        {page.form.dateChipPrefix}
+      </span>
+      <span className="font-semibold">
+        {selected ? label : page.form.dateChipEmpty}
+      </span>
+    </div>
+  );
+}
+
+function ReviewList({
+  formData,
+  locale,
+  onStepSelect,
+  page,
+  rent,
+  selectedDateLabel,
+  selectedNight,
+}) {
+  const residencyLabel = page.form.residencyOptions.find(
+    (option) => option.value === formData.residency,
+  )?.label;
+  const paymentLabel = page.form.paymentMethods.find(
+    (option) => option.value === formData.payment_method,
+  )?.label;
+
+  const rows = [
+    {
+      step: null,
+      label: page.form.nightLabel,
+      value: selectedNight ? selectedDateLabel : null,
+    },
+    { step: 0, label: page.form.nameLabel, value: formData.requester_name },
+    { step: 0, label: page.form.emailLabel, value: formData.email },
+    { step: 0, label: page.form.phoneLabel, value: formData.phone },
+    { step: 0, label: page.form.addressLabel, value: formData.address },
+    { step: 1, label: page.form.residencyLabel, value: residencyLabel },
+    {
+      step: 1,
+      label: page.form.totalLabel,
+      value: rent ? formatMoney(rent + DEPOSIT_AMOUNT, locale) : null,
+    },
+    { step: 1, label: page.form.guestCountLabel, value: formData.guest_count },
+    { step: 1, label: page.form.paymentMethodLabel, value: paymentLabel },
+    {
+      step: 1,
+      label: page.form.additionalInfoLabel,
+      value: formData.additional_info,
+    },
+  ];
+
+  return (
+    <dl className="grid gap-px border border-line bg-line">
+      {rows.map((row) => (
+        <div
+          key={row.label}
+          className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 bg-surface px-4 py-3"
+        >
+          <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+            {row.label}
+          </dt>
+          <dd className="flex items-baseline gap-3">
+            <span
+              className={`text-sm ${
+                row.value ? "font-semibold text-ink" : "text-muted"
+              }`}
+            >
+              {row.value || page.form.reviewEmpty}
+            </span>
+            {row.step !== null ? (
+              <button
+                type="button"
+                className="link-quiet text-xs font-semibold uppercase tracking-[0.12em] text-primary"
+                onClick={() => onStepSelect(row.step)}
+              >
+                {page.form.reviewEdit}
+              </button>
+            ) : null}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function FormField({ children, error, hint, id, label, required = false }) {
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className="mb-2 flex flex-wrap items-baseline gap-x-2 text-sm font-semibold"
+      >
+        <span>
+          {label}
+          {required ? (
+            <span className="text-danger" aria-hidden="true">
+              {" *"}
+            </span>
+          ) : null}
+        </span>
+        {hint ? (
+          <span className="text-xs font-normal uppercase tracking-[0.12em] text-muted">
+            {hint}
           </span>
         ) : null}
       </label>
@@ -1366,7 +1721,7 @@ function PriceDisplay({ locale, page, rent }) {
           <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
             {page.form.rentLabel}
           </dt>
-          <dd className="mt-2 font-display text-3xl font-semibold text-primary">
+          <dd className="display-figure mt-2 text-3xl text-primary">
             {formatMoney(rent, locale)}
           </dd>
         </div>
@@ -1374,7 +1729,7 @@ function PriceDisplay({ locale, page, rent }) {
           <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
             {page.form.depositLabel}
           </dt>
-          <dd className="mt-2 font-display text-3xl font-semibold text-primary">
+          <dd className="display-figure mt-2 text-3xl text-primary">
             {formatMoney(DEPOSIT_AMOUNT, locale)}
           </dd>
         </div>
@@ -1382,7 +1737,7 @@ function PriceDisplay({ locale, page, rent }) {
           <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
             {page.form.totalLabel}
           </dt>
-          <dd className="mt-2 font-display text-3xl font-semibold text-primary">
+          <dd className="display-figure mt-2 text-3xl text-primary">
             {formatMoney(rent + DEPOSIT_AMOUNT, locale)}
           </dd>
         </div>

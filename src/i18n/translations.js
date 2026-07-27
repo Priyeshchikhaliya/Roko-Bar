@@ -322,8 +322,8 @@ export const de = {
       ],
       rosenbachwegNote:
         "Dieser Tarif gilt nur für langfristige Bewohner:innen, nicht für Kurzzeitaufenthalte wie Erasmus.",
-      guestCountLabel: "Gästezahl (optional)",
-      additionalInfoLabel: "Weitere Informationen (optional)",
+      guestCountLabel: "Gästezahl",
+      additionalInfoLabel: "Weitere Informationen",
       priceTitle: "Preis nach Wohnstatus",
       priceChooseResidency:
         "Wähle deinen Wohnstatus aus, dann zeigen wir dir die voraussichtliche Miete und Kaution.",
@@ -358,6 +358,28 @@ export const de = {
       stickyTotal: "gesamt",
       stickyChoosePrompt: "Tarif für Gesamtpreis wählen",
       stickyContinue: "Weiter zum Formular",
+      steps: [
+        { label: "Kontakt", hint: "Wer fragt an?" },
+        { label: "Abend", hint: "Was ist geplant?" },
+        { label: "Prüfen", hint: "Stimmt alles?" },
+      ],
+      stepCounter: "Schritt {current} von {total}",
+      next: "Weiter",
+      back: "Zurück",
+      errorSummaryTitle: "Bitte schau dir das noch einmal an",
+      errorSummaryIntro:
+        "Wir konnten die Anfrage noch nicht weiterschicken. Diese Felder brauchen noch etwas:",
+      dateChipEmpty: "Noch kein Termin gewählt",
+      dateChipPrefix: "Termin",
+      dateMissingTitle: "Zuerst einen Termin wählen",
+      dateMissingText:
+        "Such dir im Kalender einen freien oder angefragten Freitag oder Samstag aus. Du kannst das Formular schon ausfüllen – ohne Termin können wir die Anfrage aber nicht annehmen.",
+      reviewTitle: "Deine Anfrage im Überblick",
+      reviewIntro:
+        "Prüfe kurz, ob alles stimmt. Zum Ändern gehst du einfach zurück.",
+      reviewEdit: "Ändern",
+      reviewEmpty: "Keine Angabe",
+      optionalLabel: "optional",
     },
     agreement: {
       title: "Worauf du dich einlässt",
@@ -1141,8 +1163,8 @@ export const en = {
       ],
       rosenbachwegNote:
         "This rate applies only to long-term residents, not short-term stays such as Erasmus.",
-      guestCountLabel: "Guest count (optional)",
-      additionalInfoLabel: "Additional information (optional)",
+      guestCountLabel: "Guest count",
+      additionalInfoLabel: "Additional information",
       priceTitle: "Price by residency",
       priceChooseResidency:
         "Choose your residency, then we will show the expected rent and deposit.",
@@ -1176,6 +1198,28 @@ export const en = {
       stickyTotal: "total",
       stickyChoosePrompt: "Choose a rate for the total",
       stickyContinue: "Continue to form",
+      steps: [
+        { label: "Contact", hint: "Who is asking?" },
+        { label: "Night", hint: "What is planned?" },
+        { label: "Review", hint: "All correct?" },
+      ],
+      stepCounter: "Step {current} of {total}",
+      next: "Continue",
+      back: "Back",
+      errorSummaryTitle: "Please take another look",
+      errorSummaryIntro:
+        "We could not send the request yet. These fields still need something:",
+      dateChipEmpty: "No date chosen yet",
+      dateChipPrefix: "Date",
+      dateMissingTitle: "Pick a date first",
+      dateMissingText:
+        "Choose a free or requested Friday or Saturday in the calendar. You can fill in the form already — but without a date we cannot accept the request.",
+      reviewTitle: "Your request at a glance",
+      reviewIntro:
+        "Have a quick look that everything is right. Go back to change anything.",
+      reviewEdit: "Change",
+      reviewEmpty: "Not provided",
+      optionalLabel: "optional",
     },
     agreement: {
       title: "What you are agreeing to",
