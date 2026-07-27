@@ -136,7 +136,7 @@ export default function Directions() {
           <div className="relative">
             <span
               aria-hidden="true"
-              className="absolute bottom-6 left-[1.4375rem] top-3 w-px bg-line lg:left-1/2"
+              className="absolute bottom-6 left-[1.4375rem] top-3 w-px bg-line xl:left-1/2"
             />
 
             <ol>
@@ -144,21 +144,21 @@ export default function Directions() {
                 const textLeft = stepIndex % 2 === 0;
                 return (
                   <li
-                    className="reveal relative grid gap-6 pb-14 pl-16 last:pb-0 lg:grid-cols-[1fr_6rem_1fr] lg:gap-y-0 lg:pb-24 lg:pl-0"
+                    className="reveal relative grid gap-6 pb-14 pl-16 last:pb-0 xl:grid-cols-[1fr_5rem_1fr] xl:gap-y-0 xl:pb-24 xl:pl-0"
                     key={step.heading}
                     ref={reveal}
                   >
-                    <span className="absolute left-0 top-0 flex size-12 items-center justify-center border border-line bg-surface lg:static lg:col-start-2 lg:row-start-1 lg:justify-self-center">
+                    <span className="absolute left-0 top-0 flex size-12 items-center justify-center border border-line bg-surface xl:static xl:col-start-2 xl:row-start-1 xl:justify-self-center">
                       <span className="display-figure text-xl text-primary">
                         {String(stepIndex + 1).padStart(2, "0")}
                       </span>
                     </span>
 
                     <div
-                      className={`space-y-3 lg:row-start-1 ${
+                      className={`space-y-3 xl:row-start-1 ${
                         textLeft
-                          ? "lg:col-start-1 lg:pr-12 lg:text-right"
-                          : "lg:col-start-3 lg:pl-12"
+                          ? "xl:col-start-1 xl:pr-12 xl:text-right"
+                          : "xl:col-start-3 xl:pl-12"
                       }`}
                     >
                       <h3 className="font-display text-3xl font-semibold leading-tight md:text-4xl">
@@ -166,7 +166,7 @@ export default function Directions() {
                       </h3>
                       <p
                         className={`lead text-base ${
-                          textLeft ? "lg:ml-auto lg:max-w-sm" : "lg:max-w-sm"
+                          textLeft ? "xl:ml-auto xl:max-w-sm" : "xl:max-w-sm"
                         }`}
                       >
                         {step.text}
@@ -174,16 +174,16 @@ export default function Directions() {
                     </div>
 
                     <div
-                      className={`flex lg:row-start-1 ${
+                      className={`flex xl:row-start-1 ${
                         textLeft
-                          ? "lg:col-start-3 lg:justify-start lg:pl-12"
-                          : "lg:col-start-1 lg:justify-end lg:pr-12"
+                          ? "xl:col-start-3 xl:justify-start xl:pl-12"
+                          : "xl:col-start-1 xl:justify-end xl:pr-12"
                       }`}
                     >
                       <div className="flex h-fit w-fit gap-px border border-line bg-line">
                         {step.photos.map((name, photoIndex) => (
                           <button
-                            className="group block w-32 cursor-zoom-in overflow-hidden bg-surface focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary sm:w-40 lg:w-44"
+                            className="group block w-32 cursor-zoom-in overflow-hidden bg-surface focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary sm:w-48 md:w-56 lg:w-64 xl:w-56"
                             key={name}
                             onClick={() =>
                               setIndex(offsets[stepIndex] + photoIndex)
@@ -194,7 +194,7 @@ export default function Directions() {
                               alt={photos[name].alt}
                               className="aspect-[3/4] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                               name={name}
-                              sizes="(min-width: 1024px) 176px, (min-width: 640px) 160px, 128px"
+                              sizes="(min-width: 1280px) 224px, (min-width: 1024px) 256px, (min-width: 768px) 224px, (min-width: 640px) 192px, 128px"
                             />
                             <span className="sr-only">
                               {t.common.gallery.enlarge}

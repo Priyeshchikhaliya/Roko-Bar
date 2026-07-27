@@ -584,6 +584,8 @@ export const de = {
         photos: ["club-bar-sign"],
       },
     ],
+    gmapsLabel: "Google Maps (Routenplanung)",
+    mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
     helpTitle: "Etwas unklar?",
     helpText:
       "Wenn ihr den Eingang nicht findet oder etwas an der Beschreibung nicht stimmt, schreibt uns kurz – wir bessern es nach.",
@@ -1459,6 +1461,8 @@ export const en = {
         photos: ["club-bar-sign"],
       },
     ],
+    gmapsLabel: "Google Maps (route planner)",
+    mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
     helpTitle: "Something unclear?",
     helpText:
       "If you cannot find the entrance, or something in this description is wrong, drop us a line and we will fix it.",
