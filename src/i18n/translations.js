@@ -444,13 +444,29 @@ export const de = {
       "Im Studentenwohnheim Robert-Koch-Straße 38, kurz RoKo, leben Studierende aus vielen Studiengängen, Ländern und Kulturen unter einem Dach.",
       "Die Heimkneipe im Keller ist der Ort für Geburtstage, WG-Partys, Fachschaftsabende und alles, was zu einem lebendigen Wohnheim dazugehört.",
     ],
+    vibeKicker: "Das Haus",
     vibeTitle: "Was RoKo besonders macht",
+    vibeIntro:
+      "Vier Dinge, die ein Wohnheim mit eigener Kellerbar von einer normalen Wohnung unterscheiden.",
     vibePoints: [
-      "Großes Hochhaus mit vielen Studis, kurzen Wegen und jeder Menge Geschichten.",
-      "Eigene Kellerbar im Wohnheim: Nach der Party ist der Heimweg angenehm kurz.",
-      "Engagierte Bewohner:innen und Bar-Tutor:innen kümmern sich um Bar, Technik und Regeln.",
-      "Die Einnahmen aus der Vermietung helfen bei Ausgaben rund ums Wohnheim und gemeinsamen Projekten.",
+      {
+        title: "Ein ganzes Haus",
+        text: "Großes Hochhaus mit vielen Studis, kurzen Wegen und jeder Menge Geschichten.",
+      },
+      {
+        title: "Kurzer Heimweg",
+        text: "Eigene Kellerbar im Wohnheim: Nach der Party ist der Heimweg angenehm kurz.",
+      },
+      {
+        title: "Von Studis betreut",
+        text: "Engagierte Bewohner:innen und Bar-Tutor:innen kümmern sich um Bar, Technik und Regeln.",
+      },
+      {
+        title: "Fließt zurück",
+        text: "Die Einnahmen aus der Vermietung helfen bei Ausgaben rund ums Wohnheim und gemeinsamen Projekten.",
+      },
     ],
+    barKicker: "Der Raum",
     barTitle: "Die Heimkneipe in RoKo 38",
     barParagraphs: [
       "Die Heimkneipe ist ein separater Raum im Keller des RoKo mit Tresen, Zapfanlage, Kühlschränken und Sitzmöglichkeiten.",
@@ -1283,13 +1299,29 @@ export const en = {
       "The student dormitory at Robert-Koch-Str. 38, usually called RoKo, is home to students from many study programs, countries, and cultures.",
       "The basement bar is the place for birthdays, flat parties, student society nights, and everything that makes dorm life lively.",
     ],
+    vibeKicker: "The house",
     vibeTitle: "What makes RoKo special",
+    vibeIntro:
+      "Four things that set a dorm with its own basement bar apart from an ordinary flat.",
     vibePoints: [
-      "A large high-rise full of students, short distances, and plenty of stories.",
-      "Its own basement bar in the dorm: after the party, the way home is pleasantly short.",
-      "Committed residents and bar tutors take care of the bar, equipment, and rules.",
-      "Rental income helps cover dorm expenses and shared community projects.",
+      {
+        title: "A whole building",
+        text: "A large high-rise full of students, short distances, and plenty of stories.",
+      },
+      {
+        title: "A short walk home",
+        text: "Its own basement bar in the dorm: after the party, the way home is pleasantly short.",
+      },
+      {
+        title: "Run by students",
+        text: "Committed residents and bar tutors take care of the bar, equipment, and rules.",
+      },
+      {
+        title: "It flows back",
+        text: "Rental income helps cover dorm expenses and shared community projects.",
+      },
     ],
+    barKicker: "The room",
     barTitle: "The RoKo 38 basement bar",
     barParagraphs: [
       "The student bar is a separate room in RoKo's basement with a counter, tap system, fridges, and seating.",
