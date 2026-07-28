@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Per-booking status pages live at /booking/<token> and are private to one guest.
+# The pages already send noindex,nofollow; this keeps well-behaved crawlers from
+# requesting them at all. Note /booking itself (the public form) stays allowed.
+Disallow: /booking/
+Disallow: /admin
+
+Sitemap: https://www.rokobar.de/sitemap.xml

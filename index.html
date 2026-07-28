@@ -4,7 +4,97 @@
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/roko-favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RoKo Bar Goettingen</title>
+
+    <!--
+      These tags are static on purpose. react-helmet-async sets <title>, the
+      description and the canonical per route at runtime, and Googlebot executes
+      that fine — but WhatsApp, Instagram, Signal, Telegram, Facebook and
+      LinkedIn never run JavaScript. Without og:/twitter: tags in the served
+      HTML, sharing a rokobar.de link produces a preview with no image and no
+      text, which is how most people actually encounter this site.
+
+      Deliberately NOT set here:
+        - canonical: Helmet owns it per route. A static one would tell a non-JS
+          crawler that every URL canonicalises to the homepage.
+        - og:url: omitting it makes crawlers fall back to the URL they fetched,
+          so a shared /directions link is attributed to /directions.
+        - meta name="description": Helmet APPENDS rather than replacing a
+          pre-existing description, so having one here produced two per page
+          with the homepage text winning. og:description below covers the
+          crawlers that cannot run JS; Google runs JS and gets the per-route
+          one. Do not add a static description back.
+    -->
+    <title>RoKo Bar Göttingen – Heimkneipe im Studentenwohnheim mieten</title>
+    <meta name="theme-color" content="#A8392E" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RoKo Bar" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta
+      property="og:title"
+      content="RoKo Bar Göttingen – Heimkneipe im Studentenwohnheim mieten"
+    />
+    <meta
+      property="og:description"
+      content="Freitags und samstags für private Feiern mietbar. 75 € für Bewohner:innen, 100 € extern, 200 € Kaution bar bei der Schlüsselübergabe."
+    />
+    <meta property="og:image" content="https://www.rokobar.de/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Die Tanzfläche der RoKo-Bar im violett-blauen Licht der Bar-Beleuchtung"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="RoKo Bar Göttingen – Heimkneipe im Studentenwohnheim mieten"
+    />
+    <meta
+      name="twitter:description"
+      content="Freitags und samstags für private Feiern mietbar. 75 € für Bewohner:innen, 100 € extern, 200 € Kaution."
+    />
+    <meta name="twitter:image" content="https://www.rokobar.de/og-image.jpg" />
+
+    <!--
+      Place, not LocalBusiness. LocalBusiness would assert a commercial
+      operation in machine-readable form, which contradicts the Impressum's
+      statement that no trade is carried on here. Place still gives search
+      engines the name, address and coordinates for local results.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": "RoKo-Bar",
+        "alternateName": "RoKo Club Bar",
+        "description": "Heimkneipe im Studentenwohnheim Robert-Koch-Straße 38 in Göttingen, freitags und samstags für private Feiern mietbar.",
+        "url": "https://www.rokobar.de/",
+        "image": "https://www.rokobar.de/og-image.jpg",
+        "email": "heimkneipe@roko-goettingen.de",
+        "publicAccess": false,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Robert-Koch-Straße 38",
+          "postalCode": "37075",
+          "addressLocality": "Göttingen",
+          "addressRegion": "Niedersachsen",
+          "addressCountry": "DE"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 51.549126,
+          "longitude": 9.939261
+        },
+        "containedInPlace": {
+          "@type": "Place",
+          "name": "Studentenwohnheim Robert-Koch-Straße 38"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
