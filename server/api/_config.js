@@ -11,6 +11,15 @@ export const DEPOSIT_AMOUNT = 200;
 // account email as the guest email if the acknowledgement should actually arrive.
 export const EMAIL_FROM =
   process.env.EMAIL_FROM || "RoKo Bar <noreply@rokobar.de>";
+
+// Every guest mail is sent From: noreply@rokobar.de, and rokobar.de has no MX
+// record — so a guest who simply hits Reply was writing into a void. Point
+// replies at the mailbox that is actually read (roko-goettingen.de does have
+// MX). Without this, silence from a guest is indistinguishable from a guest who
+// answered and never reached us.
+export const EMAIL_REPLY_TO =
+  envValue("EMAIL_REPLY_TO") || "heimkneipe@roko-goettingen.de";
+
 export const TUTOR_NOTIFY_EMAIL = "rokobar.goettingen@outlook.com";
 function envValue(name) {
   return (process.env[name] || "").trim();

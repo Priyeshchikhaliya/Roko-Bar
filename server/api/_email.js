@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 import { approvalEmailAttachments } from "./_contracts.js";
-import { EMAIL_FROM } from "./_config.js";
+import { EMAIL_FROM, EMAIL_REPLY_TO } from "./_config.js";
 import { approvalEmail, tutorIntroEmail } from "./_email-content.js";
 import { privateBookingUrl } from "./_links.js";
 
@@ -125,6 +125,7 @@ function formatDeadline(value, lang) {
 export async function sendEmail({ to, subject, html, attachments }) {
   const result = await getResend().emails.send({
     from: EMAIL_FROM,
+    replyTo: EMAIL_REPLY_TO,
     to,
     subject,
     html,
