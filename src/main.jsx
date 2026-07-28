@@ -3,7 +3,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { Analytics } from "@vercel/analytics/react";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
 import App from "./App.jsx";
 // The opsz cut carries Fraunces' optical-size axis alongside weight (+30 kB on
@@ -17,9 +16,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HelmetProvider>
       <LanguageProvider>
+        {/* Deliberately no analytics script of any kind: /datenschutz promises
+            no tracking and no visitor counting, and that promise is only worth
+            something if nothing here quietly contradicts it. */}
         <BrowserRouter>
           <App />
-          <Analytics />
         </BrowserRouter>
       </LanguageProvider>
     </HelmetProvider>

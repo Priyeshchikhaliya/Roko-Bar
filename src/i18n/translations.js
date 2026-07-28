@@ -11,6 +11,11 @@ export const de = {
       line2: "37075 Göttingen, Deutschland",
     },
     email: "heimkneipe@roko-goettingen.de",
+    // Named once, read by both the Impressum and the privacy policy. § 5 DDG
+    // wants a real person here, so this must not stay a placeholder.
+    operatorName:
+      "Heimselbstverwaltung des Studentenwohnheims Robert-Koch-Straße 38",
+    responsiblePerson: "Priyeshkumar Chikhaliya",
     languageLabels: {
       de: "DE",
       en: "EN",
@@ -131,8 +136,10 @@ export const de = {
     contracts: {
       residentsHref: "/contracts/roko-bar-mietvertrag-75.pdf",
       externalHref: "/contracts/roko-bar-mietvertrag-100.pdf",
+      houseOrderHref: "/contracts/roko-bar-hausordnung.pdf",
       residentsLabel: "Mietvertrag für berechtigte Bewohner:innen (75 €)",
       externalLabel: "Mietvertrag extern (100 €)",
+      houseOrderLabel: "Hausordnung (PDF)",
     },
   },
   nav: {
@@ -527,11 +534,63 @@ export const de = {
       "Ehemalige Bar-Tutor:innen, legendäre Abende und Erinnerungen aus der RoKo-Bar.",
     title: "Ehemalige, Legenden, Kellergeschichten",
     intro:
-      "Viele Hände haben diese Bar am Laufen gehalten. Hier soll später Platz sein für frühere Tutor:innen, alte Fotos und die Partys, über die man beim Aufräumen noch spricht.",
+      "Diese Bar ist älter als jede Generation, die sie gerade betreibt. Vor uns haben andere die Theke geschrubbt, die Anlage geflickt und Abende gebaut, von denen bis heute erzählt wird. Diese Seite gehört ihnen.",
+    statusKicker: "Stand",
+    statusTitle: "Ein Archiv, das noch keins ist",
+    statusParagraphs: [
+      "Ehrlich gesagt: Wir haben fast nichts. Ein paar Namen an der Wand, zwei Ordner im Keller, Fotos auf Telefonen, die längst kaputt sind. Über Jahrzehnte hat niemand mitgeschrieben, weil alle mit dem Feiern beschäftigt waren.",
+      "Deshalb steht hier noch keine Galerie. Statt eine Chronik zu erfinden, die nach nichts aussieht, sammeln wir erst – und veröffentlichen dann, wenn genug zusammengekommen ist.",
+    ],
+    collectKicker: "Gesucht",
+    collectTitle: "Was wir sammeln",
+    collect: [
+      {
+        title: "Namen & Jahre",
+        text: "Wer hat wann hinter der Theke gestanden? Auch ungefähre Zeiträume helfen – eine Liste entsteht aus Überschneidungen.",
+      },
+      {
+        title: "Fotos",
+        text: "Der Raum in früheren Zuständen, Umbauten, alte Preistafeln, Menschen. Unscharf und verwackelt ist genau richtig.",
+      },
+      {
+        title: "Plakate & Flyer",
+        text: "Handgemalte Ankündigungen, kopierte Zettel, Motti vergangener Semesterpartys. Davon lebt so ein Archiv.",
+      },
+      {
+        title: "Geschichten",
+        text: "Der Abend, an dem die Sicherung rausflog. Die Anlage, die keiner mehr reparieren konnte. Drei Sätze reichen.",
+      },
+    ],
+    howKicker: "So geht's",
+    howTitle: "Beitragen in drei Schritten",
+    howSteps: [
+      {
+        heading: "Schreib uns eine E-Mail",
+        text: "An die Adresse unten, mit allem im Anhang, was du hast. Kein Formular, keine Anmeldung, keine Mindestmenge.",
+      },
+      {
+        heading: "Sag dazu, was du weißt",
+        text: "Jahr oder Semester, wer zu sehen ist, was passiert ist. Unsicher ist besser als weggelassen – wir markieren es als unsicher.",
+      },
+      {
+        heading: "Wir melden uns zurück",
+        text: "Wir sortieren ein, fragen bei Lücken nach und zeigen dir, wie dein Beitrag aussehen würde, bevor er online geht.",
+      },
+    ],
+    consentKicker: "Fair bleiben",
+    consentTitle: "Nichts geht ohne Zustimmung online",
+    consentIntro:
+      "Auf alten Fotos sind echte Menschen, die nie damit gerechnet haben, im Netz zu landen. Deshalb halten wir uns an ein paar feste Regeln:",
+    consentPoints: [
+      "Namen und erkennbare Gesichter veröffentlichen wir nur mit ausdrücklicher Zustimmung der jeweiligen Person – nicht nur der Person, die das Foto schickt.",
+      "Du kannst deine Zustimmung jederzeit zurückziehen, ohne Begründung. Wir nehmen den Beitrag dann zeitnah wieder herunter.",
+      "Auf Wunsch nennen wir nur den Vornamen, nur den Jahrgang oder nichts davon.",
+      "Bis zur Veröffentlichung liegt zugeschicktes Material bei uns und wird nicht weitergegeben.",
+    ],
     callKicker: "Mitmachen",
     callTitle: "Du hast hinter dieser Theke gestanden?",
     callText:
-      "Diese Seite entsteht gerade. Wir sammeln Fotos, Namen, Jahrgänge und die Geschichten, über die man beim Aufräumen noch redet. Wenn du etwas beisteuern möchtest, schreib uns – wir bauen die Galerie nach und nach auf.",
+      "Dann fehlt hier gerade dein Teil. Schick, was du hast – auch wenn es nur ein Foto und ein halb vergessenes Jahr ist.",
     callCTA: "Erinnerungen schicken",
   },
   directions: {
@@ -586,6 +645,11 @@ export const de = {
     ],
     gmapsLabel: "Google Maps (Routenplanung)",
     mapTitle: "Karte: Studentenwohnheim RoKo 38 in Göttingen",
+    mapConsentTitle: "Karte laden?",
+    mapConsentText:
+      "Die Karte kommt von OpenStreetMap. Beim Laden wird deine IP-Adresse dorthin übertragen – deshalb fragen wir vorher.",
+    mapConsentCTA: "Karte laden",
+    mapConsentPrivacy: "Was dabei passiert",
     helpTitle: "Etwas unklar?",
     helpText:
       "Wenn ihr den Eingang nicht findet oder etwas an der Beschreibung nicht stimmt, schreibt uns kurz – wir bessern es nach.",
@@ -669,6 +733,11 @@ export const de = {
         type: "internal",
       },
       {
+        label: "Hausordnung (PDF)",
+        href: "/contracts/roko-bar-hausordnung.pdf",
+        type: "external",
+      },
+      {
         label: "Mietvertrag Bewohner:innen (75 €)",
         href: "/contracts/roko-bar-mietvertrag-75.pdf",
         type: "external",
@@ -679,6 +748,11 @@ export const de = {
         type: "external",
       },
     ],
+    contactKicker: "Im Zweifel",
+    contactTitle: "Lieber vorher fragen als hinterher gutmachen",
+    contactText:
+      "Etwas ist unklar, ihr habt einen Sonderfall, oder während der Veranstaltung geht etwas kaputt? Meldet euch – ein früher Hinweis kostet euch nichts, ein verschwiegener Schaden die Kaution.",
+    contactCTA: "Bar-Team schreiben",
   },
   terms: {
     pageTitle: "Mietbedingungen RoKo-Bar – RoKo Bar Göttingen",
@@ -720,6 +794,15 @@ export const de = {
         ],
       },
       {
+        heading: "Absagen & Verschieben",
+        points: [
+          "Ihr könnt jederzeit vor der Veranstaltung absagen. Es gibt keine Stornogebühr und keine Frist – sagt aber bitte so früh ab, wie es geht, damit die Nacht wieder freigegeben und neu gebucht werden kann.",
+          "Bereits überwiesene Miete erstatten wir vollständig zurück. Die Kaution ist nie betroffen, weil sie erst bei der Schlüsselübergabe bar bezahlt wird.",
+          "Wollt ihr das Datum verschieben, schreibt uns. Verschoben ist es erst, wenn wir die neue Nacht bestätigt haben.",
+          "Wenn wir absagen müssen – etwa wegen eines Schadens im Haus – erstatten wir die Miete vollständig und sagen es so früh, wie wir es wissen.",
+        ],
+      },
+      {
         heading: "Reinigung & Rückgabe",
         points: [
           "Die Bar muss gereinigt, aufgeräumt und im übernommenen Zustand zurückgegeben werden.",
@@ -750,17 +833,18 @@ export const de = {
         ],
       },
     ],
-    contractsTitle: "Verträge herunterladen",
+    contractsTitle: "Verträge vorab lesen",
     contractsIntro:
-      "Die endgültige Auswahl und der Upload passieren später über euren privaten Buchungslink. Diese Platzhalter-Links zeigen schon die vorgesehenen Vertragsdateien.",
-    legalDetailsTitle: "Vollständige rechtliche Bedingungen",
-    legalDetailsSummary: "Vollständige rechtliche Bedingungen anzeigen",
+      "Hier stehen beide Mietverträge und die Hausordnung des Wohnheims zum Herunterladen. Welchen Vertrag ihr braucht, hängt von eurem Wohnstatus ab. Auswählen, unterschreiben und hochladen tut ihr ihn später über euren privaten Buchungslink – hier könnt ihr ihn nur schon einmal in Ruhe durchlesen.",
+    legalDetailsTitle: "Was im Mietvertrag steht",
+    legalDetailsSummary: "Verhältnis zu Vertrag und Hausordnung",
     legalDetailsIntro:
-      "Dieser Abschnitt ist für die ausführliche Vertragsfassung vorgesehen. Bis die PDFs final eingepflegt sind, gelten die unterschriebenen Mietverträge und diese Zusammenfassung als Orientierung.",
+      "Diese Seite ist eine Zusammenfassung in Alltagssprache. Verbindlich ist immer der unterschriebene Mietvertrag – die vollständige Fassung findet ihr in den PDFs oben.",
     legalDetailsPoints: [
-      "Der Mietvertrag regelt die verantwortliche Person, Mietdauer, Zahlung, Kaution, Reinigung, Haftung, Hausrecht und Folgen von Verstößen.",
-      "Die Hausregeln sind Bestandteil der Nutzung und müssen von allen Gästen eingehalten werden.",
-      "Vor dem Launch müssen die finalen Vertrags-PDFs geprüft und an dieser Stelle verlinkt werden.",
+      "Der Mietvertrag regelt die verantwortliche Person, Mietzeitraum, Zahlung, Kaution, Reinigung, Haftung für Schäden, Hausrecht und die Folgen von Verstößen.",
+      "Die Hausordnung des Wohnheims und die Hausregeln der Bar sind Bestandteil der Nutzung und gelten für alle Gäste, die ihr mitbringt.",
+      "Weicht diese Zusammenfassung im Einzelfall vom unterschriebenen Vertrag ab, gilt der Vertrag.",
+      "Wie wir mit euren Angaben aus der Buchung umgehen, steht in der Datenschutzerklärung.",
     ],
     bookingText: "Zur Anfrage geht es über die Buchungsseite.",
     bookingLink: "Zur Buchungsseite",
@@ -816,62 +900,232 @@ export const de = {
   impressum: {
     pageTitle: "Impressum – RoKo Bar Göttingen",
     seoDescription:
-      "Impressum der RoKo-Bar im Studentenwohnheim Robert-Koch-Str. 38, Göttingen. Ansprechpartner und Hinweise zum nicht-kommerziellen Studentenprojekt.",
+      "Impressum der RoKo-Bar im Studentenwohnheim Robert-Koch-Str. 38, Göttingen: Anbieter, verantwortliche Person, Kontakt und Haftungshinweise.",
+    kicker: "Angaben nach § 5 DDG",
     title: "Impressum",
-    operator:
-      "Betreiber: Studentenwohnheim Robert-Koch-Straße 38, 37075 Göttingen",
-    managedBy: "Verantwortlich: [PLACEHOLDER — Name verantwortliche Person]",
-    emailLabel: "E-Mail",
     disclaimer:
-      "Hinweis: Die RoKo-Bar ist ein nicht-kommerzielles Studentenprojekt und keine geschäftsmäßige Website. Inhalte dienen ausschließlich der Information zu Vermietung und Nutzung der Bar.",
+      "Die RoKo-Bar ist die Heimkneipe des Studentenwohnheims Robert-Koch-Straße 38. Sie wird von Bewohner:innen ehrenamtlich betrieben – nicht gewinnorientiert, ohne Eintritt und ohne Verkauf. Diese Seite informiert über die Vermietung der Bar, sie ist kein Shop.",
+    identityKicker: "Anbieter",
+    identityTitle: "Wer diese Seite betreibt",
+    identityLabels: {
+      operator: "Anbieter",
+      responsible: "Verantwortlich für den Inhalt",
+      address: "Anschrift",
+      contact: "Kontakt",
+    },
+    contactNote:
+      "Die Bar wird vom Team der Heimselbstverwaltung gemeinsam betrieben. Oben genannt ist die Person, die diese Website betreut – für Fragen zur Bar antwortet das Team unter derselben Adresse. E-Mail ist der schnellste Weg zu uns; wir sind ein Studierendenteam ohne Büro und antworten nicht immer am selben Tag.",
+    noteKicker: "Hinweis",
+    noteTitle: "Kein Angebot des Studentenwerks",
+    noteParagraphs: [
+      "Das Wohnheim gehört dem Studentenwerk Göttingen. Die Bar im Keller wird davon unabhängig von der Heimselbstverwaltung betrieben. Anfragen zur Bar, zu Buchungen oder zu dieser Website beantworten wir – nicht das Studentenwerk.",
+      "Umsatzsteuer-Identifikationsnummer, Handelsregistereintrag und Aufsichtsbehörde gibt es nicht, weil hier kein Gewerbe betrieben wird. Miete und Kaution decken Betrieb und Instandhaltung der Räume.",
+    ],
+    legalKicker: "Haftung & Rechte",
+    legalTitle: "Das Kleingedruckte",
+    legalSections: [
+      {
+        heading: "Haftung für Inhalte",
+        points: [
+          "Wir erstellen die Inhalte dieser Seite mit Sorgfalt, können aber keine Gewähr für Richtigkeit, Vollständigkeit und Aktualität übernehmen.",
+          "Preise, Belegungen und Abläufe können sich ändern. Verbindlich ist immer der unterschriebene Mietvertrag, nicht die Darstellung auf dieser Seite.",
+          "Wenn dir ein Fehler auffällt, schreib uns kurz – wir korrigieren ihn.",
+        ],
+      },
+      {
+        heading: "Haftung für Links",
+        points: [
+          "Diese Seite verlinkt auf externe Angebote, etwa Fahrplaninformationen und Kartendienste. Für deren Inhalte sind ausschließlich die jeweiligen Anbieter verantwortlich.",
+          "Zum Zeitpunkt der Verlinkung waren keine rechtswidrigen Inhalte erkennbar. Eine dauerhafte inhaltliche Kontrolle fremder Seiten ist ohne konkreten Anlass nicht zumutbar.",
+          "Werden uns Rechtsverstöße bekannt, entfernen wir den Link.",
+        ],
+      },
+      {
+        heading: "Urheberrecht & Bildrechte",
+        points: [
+          "Die Inhalte dieser Seite sind urheberrechtlich geschützt. Nutzung außerhalb dieser Website nur mit unserer Zustimmung.",
+          "Auf den Porträts der Bar-Tutor:innen sind echte Personen zu sehen, die der Veröffentlichung zugestimmt haben. Wer seine Zustimmung zurückzieht, wird zeitnah entfernt.",
+          "Sollte auf dieser Seite trotz Prüfung Bildmaterial Dritter verwendet worden sein, sagt uns Bescheid – wir ergänzen die Quelle oder nehmen das Bild heraus.",
+          "Die Karte auf der Anfahrtsseite stammt von OpenStreetMap und steht unter der Open Database License der OpenStreetMap-Mitwirkenden.",
+        ],
+      },
+      {
+        heading: "Streitbeilegung",
+        points: [
+          "Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+          "Sprich uns bei Problemen zuerst direkt an – bei einer Heimkneipe lässt sich fast alles im Gespräch klären.",
+        ],
+      },
+    ],
+    privacyText:
+      "Wie wir mit deinen Daten umgehen, steht in der Datenschutzerklärung.",
+    privacyLink: "Zur Datenschutzerklärung",
   },
   datenschutz: {
     pageTitle: "Datenschutzerklärung – RoKo Bar Göttingen",
     seoDescription:
-      "Datenschutz für die RoKo-Bar: keine Cookies oder Tracking, Buchungsanfragen nur zur Bearbeitung, Spracheinstellung in localStorage.",
-    title: "Datenschutzerklärung",
-    lastUpdated: "Stand: 12.01.2025",
+      "Datenschutzerklärung der RoKo-Bar: keine Cookies, kein Tracking, keine Analyse. Buchungsdaten nur zur Vermietung, Karte erst nach Klick.",
+    // Soft hyphens at the compound seams (Daten-schutz-erklärung). This word is
+    // wider than a 320 px phone at the display size, and a soft hyphen breaks it
+    // with a real dash in every browser — `hyphens: auto` needs a German
+    // dictionary that headless and some mobile builds do not ship. Only the h1
+    // reads this; the document title uses `pageTitle` above.
+    title: "Daten­schutz­erklärung",
+    lastUpdated: "Stand: 28. Juli 2026",
     intro:
-      "Wir halten es simpel: Wir verarbeiten nur die Daten, die ihr uns zur Bearbeitung eurer Buchungsanfragen sendet. Es gibt keine Tracking-Cookies oder Analytics.",
+      "Kurz gesagt: Diese Seite setzt keine Cookies, zählt keine Besucher:innen und lädt nichts von Dritten, ohne dass du es anstößt. Personenbezogene Daten verarbeiten wir nur, wenn du uns eine Buchungsanfrage schickst – und nur, um sie zu bearbeiten.",
+    summaryKicker: "Kurz gefasst",
+    summary: [
+      {
+        title: "Keine Cookies",
+        text: "Diese Seite setzt keine Cookies – auch keine „technisch notwendigen“. Es gibt daher keinen Cookie-Banner.",
+      },
+      {
+        title: "Keine Analyse",
+        text: "Kein Analytics, keine Reichweitenmessung, keine Werbenetzwerke, keine Profile. Wir wissen nicht, wer hier war.",
+      },
+      {
+        title: "Nur Buchungsdaten",
+        text: "Wir verarbeiten Namen und Kontaktdaten nur, wenn du eine Anfrage stellst – zur Vermietung, nicht für Newsletter.",
+      },
+      {
+        title: "Karte erst nach Klick",
+        text: "Die Karte auf der Anfahrtsseite lädt erst, wenn du sie anforderst. Vorher geht keine Anfrage nach außen.",
+      },
+    ],
     sections: [
       {
         heading: "Verantwortliche Stelle",
         points: [
-          "Studentenwohnheim RoKo 38, Robert-Koch-Straße 38, 37075 Göttingen.",
-          "E-Mail: heimkneipe@roko-goettingen.de",
+          "Verantwortlich im Sinne der DSGVO ist die Heimselbstverwaltung des Studentenwohnheims Robert-Koch-Straße 38, 37075 Göttingen.",
+          "Kontakt in Datenschutzfragen: heimkneipe@roko-goettingen.de",
+          "Eine Datenschutzbeauftragte oder einen Datenschutzbeauftragten müssen wir nicht benennen: mit der Verarbeitung sind bei uns deutlich weniger als 20 Personen befasst (§ 38 BDSG).",
         ],
       },
       {
-        heading: "Server-Logs",
+        heading: "Rechtsgrundlagen",
         points: [
-          "Der Hosting-Anbieter Vercel speichert technisch notwendige Server-Logs (IP-Adresse, Timestamp, User-Agent), um den Betrieb zu gewährleisten.",
-          "Wir werten diese Logs nicht zu Marketing- oder Tracking-Zwecken aus.",
+          "Buchungsanfragen, Vertrag und Abwicklung: Art. 6 Abs. 1 lit. b DSGVO – die Verarbeitung ist für die Anbahnung und Erfüllung des Mietvertrags erforderlich.",
+          "Technischer Betrieb, Server-Logs und Schutz vor Missbrauch: Art. 6 Abs. 1 lit. f DSGVO – unser berechtigtes Interesse an einer funktionierenden, nicht überlasteten Seite.",
+          "Nachladen der Karte: Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG – nur nach deinem Klick, also mit deiner Einwilligung.",
+          "Veröffentlichung von Porträts und Alumni-Beiträgen: Art. 6 Abs. 1 lit. a DSGVO – nur mit ausdrücklicher Zustimmung, jederzeit widerrufbar.",
         ],
       },
       {
-        heading: "Kontakt & Buchungen",
+        heading: "Hosting & Server-Logs",
         points: [
-          "Wir verarbeiten nur die Daten, die ihr uns sendet (z. B. Name, Kontaktdaten, gewünschtes Datum), um eure Buchungsanfrage zu beantworten.",
-          "Die Daten werden ausschließlich zur Organisation von Mietvertrag, Schlüsselübergabe und Rückfragen genutzt.",
-          "Speicherdauer: solange es für Rückfragen zur Buchung nötig ist; auf Wunsch löschen wir die Korrespondenz, sofern keine gesetzlichen Pflichten entgegenstehen.",
+          "Die Seite wird von Vercel Inc. (USA) betrieben. Beim Aufruf fallen technisch notwendige Log-Daten an: IP-Adresse, Zeitpunkt, angefragte Adresse, Referrer, User-Agent-Kennung.",
+          "Diese Logs dienen ausschließlich Betrieb, Fehlersuche und Abwehr von Angriffen. Wir führen sie nicht mit anderen Daten zusammen und werten sie nicht statistisch aus.",
+          "Mit Vercel besteht ein Auftragsverarbeitungsvertrag nach Art. 28 DSGVO. Für die Übermittlung in die USA gelten die Standardvertragsklauseln der EU-Kommission.",
+          "Die Auslieferung erfolgt über europäische Standorte; Zugriff aus den USA im Rahmen von Wartung und Support lässt sich nicht vollständig ausschließen.",
         ],
       },
       {
-        heading: "Cookies & localStorage",
+        heading: "Buchungsanfragen",
         points: [
-          "Keine Cookies, kein Google Analytics, keine Marketing-Tools.",
-          "Wir speichern nur eure Spracheinstellung (\"de\" oder \"en\") im Browser (localStorage, Schlüssel: \"roko-language\"), damit die Seite beim nächsten Besuch in eurer Sprache lädt.",
-          "Ihr könnt den Eintrag jederzeit über eure Browser-Einstellungen löschen.",
+          "Wenn du das Buchungsformular abschickst, verarbeiten wir: gewünschte Nacht, Name, E-Mail-Adresse, Telefonnummer, Anschrift, Wohnstatus, Gästezahl, geplante Zahlungsart, deine Anmerkungen und die gewählte Sprache.",
+          "Anschrift und Wohnstatus brauchen wir, weil sie den Mietvertrag und den Tarif bestimmen. Telefonnummer, weil wir dich am Veranstaltungsabend im Notfall erreichen müssen.",
+          "Diese Angaben sehen ausschließlich die Bar-Tutor:innen, die Buchungen verwalten. Sie werden nicht an Dritte weitergegeben und nicht für Werbung genutzt.",
+          "Nach dem Absenden bekommst du eine Bestätigungs-E-Mail; wir erhalten parallel eine Benachrichtigung mit den Angaben.",
         ],
       },
       {
-        heading: "Eure Rechte",
+        heading: "Verträge & Zahlungsnachweise",
         points: [
-          "Ihr könnt Auskunft oder Löschung eurer Daten verlangen, soweit keine Aufbewahrungspflichten entgegenstehen.",
-          "Bei Fragen: heimkneipe@roko-goettingen.de",
+          "Lädst du einen unterschriebenen Mietvertrag oder einen Zahlungsnachweis hoch, liegen diese Dateien in einem privaten, nicht öffentlichen Speicher.",
+          "Sie sind nie über eine feste Adresse erreichbar. Der Abruf läuft immer über unseren Server und einen kurzlebigen, signierten Link.",
+          "Der gegengezeichnete Vertrag wird ausschließlich über deinen persönlichen Buchungslink freigegeben.",
+        ],
+      },
+      {
+        heading: "Datenbank & E-Mail-Versand",
+        points: [
+          "Buchungen und hochgeladene Dateien liegen bei Supabase in der EU – Region Irland (eu-west-1). Anbieter ist Supabase, Inc. (USA); ein Auftragsverarbeitungsvertrag nach Art. 28 DSGVO mit Standardvertragsklauseln liegt vor. Ein Zugriff aus den USA im Rahmen von Wartung und Support lässt sich nicht vollständig ausschließen.",
+          "Transaktionale E-Mails – Bestätigung, Zusage, Vertragsfreigabe – versendet Resend, ebenfalls über Server in der EU (Irland). Auch hier besteht ein Auftragsverarbeitungsvertrag.",
+          "Es gibt keinen Newsletter und keine Werbemails. Du erhältst nur E-Mails, die zu deiner eigenen Buchung gehören.",
+        ],
+      },
+      {
+        heading: "Speicherdauer",
+        points: [
+          "Abgesagte und abgelehnte Anfragen löschen wir, sobald sie für Rückfragen nicht mehr gebraucht werden – in der Regel nach wenigen Wochen.",
+          "Bestätigte Buchungen bewahren wir bis zum Ablauf möglicher Ansprüche aus Kaution, Reinigung oder Schäden auf, längstens drei Jahre nach der Veranstaltung (§ 195 BGB).",
+          "Server-Logs bei Vercel werden nach kurzer Zeit automatisch gelöscht; Zähler der Missbrauchsbremse laufen innerhalb von Minuten ab.",
+          "Auf Wunsch löschen wir früher, sofern keine offenen Ansprüche entgegenstehen.",
+        ],
+      },
+      {
+        heading: "Karte auf der Anfahrtsseite",
+        points: [
+          "Die Karte kommt von OpenStreetMap und wird nicht automatisch geladen. Du siehst zuerst nur einen Platzhalter mit der Adresse.",
+          "Erst wenn du auf „Karte laden“ klickst, wird eine Verbindung zur OpenStreetMap Foundation aufgebaut und deine IP-Adresse dorthin übertragen. Vorher passiert nichts.",
+          "Die OpenStreetMap Foundation sitzt im Vereinigten Königreich, für das ein Angemessenheitsbeschluss der EU-Kommission vorliegt.",
+          "Deine Einwilligung gilt nur für den aktuellen Seitenaufruf. Lädst du die Seite neu, ist die Karte wieder gesperrt.",
+        ],
+      },
+      {
+        heading: "Links nach draußen",
+        points: [
+          "Der Routenplaner-Link führt zu Google Maps. Erst wenn du ihn anklickst, erreichen Daten Google – dann gilt die Datenschutzerklärung von Google.",
+          "Die Mietverträge und die Hausordnung liegen als PDF auf unserem eigenen Server. Beim Herunterladen wird nichts an Dritte übermittelt.",
+        ],
+      },
+      {
+        heading: "Speicherung im Browser",
+        points: [
+          "Wir speichern deine Sprachwahl („de“ oder „en“) lokal in deinem Browser (localStorage, Schlüssel „roko-language“), damit die Seite beim nächsten Besuch in deiner Sprache öffnet.",
+          "Diese Angabe verlässt deinen Rechner nicht und ist für die gewünschte Funktion erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG). Du kannst sie über die Browser-Einstellungen jederzeit löschen.",
+          "Der interne Verwaltungsbereich für Bar-Tutor:innen legt zusätzlich eine Sitzungskennung ab, die beim Schließen des Browsers verfällt. Für Gäste ist das ohne Bedeutung.",
+        ],
+      },
+      {
+        heading: "Sicherheit",
+        points: [
+          "Der Abruf erfolgt ausschließlich verschlüsselt über HTTPS.",
+          "Öffentliche Schnittstellen sind gegen Massenanfragen gebremst. Dazu wird ein Zähler zur anfragenden IP-Adresse für wenige Minuten gespeichert.",
+          "Buchungsdaten sind in der Datenbank gegen direkten Zugriff von außen gesperrt; alle Zugriffe laufen über unseren Server.",
+        ],
+      },
+      {
+        heading: "Automatisierte Entscheidungen",
+        points: [
+          "Es gibt keine automatisierte Entscheidungsfindung und kein Profiling. Über jede Anfrage entscheidet ein Mensch aus dem Bar-Team.",
+        ],
+      },
+      {
+        heading: "Deine Rechte",
+        points: [
+          "Auskunft über die zu dir gespeicherten Daten (Art. 15 DSGVO).",
+          "Berichtigung falscher und Vervollständigung unvollständiger Daten (Art. 16 DSGVO).",
+          "Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO), soweit keine Ansprüche oder Pflichten entgegenstehen.",
+          "Datenübertragbarkeit (Art. 20 DSGVO) und Widerspruch gegen Verarbeitungen auf Grundlage berechtigter Interessen (Art. 21 DSGVO).",
+          "Widerruf einer Einwilligung jederzeit und ohne Angabe von Gründen (Art. 7 Abs. 3 DSGVO); die Verarbeitung bis zum Widerruf bleibt rechtmäßig.",
+          "Beschwerde bei einer Aufsichtsbehörde (Art. 77 DSGVO) – die für uns zuständige Stelle steht unten.",
+        ],
+      },
+      {
+        heading: "Änderungen",
+        points: [
+          "Wenn sich die Technik der Seite oder die eingesetzten Dienste ändern, passen wir diese Erklärung an. Das Datum oben zeigt den aktuellen Stand.",
+          "Rückwirkende Verschlechterungen gibt es nicht: Daten, die du uns unter einer früheren Fassung anvertraut hast, verwenden wir nicht für neue Zwecke.",
         ],
       },
     ],
+    authorityKicker: "Aufsichtsbehörde",
+    authorityTitle: "Wenn du dich beschweren willst",
+    authorityText:
+      "Du kannst dich jederzeit direkt an die zuständige Aufsichtsbehörde wenden – ohne vorher mit uns gesprochen zu haben. Wir würden uns über den kurzen Weg trotzdem freuen.",
+    authority: {
+      name: "Die Landesbeauftragte für den Datenschutz Niedersachsen",
+      lines: ["Prinzenstraße 5", "30159 Hannover", "Deutschland"],
+      href: "https://www.lfd.niedersachsen.de",
+      linkLabel: "lfd.niedersachsen.de",
+    },
+    contactKicker: "Fragen",
+    contactTitle: "Frag einfach nach",
+    contactText:
+      "Auskunft, Löschung, Widerruf oder eine Frage zu einem Absatz hier: eine E-Mail genügt. Es braucht kein Formular und keine Begründung.",
+    contactCTA: "Datenschutzanfrage senden",
   },
 };
 
@@ -888,6 +1142,11 @@ export const en = {
       line2: "37075 Göttingen, Germany",
     },
     email: "heimkneipe@roko-goettingen.de",
+    // Kept in German on purpose: this is the legal name of the body that runs
+    // the bar, and § 5 DDG identifies it by that name in any language.
+    operatorName:
+      "Heimselbstverwaltung des Studentenwohnheims Robert-Koch-Straße 38",
+    responsiblePerson: "Priyeshkumar Chikhaliya",
     languageLabels: {
       de: "DE",
       en: "EN",
@@ -1009,8 +1268,10 @@ export const en = {
     contracts: {
       residentsHref: "/contracts/roko-bar-mietvertrag-75.pdf",
       externalHref: "/contracts/roko-bar-mietvertrag-100.pdf",
+      houseOrderHref: "/contracts/roko-bar-hausordnung.pdf",
       residentsLabel: "Rental contract for eligible residents (€75)",
       externalLabel: "External rental contract (€100)",
+      houseOrderLabel: "Dormitory house order (PDF, German)",
     },
   },
   nav: {
@@ -1404,11 +1665,63 @@ export const en = {
       "Former bar tutors, legendary nights, and memories from RoKo Bar.",
     title: "Alumni, legends, basement stories",
     intro:
-      "Many hands have kept this bar running. Later, this page should hold former tutors, old photos, and the parties people still mention while cleaning up.",
+      "This bar is older than whichever generation happens to be running it. Before us, other people scrubbed the counter, patched the PA and built nights that are still talked about. This page belongs to them.",
+    statusKicker: "Status",
+    statusTitle: "An archive that isn't one yet",
+    statusParagraphs: [
+      "Honestly: we have almost nothing. A few names on the wall, two folders in the basement, photos on phones that died years ago. For decades nobody wrote anything down, because everyone was busy having a good time.",
+      "So there is no gallery here yet. Rather than invent a history that looks like nothing, we are collecting first and will publish once enough has come together.",
+    ],
+    collectKicker: "Wanted",
+    collectTitle: "What we're collecting",
+    collect: [
+      {
+        title: "Names & years",
+        text: "Who stood behind the counter, and when? Even rough date ranges help — a list emerges from overlaps.",
+      },
+      {
+        title: "Photos",
+        text: "The room in earlier states, renovations, old price boards, people. Blurry and badly lit is exactly right.",
+      },
+      {
+        title: "Posters & flyers",
+        text: "Hand-painted announcements, photocopied notices, themes of semester parties past. This is what an archive lives on.",
+      },
+      {
+        title: "Stories",
+        text: "The night the fuse blew. The sound system nobody could fix any more. Three sentences are plenty.",
+      },
+    ],
+    howKicker: "How to help",
+    howTitle: "Contributing in three steps",
+    howSteps: [
+      {
+        heading: "Send us an email",
+        text: "To the address below, with whatever you have attached. No form, no account, no minimum.",
+      },
+      {
+        heading: "Tell us what you know",
+        text: "Year or semester, who is in the picture, what happened. Unsure beats left out — we'll label it as unsure.",
+      },
+      {
+        heading: "We come back to you",
+        text: "We sort it in, ask about gaps, and show you how your contribution would look before it goes online.",
+      },
+    ],
+    consentKicker: "Playing fair",
+    consentTitle: "Nothing goes online without consent",
+    consentIntro:
+      "Old photos show real people who never expected to end up on the internet. So we hold ourselves to a few fixed rules:",
+    consentPoints: [
+      "We publish names and recognisable faces only with the explicit consent of each person shown — not just the person who sent the photo.",
+      "You can withdraw your consent at any time, without giving a reason. We take the contribution down promptly.",
+      "On request we'll use only a first name, only the year, or neither.",
+      "Until publication, material you send stays with us and is not passed on.",
+    ],
     callKicker: "Get involved",
     callTitle: "Did you work behind this bar?",
     callText:
-      "This page is still taking shape. We are collecting photos, names, years and the stories people still tell while cleaning up. If you have something to contribute, drop us a line — we are building the gallery piece by piece.",
+      "Then your part is what's missing here. Send what you have — even if it's one photo and a half-forgotten year.",
     callCTA: "Send us your memories",
   },
   directions: {
@@ -1463,6 +1776,11 @@ export const en = {
     ],
     gmapsLabel: "Google Maps (route planner)",
     mapTitle: "Map: RoKo 38 student dormitory in Göttingen",
+    mapConsentTitle: "Load the map?",
+    mapConsentText:
+      "The map comes from OpenStreetMap. Loading it sends your IP address there — so we ask first.",
+    mapConsentCTA: "Load map",
+    mapConsentPrivacy: "What happens then",
     helpTitle: "Something unclear?",
     helpText:
       "If you cannot find the entrance, or something in this description is wrong, drop us a line and we will fix it.",
@@ -1546,6 +1864,11 @@ export const en = {
         type: "internal",
       },
       {
+        label: "House order (PDF, German)",
+        href: "/contracts/roko-bar-hausordnung.pdf",
+        type: "external",
+      },
+      {
         label: "Resident contract (€75)",
         href: "/contracts/roko-bar-mietvertrag-75.pdf",
         type: "external",
@@ -1556,6 +1879,11 @@ export const en = {
         type: "external",
       },
     ],
+    contactKicker: "When in doubt",
+    contactTitle: "Better to ask first than make up for it later",
+    contactText:
+      "Something unclear, a special case, or did something break during your event? Get in touch — telling us early costs you nothing, hiding damage costs you the deposit.",
+    contactCTA: "Message the bar team",
   },
   terms: {
     pageTitle: "Rental terms RoKo Bar – RoKo Bar Göttingen",
@@ -1597,6 +1925,15 @@ export const en = {
         ],
       },
       {
+        heading: "Cancelling & rescheduling",
+        points: [
+          "You can cancel at any time before the event. There is no cancellation fee and no deadline — but please cancel as early as you can, so the night can be released and booked by someone else.",
+          "Rent you have already transferred is refunded in full. The deposit is never affected, because it is only paid in cash at key handover.",
+          "If you want to move the date, write to us. It is only moved once we have confirmed the new night.",
+          "If we have to cancel — for example because of damage in the building — we refund the rent in full and tell you as soon as we know.",
+        ],
+      },
+      {
         heading: "Cleaning & return",
         points: [
           "The bar must be cleaned, tidied, and returned in the condition in which it was handed over.",
@@ -1627,17 +1964,18 @@ export const en = {
         ],
       },
     ],
-    contractsTitle: "Download contracts",
+    contractsTitle: "Read the contracts up front",
     contractsIntro:
-      "The final selection and upload happen later through your private booking link. These placeholder links show the intended contract files.",
-    legalDetailsTitle: "Full legal terms",
-    legalDetailsSummary: "Show full legal terms",
+      "Both rental contracts and the dormitory house order are here to download. Which contract you need depends on your residency status. You select, sign and upload it later through your private booking link — here you can simply read it through first.",
+    legalDetailsTitle: "What the rental contract covers",
+    legalDetailsSummary: "How this relates to the contract and house order",
     legalDetailsIntro:
-      "This section is reserved for the detailed contract text. Until the PDFs are final, the signed rental contracts and this summary serve as guidance.",
+      "This page is a plain-language summary. The binding document is always the signed rental contract — the full text is in the PDFs above. The contracts and the house order are in German only.",
     legalDetailsPoints: [
-      "The rental contract covers the responsible person, rental period, payment, deposit, cleaning, liability, house rights, and consequences of violations.",
-      "The house rules are part of the use of the bar and must be followed by all guests.",
-      "Before launch, the final contract PDFs must be checked and linked here.",
+      "The rental contract covers the responsible person, rental period, payment, deposit, cleaning, liability for damage, house rights, and consequences of violations.",
+      "The dormitory house order and the bar's house rules are part of using the bar and apply to every guest you bring.",
+      "Where this summary differs from the signed contract, the contract applies.",
+      "How we handle the details you submit when booking is set out in our privacy policy.",
     ],
     bookingText: "Requests are made through the booking page.",
     bookingLink: "Go to booking",
@@ -1693,62 +2031,226 @@ export const en = {
   impressum: {
     pageTitle: "Legal notice – RoKo Bar Göttingen",
     seoDescription:
-      "Legal notice for RoKo Bar at the Robert-Koch-Str. 38 dormitory in Göttingen. Contact and notes about the non-commercial student project.",
+      "Legal notice for RoKo Bar at the Robert-Koch-Str. 38 dormitory in Göttingen: provider, responsible person, contact, and liability notices.",
+    kicker: "Information under § 5 DDG",
     title: "Legal notice",
-    operator:
-      "Operator: Studentenwohnheim Robert-Koch-Straße 38, 37075 Göttingen",
-    managedBy: "Responsible person: [PLACEHOLDER — responsible person name]",
-    emailLabel: "Email",
     disclaimer:
-      "Note: RoKo Bar is a non-commercial student project, not a business website. The content only provides information about renting and using the bar.",
+      "RoKo Bar is the house pub of the Robert-Koch-Straße 38 student dormitory. It is run by residents on a voluntary basis — not for profit, with no entry fee and nothing for sale. This site provides information about renting the bar; it is not a shop.",
+    identityKicker: "Provider",
+    identityTitle: "Who runs this site",
+    identityLabels: {
+      operator: "Provider",
+      responsible: "Responsible for content",
+      address: "Address",
+      contact: "Contact",
+    },
+    contactNote:
+      "The bar is run collectively by the residents' self-administration team. The person named above looks after this website — questions about the bar are answered by the team at the same address. Email is the fastest way to reach us; we are a team of students without an office, so we do not always reply the same day.",
+    noteKicker: "Note",
+    noteTitle: "Not a Studentenwerk service",
+    noteParagraphs: [
+      "The dormitory belongs to Studentenwerk Göttingen. The bar in the basement is run independently of it by the residents' self-administration. Questions about the bar, about bookings, or about this website are answered by us — not by the Studentenwerk.",
+      "There is no VAT number, no commercial register entry, and no supervisory authority, because no business is operated here. Rent and deposit cover running and maintaining the rooms.",
+    ],
+    legalKicker: "Liability & rights",
+    legalTitle: "The small print",
+    legalSections: [
+      {
+        heading: "Liability for content",
+        points: [
+          "We write the content of this site carefully, but we cannot guarantee that it is accurate, complete, or up to date.",
+          "Prices, availability, and procedures can change. The binding document is always the signed rental contract, not what this site says.",
+          "If you spot a mistake, drop us a line and we will correct it.",
+        ],
+      },
+      {
+        heading: "Liability for links",
+        points: [
+          "This site links to external services such as transit timetables and map providers. Their content is the sole responsibility of the respective providers.",
+          "No unlawful content was apparent when the links were added. Permanently monitoring third-party sites without concrete cause is not reasonable.",
+          "If we learn of a legal violation, we remove the link.",
+        ],
+      },
+      {
+        heading: "Copyright & image rights",
+        points: [
+          "The content of this site is protected by copyright. Use outside this website requires our consent.",
+          "The tutor portraits show real people who have consented to publication. Anyone who withdraws consent is removed promptly.",
+          "If, despite our checks, third-party image material has been used on this site, let us know — we will credit the source or take the image down.",
+          "The map on the directions page comes from OpenStreetMap and is available under the Open Database License of the OpenStreetMap contributors.",
+        ],
+      },
+      {
+        heading: "Dispute resolution",
+        points: [
+          "We are neither obliged nor willing to take part in dispute resolution proceedings before a consumer arbitration body.",
+          "If there is a problem, talk to us directly first — at a house pub, almost everything can be sorted out in conversation.",
+        ],
+      },
+    ],
+    privacyText: "How we handle your data is set out in the privacy policy.",
+    privacyLink: "Read the privacy policy",
   },
   datenschutz: {
     pageTitle: "Privacy Policy – RoKo Bar Göttingen",
     seoDescription:
-      "Privacy for RoKo Bar: no cookies or tracking, booking requests only for handling rentals, language saved in localStorage.",
+      "RoKo Bar privacy policy: no cookies, no tracking, no analytics. Booking data used only for the rental, map loads only on request.",
     title: "Privacy Policy",
-    lastUpdated: "Last updated: 12 Jan 2025",
+    lastUpdated: "Last updated: 28 July 2026",
     intro:
-      "We keep it simple: we only process the data you send us to handle your booking request. There are no tracking cookies or analytics tools.",
+      "In short: this site sets no cookies, counts no visitors, and loads nothing from third parties unless you ask it to. We process personal data only when you send us a booking request — and only to handle it.",
+    summaryKicker: "In short",
+    summary: [
+      {
+        title: "No cookies",
+        text: "This site sets no cookies at all — not even “strictly necessary” ones. So there is no cookie banner.",
+      },
+      {
+        title: "No analytics",
+        text: "No analytics, no visitor counting, no ad networks, no profiles. We do not know who has been here.",
+      },
+      {
+        title: "Booking data only",
+        text: "We process names and contact details only if you make a request — for the rental, not for a mailing list.",
+      },
+      {
+        title: "Map on request",
+        text: "The map on the directions page loads only when you ask for it. Until then, no request leaves the page.",
+      },
+    ],
     sections: [
       {
         heading: "Controller",
         points: [
-          "Student dormitory RoKo 38, Robert-Koch-Str. 38, 37075 Göttingen, Germany.",
-          "Email: heimkneipe@roko-goettingen.de",
+          "The controller under the GDPR is the residents' self-administration of the Robert-Koch-Straße 38 student dormitory, 37075 Göttingen, Germany.",
+          "Contact for data protection matters: heimkneipe@roko-goettingen.de",
+          "We are not required to appoint a data protection officer: far fewer than 20 people are involved in processing here (§ 38 BDSG).",
         ],
       },
       {
-        heading: "Server logs",
+        heading: "Legal bases",
         points: [
-          "The hosting provider Vercel stores technically necessary server logs (IP address, timestamp, user agent) to keep the site running.",
-          "We do not use these logs for marketing or tracking.",
+          "Booking requests, contract and handling: Art. 6(1)(b) GDPR — processing is necessary to prepare and perform the rental contract.",
+          "Technical operation, server logs and abuse protection: Art. 6(1)(f) GDPR — our legitimate interest in a working site that is not overloaded.",
+          "Loading the map: Art. 6(1)(a) GDPR and § 25(1) TDDDG — only after your click, i.e. with your consent.",
+          "Publishing portraits and alumni contributions: Art. 6(1)(a) GDPR — only with explicit consent, withdrawable at any time.",
         ],
       },
       {
-        heading: "Contact & booking",
+        heading: "Hosting & server logs",
         points: [
-          "We only process the data you send us (e.g., name, contact details, desired date) to handle your booking request.",
-          "Data is used solely to organize rental contracts, key handover, and follow-up questions.",
-          "Retention: kept as long as needed for booking-related communication; we delete correspondence on request unless legal duties require keeping it.",
+          "The site is operated by Vercel Inc. (USA). Opening a page produces technically necessary log data: IP address, timestamp, requested address, referrer, user-agent string.",
+          "These logs serve only operation, debugging, and defence against attacks. We do not combine them with other data and do not evaluate them statistically.",
+          "A data processing agreement under Art. 28 GDPR is in place with Vercel. Transfers to the USA rely on the European Commission's standard contractual clauses.",
+          "Delivery runs through European locations; access from the USA in the course of maintenance and support cannot be ruled out entirely.",
         ],
       },
       {
-        heading: "Cookies & localStorage",
+        heading: "Booking requests",
         points: [
-          "No cookies, no Google Analytics, no marketing tools.",
-          "We only store your language preference (\"de\" or \"en\") in the browser (localStorage, key: \"roko-language\") so the site opens in your language next time.",
-          "You can delete this entry at any time via your browser settings.",
+          "When you submit the booking form we process: the requested night, name, email address, phone number, postal address, residency status, guest count, intended payment method, your notes, and the language you chose.",
+          "We need the address and residency status because they determine the contract and the rate. The phone number, because we have to be able to reach you on the night of the event in an emergency.",
+          "Only the bar tutors who manage bookings see these details. They are not passed to third parties and are not used for advertising.",
+          "After submitting you receive a confirmation email; we receive a parallel notification containing the details.",
+        ],
+      },
+      {
+        heading: "Contracts & payment proof",
+        points: [
+          "If you upload a signed rental contract or a payment proof, those files are held in private, non-public storage.",
+          "They are never reachable at a fixed address. Retrieval always runs through our server using a short-lived signed link.",
+          "The countersigned contract is released solely through your personal booking link.",
+        ],
+      },
+      {
+        heading: "Database & email delivery",
+        points: [
+          "Bookings and uploaded files are held with Supabase in the EU — Ireland region (eu-west-1). The provider is Supabase, Inc. (USA); a data processing agreement under Art. 28 GDPR with standard contractual clauses is in place. Access from the USA in the course of maintenance and support cannot be ruled out entirely.",
+          "Transactional emails — acknowledgement, approval, contract release — are sent via Resend, also using servers in the EU (Ireland). A data processing agreement is in place here too.",
+          "There is no newsletter and no marketing email. You only receive email that belongs to your own booking.",
+        ],
+      },
+      {
+        heading: "Retention",
+        points: [
+          "Cancelled and rejected requests are deleted once they are no longer needed for follow-up questions — usually within a few weeks.",
+          "Confirmed bookings are kept until any claims relating to the deposit, cleaning, or damage have lapsed, at most three years after the event (§ 195 BGB).",
+          "Server logs at Vercel are deleted automatically after a short period; abuse-protection counters expire within minutes.",
+          "On request we delete earlier, provided no claims are outstanding.",
+        ],
+      },
+      {
+        heading: "The map on the directions page",
+        points: [
+          "The map comes from OpenStreetMap and is not loaded automatically. At first you see only a placeholder with the address.",
+          "Only when you click “Load map” is a connection to the OpenStreetMap Foundation established and your IP address transmitted there. Nothing happens before that.",
+          "The OpenStreetMap Foundation is based in the United Kingdom, for which the European Commission has issued an adequacy decision.",
+          "Your consent applies only to the current page view. Reload the page and the map is locked again.",
+        ],
+      },
+      {
+        heading: "Links out",
+        points: [
+          "The route-planner link goes to Google Maps. Data reaches Google only once you click it — Google's privacy policy then applies.",
+          "The rental contracts and the house order are PDFs on our own server. Downloading them transmits nothing to third parties.",
+        ],
+      },
+      {
+        heading: "Storage in your browser",
+        points: [
+          "We store your language choice (“de” or “en”) locally in your browser (localStorage, key “roko-language”) so the site opens in your language next time.",
+          "This value never leaves your machine and is necessary for the function you asked for (§ 25(2)(2) TDDDG). You can delete it through your browser settings at any time.",
+          "The internal admin area for bar tutors additionally stores a session identifier that expires when the browser closes. This is irrelevant for guests.",
+        ],
+      },
+      {
+        heading: "Security",
+        points: [
+          "The site is served exclusively over encrypted HTTPS.",
+          "Public endpoints are throttled against bulk requests. To do that, a counter tied to the requesting IP address is stored for a few minutes.",
+          "Booking data in the database is locked against direct outside access; every access goes through our server.",
+        ],
+      },
+      {
+        heading: "Automated decisions",
+        points: [
+          "There is no automated decision-making and no profiling. Every request is decided by a person from the bar team.",
         ],
       },
       {
         heading: "Your rights",
         points: [
-          "You can request access to or deletion of your data unless legal retention duties apply.",
-          "Questions: heimkneipe@roko-goettingen.de",
+          "Access to the data we hold about you (Art. 15 GDPR).",
+          "Rectification of incorrect and completion of incomplete data (Art. 16 GDPR).",
+          "Erasure (Art. 17 GDPR) and restriction of processing (Art. 18 GDPR), where no claims or obligations stand in the way.",
+          "Data portability (Art. 20 GDPR) and objection to processing based on legitimate interests (Art. 21 GDPR).",
+          "Withdrawal of consent at any time and without giving reasons (Art. 7(3) GDPR); processing up to the withdrawal remains lawful.",
+          "Complaint to a supervisory authority (Art. 77 GDPR) — the authority responsible for us is listed below.",
+        ],
+      },
+      {
+        heading: "Changes",
+        points: [
+          "If the technology behind the site or the services it uses change, we update this policy. The date above shows the current version.",
+          "There are no retroactive downgrades: data you entrusted to us under an earlier version is not used for new purposes.",
         ],
       },
     ],
+    authorityKicker: "Supervisory authority",
+    authorityTitle: "If you want to complain",
+    authorityText:
+      "You can go straight to the competent supervisory authority at any time, without talking to us first. We would still appreciate the short route.",
+    authority: {
+      name: "Die Landesbeauftragte für den Datenschutz Niedersachsen",
+      lines: ["Prinzenstraße 5", "30159 Hannover", "Germany"],
+      href: "https://www.lfd.niedersachsen.de",
+      linkLabel: "lfd.niedersachsen.de",
+    },
+    contactKicker: "Questions",
+    contactTitle: "Just ask",
+    contactText:
+      "Access, erasure, withdrawal, or a question about one of the paragraphs here: an email is enough. No form and no justification needed.",
+    contactCTA: "Send a privacy request",
   },
 };
 

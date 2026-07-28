@@ -86,7 +86,10 @@ export default function HeroCarousel({ names, label, labels }) {
               <button
                 aria-current={index === active}
                 aria-label={labels.goTo.replace("{n}", index + 1)}
-                className="group py-2"
+                /* py-3 not py-2: the tick itself is 2 px, so py-2 gave an 18 px
+                   tall target and WCAG 2.5.8 asks for 24. Padding grows the hit
+                   area without changing how the tick looks. */
+                className="group py-3"
                 key={name}
                 onBlur={() => setPaused(false)}
                 onClick={() => setActive(index)}

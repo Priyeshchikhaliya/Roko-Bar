@@ -24,7 +24,10 @@ export default function Footer() {
             <Link
               key={link.to}
               to={link.to}
-              className="text-muted hover:text-primary uppercase tracking-[0.14em]"
+              /* `py-1.5 -my-1.5` grows the tap target from 16 px to 28 px while
+                 the negative margin cancels the padding in layout, so nothing
+                 moves and the row still aligns with the brand line. */
+              className="text-muted hover:text-primary uppercase tracking-[0.14em] py-1.5 -my-1.5"
             >
               {link.label}
             </Link>

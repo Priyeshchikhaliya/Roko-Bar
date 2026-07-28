@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../context/useLanguage.js";
 import Lightbox from "../components/Lightbox.jsx";
 import Photo from "../components/Photo.jsx";
@@ -25,6 +26,10 @@ export default function Directions() {
   const photos = t.common.photos;
   const reveal = useReveal();
   const [index, setIndex] = useState(null);
+  // The embed is not mounted until asked for: loading it hands the visitor's IP
+  // to the OpenStreetMap Foundation, which needs consent under § 25 TDDDG.
+  // Deliberately not persisted — consent should be per visit, not forever.
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   // Flat list backing the lightbox, in the order the steps render.
   const sequence = toItems(
@@ -247,12 +252,50 @@ export default function Directions() {
           </div>
 
           <div className="reveal border border-line min-h-[26rem]" ref={reveal}>
-            <iframe
-              title={page.mapTitle}
-              src={osmEmbedUrl}
-              className="h-full min-h-[26rem] w-full border-0"
-              loading="lazy"
-            />
+            {mapLoaded ? (
+              <iframe
+                title={page.mapTitle}
+                src={osmEmbedUrl}
+                className="h-full min-h-[26rem] w-full border-0"
+                loading="lazy"
+              />
+            ) : (
+              // The address is spelled out here so the placeholder is genuinely
+              // useful to anyone who never presses the button.
+              <div className="flex h-full min-h-[26rem] flex-col items-start justify-between gap-8 bg-surface p-6 md:p-8">
+                <div className="space-y-4">
+                  <span className="accent-rule" />
+                  <h3 className="font-display text-2xl font-semibold leading-tight">
+                    {page.mapConsentTitle}
+                  </h3>
+                  <p className="lead max-w-md text-base">
+                    {page.mapConsentText}
+                  </p>
+                </div>
+
+                <address className="select-text text-lg not-italic leading-relaxed">
+                  <div>{t.common.dormName}</div>
+                  <div className="text-muted">{t.common.address.line1}</div>
+                  <div className="text-muted">{t.common.address.line2}</div>
+                </address>
+
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                  <button
+                    type="button"
+                    onClick={() => setMapLoaded(true)}
+                    className="btn-primary text-xs md:text-sm"
+                  >
+                    {page.mapConsentCTA}
+                  </button>
+                  <Link
+                    to={t.common.links.datenschutz}
+                    className="py-1 -my-1 text-sm text-muted underline underline-offset-4 hover:text-primary"
+                  >
+                    {page.mapConsentPrivacy}
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -77,6 +77,12 @@ export default function Mietbedingungen() {
               >
                 {t.common.contracts.externalLabel}
               </a>
+              <a
+                href={t.common.contracts.houseOrderHref}
+                className="btn-secondary text-xs md:text-sm"
+              >
+                {t.common.contracts.houseOrderLabel}
+              </a>
             </div>
 
             <details className="border-t border-line pt-6">

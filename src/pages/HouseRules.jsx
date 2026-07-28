@@ -83,6 +83,24 @@ export default function HouseRules() {
           </div>
         </div>
       </section>
+
+      <section className="editorial-section section-ink section-pad">
+        <div className="container-wide flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl space-y-5">
+            <span className="accent-rule" />
+            <p className="eyebrow">{page.contactKicker}</p>
+            <h2 className="section-title">{page.contactTitle}</h2>
+            <p className="lead">{page.contactText}</p>
+          </div>
+
+          <a
+            href={`mailto:${t.common.email}`}
+            className="btn-primary w-fit shrink-0 text-xs md:text-sm"
+          >
+            {page.contactCTA}
+          </a>
+        </div>
+      </section>
     </>
   );
 }
