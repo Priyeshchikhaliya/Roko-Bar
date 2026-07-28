@@ -10,6 +10,7 @@ import {
   validatePdfFile,
 } from "../../server/api/_contracts.js";
 import { BOOKING_COLUMNS, getQueryValue, isNotFoundError } from "../../server/api/_adminUtils.js";
+import { sendSignedNotificationEmail } from "../../server/api/_email.js";
 import { normalizePaymentMethod } from "../../server/api/_payments.js";
 import { enforceRateLimit } from "../../server/api/_rateLimit.js";
 import { methodNotAllowed, sendError, sendJson } from "../../server/api/_responses.js";
@@ -180,6 +181,17 @@ export default async function handler(req, res) {
       }
 
       throw error;
+    }
+
+    // Tell the tutor inbox a contract is waiting. Deliberately after the row is
+    // committed and deliberately swallowed: the guest has done their part, so a
+    // Resend outage must not turn their successful upload into an error and make
+    // them try again. A missed notification only costs the team a look at the
+    // admin panel; a failed upload costs the guest their booking.
+    try {
+      await sendSignedNotificationEmail(data);
+    } catch (emailError) {
+      console.error("booking signed notification email error", emailError);
     }
 
     return sendJson(res, 200, { booking: sanitizeBookingForGuest(data) });

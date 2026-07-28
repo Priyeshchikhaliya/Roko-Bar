@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 import { approvalEmailAttachments } from "./_contracts.js";
-import { EMAIL_FROM, EMAIL_REPLY_TO } from "./_config.js";
+import { EMAIL_FROM, EMAIL_REPLY_TO, TUTOR_NOTIFY_EMAIL } from "./_config.js";
 import { approvalEmail, tutorIntroEmail } from "./_email-content.js";
 import { privateBookingUrl } from "./_links.js";
 
@@ -200,4 +200,48 @@ export async function sendTutorIntroEmailWithStatus(booking, tutor, onError) {
       error: "Tutor introduction email could not be sent.",
     };
   }
+}
+
+// Internal, German-only, to the tutor inbox — the guest is not a recipient and
+// gets no mail for their own upload. This is the one hand-off where the team
+// becomes the blocker: nothing else tells them a contract is waiting to be
+// counter-signed, so without this it sits until somebody opens the admin panel.
+export async function sendSignedNotificationEmail(booking) {
+  const nightLabel = formatNight(booking.night, "de");
+  const paymentMethod =
+    booking.payment_method === "online"
+      ? "Online / Überweisung"
+      : booking.payment_method === "cash"
+        ? "Barzahlung"
+        : "Nicht angegeben";
+
+  const row = (label, value) => `
+  <tr>
+    <td style="padding:8px 12px 8px 0;font-size:14px;line-height:1.45;color:#7b706b;vertical-align:top;width:170px;">${escapeHtml(label)}</td>
+    <td style="padding:8px 0;font-size:14px;line-height:1.45;color:#26211f;vertical-align:top;">${escapeHtml(value)}</td>
+  </tr>`;
+
+  const html = renderEmailLayout({
+    title: "Vertrag eingereicht",
+    preheader: `${booking.requester_name} hat den Vertrag für ${nightLabel} hochgeladen`,
+    children: `
+      <p style="margin:0 0 18px 0;font-size:15px;line-height:1.55;color:#26211f;">Ein Gast hat den unterschriebenen Vertrag eingereicht. Die Buchung wartet jetzt auf die Gegenzeichnung.</p>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;">
+        ${row("Datum", nightLabel)}
+        ${row("Name", booking.requester_name)}
+        ${row("E-Mail", booking.email)}
+        ${row("Telefon", booking.phone || "Nicht angegeben")}
+        ${row("Mietzahlung", paymentMethod)}
+        ${row("Zahlungsnachweis", booking.rent_proof_path ? "Hochgeladen" : "Keiner")}
+        ${row("Buchungs-ID", booking.id)}
+      </table>
+      <p style="margin:18px 0 0 0;font-size:14px;line-height:1.55;color:#7b706b;">Nächster Schritt: Zahlung prüfen, dann im Admin-Bereich gegenzeichnen.</p>
+    `,
+  });
+
+  return sendEmail({
+    to: TUTOR_NOTIFY_EMAIL,
+    subject: `Vertrag eingereicht: ${nightLabel} – ${booking.requester_name}`,
+    html,
+  });
 }
