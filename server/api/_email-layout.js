@@ -53,10 +53,16 @@ export function renderEmail({
   footerNote = null,
 }) {
   const emailLang = lang === "en" ? "en" : "de";
+  // This used to read "this address doesn't take replies", which was true while
+  // mail went out From: noreply@rokobar.de with no Reply-To — and it actively
+  // talked guests out of answering. sendEmail now sets a Reply-To pointing at a
+  // mailbox the team owns, so replies do arrive. Keep this in step with
+  // EMAIL_REPLY_TO in _config.js: if that ever points somewhere unread again,
+  // this sentence becomes a lie.
   const replyNote =
     emailLang === "en"
-      ? "This address doesn't take replies. Once a tutor picks up your booking, they'll be your direct contact on WhatsApp."
-      : "Diese Adresse nimmt keine Antworten entgegen. Sobald ein Tutor deine Buchung übernimmt, ist er dein direkter Kontakt über WhatsApp.";
+      ? "You can reply straight to this email — it reaches the bar team. Once a tutor picks up your booking, they'll also be reachable on WhatsApp."
+      : "Auf diese E-Mail kannst du direkt antworten – sie erreicht das Bar-Team. Sobald ein Tutor deine Buchung übernimmt, ist er zusätzlich über WhatsApp erreichbar.";
 
   return `<!doctype html>
 <html lang="${emailLang}">
