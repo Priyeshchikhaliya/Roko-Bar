@@ -13,12 +13,19 @@ export const EMAIL_FROM =
   process.env.EMAIL_FROM || "RoKo Bar <noreply@rokobar.de>";
 
 // Every guest mail is sent From: noreply@rokobar.de, and rokobar.de has no MX
-// record — so a guest who simply hits Reply was writing into a void. Point
-// replies at the mailbox that is actually read (roko-goettingen.de does have
-// MX). Without this, silence from a guest is indistinguishable from a guest who
-// answered and never reached us.
+// record — so a guest who simply hits Reply was writing into a void, and
+// silence from them was indistinguishable from an answer that never arrived.
+//
+// This points at the Outlook address rather than heimkneipe@roko-goettingen.de
+// on purpose: that one only forwards here, so it cannot be replied *from*, and
+// a broken forward would drop mail with no bounce to warn us. Guests would also
+// get an answer from a different address than the one they wrote to.
+//
+// Longer term the right home is a real mailbox on rokobar.de, which would match
+// the domain guests actually visit and remove the odd "sender cannot receive
+// mail" setup. Until then this is the address the team genuinely controls.
 export const EMAIL_REPLY_TO =
-  envValue("EMAIL_REPLY_TO") || "heimkneipe@roko-goettingen.de";
+  envValue("EMAIL_REPLY_TO") || "rokobar.goettingen@outlook.com";
 
 export const TUTOR_NOTIFY_EMAIL = "rokobar.goettingen@outlook.com";
 function envValue(name) {

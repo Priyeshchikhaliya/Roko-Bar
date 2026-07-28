@@ -10,7 +10,7 @@ export const de = {
       line1: "Robert-Koch-Straße 38",
       line2: "37075 Göttingen, Deutschland",
     },
-    email: "heimkneipe@roko-goettingen.de",
+    email: "rokobar.goettingen@outlook.com",
     // Named once, read by both the Impressum and the privacy policy. § 5 DDG
     // wants a real person here, so this must not stay a placeholder.
     operatorName:
@@ -998,7 +998,7 @@ export const de = {
         heading: "Verantwortliche Stelle",
         points: [
           "Verantwortlich im Sinne der DSGVO ist die Heimselbstverwaltung des Studentenwohnheims Robert-Koch-Straße 38, 37075 Göttingen.",
-          "Kontakt in Datenschutzfragen: heimkneipe@roko-goettingen.de",
+          "Kontakt in Datenschutzfragen: rokobar.goettingen@outlook.com",
           "Eine Datenschutzbeauftragte oder einen Datenschutzbeauftragten müssen wir nicht benennen: mit der Verarbeitung sind bei uns deutlich weniger als 20 Personen befasst (§ 38 BDSG).",
         ],
       },
@@ -1141,7 +1141,7 @@ export const en = {
       line1: "Robert-Koch-Straße 38",
       line2: "37075 Göttingen, Germany",
     },
-    email: "heimkneipe@roko-goettingen.de",
+    email: "rokobar.goettingen@outlook.com",
     // Kept in German on purpose: this is the legal name of the body that runs
     // the bar, and § 5 DDG identifies it by that name in any language.
     operatorName:
@@ -2123,7 +2123,7 @@ export const en = {
         heading: "Controller",
         points: [
           "The controller under the GDPR is the residents' self-administration of the Robert-Koch-Straße 38 student dormitory, 37075 Göttingen, Germany.",
-          "Contact for data protection matters: heimkneipe@roko-goettingen.de",
+          "Contact for data protection matters: rokobar.goettingen@outlook.com",
           "We are not required to appoint a data protection officer: far fewer than 20 people are involved in processing here (§ 38 BDSG).",
         ],
       },
