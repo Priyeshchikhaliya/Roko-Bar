@@ -261,6 +261,59 @@ export function redoEmail(booking, fmt) {
   };
 }
 
+export function deadlineReminderEmail(booking, fmt) {
+  const lang = normalizeEmailLanguage(booking.lang) === "en" ? "en" : "de";
+  const copy =
+    lang === "en"
+      ? {
+          subject: `RoKo Bar — ${fmt.daysLeftLabel} to send your contract`,
+          preheader:
+            "Your signed contract is still missing and the deadline is close.",
+          heading: "A quick reminder",
+          paragraphs: [
+            `Hi ${booking.requester_name}, we're still missing your signed rental contract for ${fmt.nightLabel}. Your deadline is ${fmt.deadlineLabel}.`,
+            "If it passes, the night is released and someone else can book it — so please open your private link below and upload the contract.",
+          ],
+          detailRows: [
+            { label: "When", value: `${fmt.nightLabel} — the whole day` },
+            { label: "Deadline", value: fmt.deadlineLabel },
+          ],
+          cta: {
+            label: "Upload your contract",
+            url: fmt.bookingUrl,
+          },
+          closingParagraphs: [
+            "Can't manage it in time, or something is unclear? Just reply to this email and we'll sort it out — losing the date over a missed deadline would be a shame.",
+          ],
+        }
+      : {
+          subject: `RoKo Bar — ${fmt.daysLeftLabel} für deinen Vertrag`,
+          preheader:
+            "Dein unterschriebener Vertrag fehlt noch und die Frist läuft bald ab.",
+          heading: "Kurze Erinnerung",
+          paragraphs: [
+            `Hallo ${booking.requester_name}, uns fehlt noch dein unterschriebener Mietvertrag für ${fmt.nightLabel}. Deine Frist endet am ${fmt.deadlineLabel}.`,
+            "Läuft sie ab, wird die Nacht wieder freigegeben und kann von anderen gebucht werden — öffne also einfach deinen privaten Link unten und lade den Vertrag hoch.",
+          ],
+          detailRows: [
+            { label: "Wann", value: `${fmt.nightLabel} — der ganze Tag` },
+            { label: "Frist", value: fmt.deadlineLabel },
+          ],
+          cta: {
+            label: "Vertrag hochladen",
+            url: fmt.bookingUrl,
+          },
+          closingParagraphs: [
+            "Schaffst du es nicht rechtzeitig oder ist etwas unklar? Antworte einfach auf diese E-Mail, dann finden wir eine Lösung — wegen einer verpassten Frist den Termin zu verlieren wäre schade.",
+          ],
+        };
+
+  return {
+    subject: copy.subject,
+    html: renderEmail({ lang, ...copy }),
+  };
+}
+
 export function rejectionEmail(booking, fmt) {
   const lang = normalizeEmailLanguage(booking.lang) === "en" ? "en" : "de";
   const copy =

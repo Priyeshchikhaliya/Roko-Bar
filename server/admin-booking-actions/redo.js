@@ -92,6 +92,10 @@ export default async function handler(req, res) {
       .update({
         status: "approved",
         confirm_deadline: confirmDeadline.toISOString(),
+        // A redo grants a brand-new deadline, so the guest is owed a brand-new
+        // reminder before it. Without clearing this, a booking that was already
+        // reminded once would silently never be reminded again.
+        deadline_reminder_sent_at: null,
         signed_contract_path: null,
         rent_proof_path: null,
         payment_method: null,
