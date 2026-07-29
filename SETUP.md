@@ -112,7 +112,25 @@ In the Vercel dashboard:
    - `SITE_URL` — set this to `https://www.rokobar.de`, not the localhost value
      from the local `.env` block above
    - `RESEND_API_KEY`
+   - `CRON_SECRET` — any long random string, e.g. `openssl rand -hex 32`
 4. Redeploy after adding or changing production environment variables.
+
+`CRON_SECRET` guards `/api/deadline-reminders`, which runs daily at 08:00 (see
+`vercel.json`). Vercel sends it as `Authorization: Bearer <CRON_SECRET>` on
+scheduled invocations. The endpoint refuses every request when the secret is
+unset — deliberately, since it sends mail and an open caller could pester
+guests. The failure is silent from the outside: the cron reports 401 and guests
+simply never get their deadline reminders. To check it end to end:
+
+```bash
+curl -s -H "Authorization: Bearer $CRON_SECRET" \
+  https://www.rokobar.de/api/deadline-reminders
+```
+
+A JSON body with `reminded` and `newlyExpired` counts means the wiring is
+correct; `{"error":"unauthorized"}` means the secret does not match. The call
+only mails guests whose deadline falls within the next two days, so it is safe
+to run on demand.
 
 ## 5. Run Locally
 
