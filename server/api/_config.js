@@ -32,7 +32,8 @@ function envValue(name) {
   return (process.env[name] || "").trim();
 }
 
-export const SITE_URL = envValue("SITE_URL") || "http://localhost:3000";
+// SITE_URL deliberately does not live here. Guest links are built in _links.js,
+// which is the single place that resolves the public origin.
 
 // Rent bank transfer details. Keep real values in environment variables only.
 export const BANK_IBAN = envValue("BANK_IBAN");

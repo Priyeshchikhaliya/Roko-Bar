@@ -81,8 +81,13 @@ EMAIL_FROM=RoKo-Bar <noreply@your-domain.de>
 `.env` and `.env.local` are gitignored. Do not put real secrets in `.env.example`.
 `ADMIN_PASSWORD` is used only by serverless functions. Do not prefix it with
 `VITE_`, because that would expose it to the browser bundle.
-`SITE_URL` is used in approval and confirmation emails; locally it defaults to
-`http://localhost:3000` if omitted.
+`SITE_URL` is the origin used to build the links inside guest emails, so it must
+be the address the *recipient* can reach — never the machine that sent the mail.
+Locally that is `http://localhost:3000`; in Production it must be
+`https://www.rokobar.de`, with no trailing slash and no path. A localhost value
+in Production sends every guest a link that resolves to their own phone, which
+looks to them like the site is down. Production ignores a localhost value and
+logs an error rather than mailing a dead link, but set it correctly regardless.
 
 To confirm the variables are reaching the functions, start `vercel dev` and
 request an endpoint that needs Supabase:
@@ -104,7 +109,8 @@ In the Vercel dashboard:
    - `SUPABASE_URL`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `ADMIN_PASSWORD`
-   - `SITE_URL`
+   - `SITE_URL` — set this to `https://www.rokobar.de`, not the localhost value
+     from the local `.env` block above
    - `RESEND_API_KEY`
 4. Redeploy after adding or changing production environment variables.
 
